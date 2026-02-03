@@ -3,9 +3,23 @@ title: Content Structure
 description: 콘텐츠 위치와 URL 구조
 ---
 
-Barodoc 콘텐츠는 `src/content/docs/` 아래에 있습니다. locale별 폴더 구조가 URL 경로가 됩니다.
+Barodoc 콘텐츠는 locale별로 정리되며, 폴더 구조가 URL 경로가 됩니다. **CLI(제로 설정)** 모드에서는 **`docs/`** 아래에 두고(예: `docs/en/`, `docs/ko/`), **수동 Astro** 모드에서는 **`src/content/docs/`** 아래에 둡니다(예: `src/content/docs/en/`). 아래 규칙은 두 방식 모두에 적용됩니다.
 
 ## 디렉터리 구조
+
+**CLI 모드** (프로젝트 루트의 `docs/`):
+
+```
+docs/
+├── en/
+│   ├── introduction.mdx    → /docs/introduction
+│   └── guides/
+│       └── installation.mdx → /docs/guides/installation
+└── ko/
+    └── ...
+```
+
+**수동 Astro 모드** (`src/content/docs/`):
 
 ```
 src/content/docs/

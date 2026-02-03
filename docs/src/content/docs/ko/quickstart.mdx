@@ -1,50 +1,93 @@
 ---
 title: 빠른 시작
-description: Barodoc으로 문서 사이트 빠르게 시작하기
+description: 5분 안에 Barodoc 문서 사이트 만들기
 ---
 
-5분 안에 첫 번째 문서 사이트를 만들어보세요.
+CLI(제로 설정)로 새 문서 사이트를 만듭니다. 프로젝트에 `package.json`이나 `node_modules`가 없습니다.
+
+## 필요 환경
+
+- Node.js 20 이상
+- pnpm 권장
 
 ## 프로젝트 생성
 
 ```bash
-npx barodoc create my-docs
+pnpm create barodoc my-docs
 cd my-docs
 ```
 
-## 개발 서버 실행
+Markdown과 설정만 있는 프로젝트가 생성됩니다. Astro 설정이나 의존성은 프로젝트 폴더에 없습니다.
+
+## 프로젝트 구조 (CLI / 제로 설정)
+
+생성 후 디렉터리 구조:
+
+```
+my-docs/
+├── docs/
+│   └── en/
+│       ├── introduction.md
+│       └── quickstart.md
+├── public/
+│   └── logo.svg
+├── barodoc.config.json
+└── .gitignore
+```
+
+- **docs/** – 로케일별 콘텐츠 (`en/`, `ko/` 등). 파일 경로 = URL 슬러그 (예: `en/introduction.md` → `/docs/introduction`).
+- **public/** – 정적 파일 (로고, 파비콘, 이미지).
+- **barodoc.config.json** – 사이트 이름, 네비게이션, 테마, i18n.
+
+이 모드에서는 `src/`, `package.json`, `astro.config.mjs`가 없습니다.
+
+## 개발 서버
 
 ```bash
-barodoc serve
+npx barodoc serve
 ```
 
-브라우저에서 `http://localhost:4321`을 열어 확인하세요.
+사이트가 실행됩니다 (예: `http://localhost:4321`). CLI가 `.barodoc/` 아래에 임시 Astro 프로젝트를 만들고 dev 서버를 띄웁니다. 수정하는 것은 `docs/`와 `barodoc.config.json`뿐입니다.
 
-## 문서 작성
-
-`docs/` 폴더에 Markdown 파일을 추가하세요:
-
-```markdown
----
-title: 내 첫 번째 문서
-description: 문서 설명
----
-
-# 제목
-
-문서 내용을 여기에 작성하세요.
-```
-
-## 프로덕션 빌드
+## 빌드
 
 ```bash
-barodoc build
+npx barodoc build
 ```
 
-`dist/` 폴더에 정적 파일이 생성됩니다. 이 파일들을 웹 서버나 GitHub Pages에 배포하세요.
+결과물은 `dist/`(또는 설정에서 지정한 경로)에 생성됩니다. 이 폴더를 GitHub Pages, Vercel, Netlify, Cloudflare Pages 등 정적 호스팅에 배포하면 됩니다.
+
+## 빌드 미리보기
+
+```bash
+npx barodoc preview
+```
+
+`dist/` 결과물을 로컬에서 띄워 프로덕션 빌드를 확인할 수 있습니다.
+
+## 페이지 추가하기
+
+1. `docs/en/` 아래에 파일 추가 (예: `docs/en/guides/installation.md`).
+2. `barodoc.config.json`의 `navigation`에 슬러그 추가:
+
+```json
+{
+  "navigation": [
+    { "group": "시작하기", "pages": ["introduction", "quickstart"] },
+    { "group": "가이드", "pages": ["guides/installation"] }
+  ]
+}
+```
+
+슬러그 = 로케일과 확장자를 뺀 경로: `guides/installation.md` → `guides/installation`.
+
+## 풀 커스텀 (Astro) 모드
+
+Astro 프로젝트 전체가 필요한 경우(커스텀 페이지, 다른 통합 등) [설치 → 수동 설치](/ko/docs/guides/installation#수동-설치-astro-통합)를 참고하세요. 그 방식은 `src/content/docs/`, `astro.config.mjs`를 사용하고 `pnpm dev` / `pnpm build`로 실행합니다. 이 저장소의 **docs/** 사이트가 그 예입니다.
 
 ## 다음 단계
 
-- [설치 가이드](/ko/docs/guides/installation) - 상세 설치 방법
-- [설정](/ko/docs/guides/configuration) - 사이트 설정 방법
-- [다국어](/ko/docs/guides/i18n) - 다국어 지원 설정
+- [설치](/ko/docs/guides/installation) – CLI vs 수동 설치
+- [설정](/ko/docs/guides/configuration) – 테마, 검색, i18n
+- [콘텐츠 구조](/ko/docs/guides/content-structure) – URL, frontmatter, MDX
+- [다국어](/ko/docs/guides/i18n) – 로케일 추가
