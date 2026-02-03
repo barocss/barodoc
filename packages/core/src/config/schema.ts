@@ -41,6 +41,11 @@ export const searchSchema = z.object({
   enabled: z.boolean().optional(),
 }).optional();
 
+export const pluginConfigSchema = z.union([
+  z.string(),
+  z.tuple([z.string(), z.record(z.unknown())]),
+]);
+
 export const barodocConfigSchema = z.object({
   name: z.string(),
   logo: z.string().optional(),
@@ -50,6 +55,7 @@ export const barodocConfigSchema = z.object({
   navigation: z.array(navItemSchema),
   topbar: topbarSchema,
   search: searchSchema,
+  plugins: z.array(pluginConfigSchema).optional(),
   customCss: z.array(z.string()).optional(),
 });
 
