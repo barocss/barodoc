@@ -7,7 +7,7 @@
     "dev": "pnpm --filter docs dev",
     "dev:docs": "pnpm --filter docs dev",
     "build": "pnpm --filter docs build",
-    "build:packages": "pnpm --filter @barodoc/core build",
+    "build:packages": "pnpm --filter @barodoc/core --filter barodoc --filter create-barodoc --filter @barodoc/plugin-sitemap --filter @barodoc/plugin-search --filter @barodoc/plugin-analytics build",
     "typecheck": "pnpm -r typecheck",
     "barodoc": "tsx packages/barodoc/src/cli.ts",
     "test:cli": "pnpm --filter barodoc build && node packages/barodoc/dist/cli.js",

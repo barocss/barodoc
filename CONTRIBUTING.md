@@ -93,6 +93,24 @@ git push origin feature/my-feature
 - `test:` 테스트 추가/수정
 - `chore:` 빌드/설정 변경
 
+### npm 배포 (유지보수자)
+
+CI에서 `main` 브랜치 푸시 시 changesets가 버전 PR을 만들거나 npm에 배포합니다. 배포가 실패하는 경우 아래를 확인하세요.
+
+1. **GitHub 시크릿**  
+   저장소 설정 → Secrets and variables → Actions에 `NPM_BARODOC_TOKEN`이 있어야 합니다.
+
+2. **npm 토큰**  
+   - [npm 액세스 토큰](https://www.npmjs.com/settings/~/tokens)에서 **Automation** 또는 **Publish** 권한이 있는 토큰을 생성합니다.  
+   - 토큰이 만료되었거나 폐기된 경우 "Access token expired or revoked"가 나옵니다. 새 토큰을 만들고 GitHub 시크릿을 갱신하세요.
+
+3. **npm 스코프 `@barodoc`**  
+   - 스코프 패키지(`@barodoc/core`, `@barodoc/theme-docs` 등)를 배포하려면 [npm 조직 생성](https://www.npmjs.com/org/create)에서 **barodoc** 조직을 만든 뒤, 배포에 사용하는 npm 계정을 해당 조직 멤버로 추가하고 퍼블리시 권한을 부여해야 합니다.  
+   - 조직이 없거나 권한이 없으면 `E404 Not Found - PUT https://registry.npmjs.org/@barodoc%2f...`가 발생할 수 있습니다.
+
+4. **비스코프 패키지 (`barodoc`, `create-barodoc`)**  
+   - 해당 이름이 이미 다른 사용자에게 사용 중이면 배포할 수 없습니다. 조직 스코프(`@barodoc/barodoc` 등)로 배포하거나, npm에서 해당 이름 소유 여부를 확인하세요.
+
 ### 패키지 버전 관리
 
 Changesets를 사용합니다:
