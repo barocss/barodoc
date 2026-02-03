@@ -2,14 +2,14 @@
 title: Code Group
 description: Display multiple code blocks in a tabbed interface
 ---
-import { CodeGroup } from "@barodoc/theme-docs/components/mdx/CodeGroup.tsx";
+import CodeGroup from "@barodoc/theme-docs/components/mdx/CodeGroup.astro";
 import { ParamField, ParamFieldGroup } from "@barodoc/theme-docs/components/mdx/ParamField.tsx";
 
 Code groups allow you to display multiple code examples in a tabbed interface, making it easy to show the same functionality in different languages.
 
 ## Basic Usage
 
-<CodeGroup client:load titles={["JavaScript", "Python", "Go"]}>
+<CodeGroup titles={["JavaScript", "Python", "Go"]}>
 
 ```javascript
 const greeting = "Hello, World!";
@@ -35,7 +35,7 @@ func main() {
 </CodeGroup>
 
 ```mdx
-<CodeGroup client:load titles={["JavaScript", "Python", "Go"]}>
+<CodeGroup titles={["JavaScript", "Python", "Go"]}>
 
 \`\`\`javascript
 const greeting = "Hello, World!";
@@ -61,7 +61,7 @@ func main() {
 
 ## Package Manager Example
 
-<CodeGroup client:load titles={["npm", "pnpm", "yarn", "bun"]}>
+<CodeGroup titles={["npm", "pnpm", "yarn", "bun"]}>
 
 ```bash
 npm install @barodoc/core
@@ -86,8 +86,5 @@ bun add @barodoc/core
 <ParamFieldGroup>
   <ParamField name="titles" type="string[]">
     Array of tab labels for each code block
-  </ParamField>
-  <ParamField name="client:load" type="directive" required>
-    Required Astro directive for client-side interactivity
   </ParamField>
 </ParamFieldGroup>

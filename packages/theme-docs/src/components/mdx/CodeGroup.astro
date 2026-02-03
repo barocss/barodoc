@@ -7,9 +7,9 @@ interface Props {
 const { titles = [] } = Astro.props;
 ---
 
-<div class="not-prose my-4 code-group" data-titles={JSON.stringify(titles)}>
-  <div class="code-group-tabs flex border-b border-[var(--color-border)] bg-[var(--color-bg-secondary)] rounded-t-lg"></div>
-  <div class="code-group-content">
+<div class="code-group not-prose my-4 rounded-lg border border-[var(--color-border)] overflow-hidden" data-titles={JSON.stringify(titles)}>
+  <div class="code-group-tabs flex flex-wrap gap-0 border-b border-[var(--color-border)] bg-[var(--color-bg-tertiary)]"></div>
+  <div class="code-group-content bg-[var(--color-bg-secondary)] px-5 py-4">
     <slot />
   </div>
 </div>
@@ -27,30 +27,27 @@ const { titles = [] } = Astro.props;
       // Create tabs
       codeBlocks.forEach((block, index) => {
         const tab = document.createElement('button');
-        tab.className = 'px-4 py-2 text-sm font-medium transition-colors text-[var(--color-text-secondary)] hover:text-[var(--color-text)]';
+        tab.className = 'shrink-0 px-4 py-2 text-sm font-medium transition-colors whitespace-nowrap text-[var(--color-text-muted)] hover:text-[var(--color-text)]';
         tab.textContent = titles[index] || `Tab ${index + 1}`;
         tab.addEventListener('click', () => {
-          // Update tabs
           tabsContainer.querySelectorAll('button').forEach((t, i) => {
             if (i === index) {
-              t.classList.add('border-b-2', 'border-primary-600', 'text-primary-600');
-              t.classList.remove('text-[var(--color-text-secondary)]');
+              t.classList.add('border-b-2', 'border-primary-500', 'text-[var(--color-text)]', '-mb-px');
+              t.classList.remove('text-[var(--color-text-muted)]');
             } else {
-              t.classList.remove('border-b-2', 'border-primary-600', 'text-primary-600');
-              t.classList.add('text-[var(--color-text-secondary)]');
+              t.classList.remove('border-b-2', 'border-primary-500', 'text-[var(--color-text)]', '-mb-px');
+              t.classList.add('text-[var(--color-text-muted)]');
             }
           });
-          // Update content
           codeBlocks.forEach((b, i) => {
             (b as HTMLElement).style.display = i === index ? 'block' : 'none';
           });
         });
         tabsContainer.appendChild(tab);
 
-        // Hide all but first
         if (index === 0) {
-          tab.classList.add('border-b-2', 'border-primary-600', 'text-primary-600');
-          tab.classList.remove('text-[var(--color-text-secondary)]');
+          tab.classList.add('border-b-2', 'border-primary-500', 'text-[var(--color-text)]', '-mb-px');
+          tab.classList.remove('text-[var(--color-text-muted)]');
         } else {
           (block as HTMLElement).style.display = 'none';
         }
