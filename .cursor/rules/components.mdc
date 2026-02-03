@@ -1,0 +1,62 @@
+# Component Usage Rules
+
+## Astro Components (.astro)
+- Use for static content
+- Props defined in frontmatter script
+- No client-side JavaScript by default
+
+## React Components (.tsx)
+- Use for interactive content
+- Must use `client:load` directive in Astro files:
+
+```astro
+<MyComponent client:load />
+```
+
+## MDX Components
+
+### Callout
+```mdx
+<Callout type="info" title="Optional Title">
+Content here
+</Callout>
+```
+
+### Card & CardGroup
+```mdx
+<CardGroup cols={2}>
+  <Card title="Title" icon="🚀" href="/link">
+    Description
+  </Card>
+</CardGroup>
+```
+
+### Steps
+```mdx
+<Steps>
+  <Step title="Step 1">
+    Instructions
+  </Step>
+</Steps>
+```
+
+## API Components
+
+### ApiEndpoint
+```mdx
+<ApiEndpoint method="GET" path="/api/endpoint" description="Description">
+  <ApiParams>
+    <ApiParam name="param" type="string" required description="Param desc" />
+  </ApiParams>
+  <ApiResponse status={200} description="Success">
+    ```json
+    { "result": "value" }
+    ```
+  </ApiResponse>
+</ApiEndpoint>
+```
+
+## Styling
+- Use Tailwind classes
+- Custom component styling in global.css with @layer components
+- Use CSS custom properties for theme colors

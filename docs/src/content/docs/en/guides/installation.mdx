@@ -1,0 +1,79 @@
+---
+title: Installation
+description: Install Barodoc in your project
+---
+
+# Installation
+
+## Using the CLI (Recommended)
+
+The fastest way to get started:
+
+```bash
+pnpm create barodoc my-docs
+```
+
+## Manual Installation
+
+If you prefer manual setup:
+
+### 1. Create an Astro project
+
+```bash
+pnpm create astro@latest my-docs
+```
+
+### 2. Install Barodoc packages
+
+```bash
+pnpm add @barodoc/core @barodoc/theme-docs
+```
+
+### 3. Configure Astro
+
+Update `astro.config.mjs`:
+
+```js
+import { defineConfig } from "astro/config";
+import barodoc from "@barodoc/core";
+import docsTheme from "@barodoc/theme-docs";
+
+export default defineConfig({
+  integrations: [
+    barodoc({
+      config: "./barodoc.config.json",
+      theme: docsTheme(),
+    }),
+  ],
+});
+```
+
+### 4. Create config file
+
+Create `barodoc.config.json`:
+
+```json
+{
+  "name": "My Docs",
+  "navigation": [
+    {
+      "group": "Getting Started",
+      "pages": ["introduction"]
+    }
+  ]
+}
+```
+
+### 5. Add content
+
+Create `src/content/docs/en/introduction.mdx`:
+
+```mdx
+---
+title: Introduction
+---
+
+# Welcome
+
+Your documentation starts here.
+```

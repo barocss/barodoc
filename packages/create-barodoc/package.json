@@ -1,0 +1,40 @@
+{
+  "name": "create-barodoc",
+  "version": "0.0.1",
+  "description": "Create a new Barodoc documentation site",
+  "type": "module",
+  "bin": {
+    "create-barodoc": "./dist/index.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup src/index.ts --format esm --dts --clean",
+    "dev": "tsup src/index.ts --format esm --watch"
+  },
+  "dependencies": {
+    "fs-extra": "^11.2.0",
+    "picocolors": "^1.1.1"
+  },
+  "devDependencies": {
+    "@types/fs-extra": "^11.0.4",
+    "@types/node": "^22.0.0",
+    "tsup": "^8.3.0",
+    "typescript": "^5.7.0"
+  },
+  "keywords": [
+    "documentation",
+    "astro",
+    "mdx",
+    "cli",
+    "create",
+    "barodoc"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/barocss/barodoc.git",
+    "directory": "packages/create-barodoc"
+  }
+}

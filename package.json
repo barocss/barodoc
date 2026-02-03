@@ -1,0 +1,33 @@
+{
+  "name": "barodoc-monorepo",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Mintlify-style documentation framework built with Astro",
+  "scripts": {
+    "dev": "pnpm --filter docs dev",
+    "build": "pnpm --filter docs build",
+    "build:packages": "pnpm -r --filter './packages/*' build",
+    "watch": "pnpm -r --filter './packages/*' --parallel dev",
+    "barodoc": "tsx packages/barodoc/src/cli.ts",
+    "test:cli": "pnpm --filter barodoc build && node packages/barodoc/dist/cli.js",
+    "changeset": "changeset",
+    "version": "changeset version",
+    "release": "pnpm build:packages && changeset publish"
+  },
+  "keywords": [
+    "documentation",
+    "astro",
+    "mdx",
+    "static-site"
+  ],
+  "author": "",
+  "license": "MIT",
+  "packageManager": "pnpm@9.15.0",
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "devDependencies": {
+    "@changesets/cli": "^2.27.0",
+    "tsx": "^4.21.0"
+  }
+}

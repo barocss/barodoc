@@ -1,0 +1,92 @@
+---
+title: Configuration
+description: Configure your Barodoc site
+---
+
+# Configuration
+
+Barodoc is configured through `barodoc.config.json`.
+
+## Full Example
+
+```json
+{
+  "name": "My Documentation",
+  "logo": "/logo.svg",
+  "favicon": "/favicon.ico",
+  "theme": {
+    "colors": {
+      "primary": "#0070f3"
+    }
+  },
+  "i18n": {
+    "defaultLocale": "en",
+    "locales": ["en", "ko"],
+    "labels": {
+      "en": "English",
+      "ko": "한국어"
+    }
+  },
+  "navigation": [
+    {
+      "group": "Getting Started",
+      "group:ko": "시작하기",
+      "pages": ["introduction", "quickstart"]
+    }
+  ],
+  "topbar": {
+    "github": "https://github.com/user/repo"
+  }
+}
+```
+
+## Options
+
+### name
+
+The site name displayed in the header.
+
+### logo
+
+Path to the logo image in the `public/` directory.
+
+### theme.colors
+
+Customize the primary color theme:
+
+```json
+{
+  "theme": {
+    "colors": {
+      "primary": "#0070f3"
+    }
+  }
+}
+```
+
+### navigation
+
+Define the sidebar navigation structure:
+
+```json
+{
+  "navigation": [
+    {
+      "group": "Section Name",
+      "pages": ["page-slug", "nested/page"]
+    }
+  ]
+}
+```
+
+### topbar
+
+Add links to the top navigation:
+
+```json
+{
+  "topbar": {
+    "github": "https://github.com/user/repo"
+  }
+}
+```

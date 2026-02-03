@@ -1,0 +1,37 @@
+---
+// Steps component for step-by-step guides
+---
+
+<div class="not-prose my-6 space-y-4 border-l-2 border-[var(--color-border)] pl-6 ml-2">
+  <slot />
+</div>
+
+<style>
+  div :global(> *) {
+    position: relative;
+  }
+  
+  div :global(> *::before) {
+    content: counter(step);
+    counter-increment: step;
+    position: absolute;
+    left: -2.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.5rem;
+    height: 1.5rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    background-color: var(--color-bg);
+    border: 2px solid var(--color-border);
+    border-radius: 9999px;
+  }
+</style>
+
+<script>
+  // Initialize step counter
+  document.querySelectorAll('.not-prose.space-y-4').forEach(container => {
+    container.style.counterReset = 'step';
+  });
+</script>

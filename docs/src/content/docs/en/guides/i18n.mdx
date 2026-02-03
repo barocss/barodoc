@@ -1,0 +1,70 @@
+---
+title: Internationalization
+description: Multi-language support in Barodoc
+---
+
+# Internationalization (i18n)
+
+Barodoc supports multiple languages out of the box.
+
+## Configuration
+
+Enable i18n in `barodoc.config.json`:
+
+```json
+{
+  "i18n": {
+    "defaultLocale": "en",
+    "locales": ["en", "ko", "ja"],
+    "labels": {
+      "en": "English",
+      "ko": "한국어",
+      "ja": "日本語"
+    }
+  }
+}
+```
+
+## Content Structure
+
+Organize content by locale:
+
+```
+src/content/docs/
+├── en/
+│   ├── introduction.mdx
+│   └── guides/
+│       └── installation.mdx
+├── ko/
+│   ├── introduction.mdx
+│   └── guides/
+│       └── installation.mdx
+└── ja/
+    └── ...
+```
+
+## Localized Navigation
+
+Add localized group names:
+
+```json
+{
+  "navigation": [
+    {
+      "group": "Getting Started",
+      "group:ko": "시작하기",
+      "group:ja": "はじめに",
+      "pages": ["introduction"]
+    }
+  ]
+}
+```
+
+## URL Structure
+
+- Default locale: `/docs/introduction`
+- Other locales: `/ko/docs/introduction`, `/ja/docs/introduction`
+
+## Language Switcher
+
+The language switcher appears automatically in the header when multiple locales are configured.

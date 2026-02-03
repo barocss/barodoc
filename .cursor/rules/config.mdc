@@ -1,0 +1,54 @@
+# Configuration Rules
+
+## barodoc.config.json
+
+### Required Fields
+- `name`: Site name displayed in header
+- `navigation`: Array of navigation groups
+
+### Optional Fields
+- `logo`: Path to logo SVG/PNG in public/
+- `favicon`: Path to favicon
+- `colors.primary`: Primary color hex code
+- `topbar.github`: GitHub repository URL
+
+### Navigation Structure
+```json
+{
+  "navigation": [
+    {
+      "group": "Group Name",
+      "pages": ["page1", "nested/page2"]
+    }
+  ]
+}
+```
+
+Page slugs map to `src/content/docs/{slug}.mdx`
+
+## astro.config.mjs
+
+### Key Settings
+- `site`: Production URL for sitemap/canonical URLs
+- `base`: Base path for subdirectory deployment
+
+### For GitHub Pages with Custom Domain
+```javascript
+export default defineConfig({
+  site: "https://docs.example.com",
+  base: "/",
+});
+```
+
+### For GitHub Pages (username.github.io/repo)
+```javascript
+export default defineConfig({
+  site: "https://username.github.io",
+  base: "/repo-name/",
+});
+```
+
+## Adding New Pages
+1. Create MDX file in `src/content/docs/`
+2. Add slug to `barodoc.config.json` navigation
+3. File path determines URL: `guides/setup.mdx` → `/docs/guides/setup`

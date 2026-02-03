@@ -1,0 +1,67 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import config from "virtual:barodoc/config";
+---
+
+<BaseLayout title={config.name}>
+  <div class="min-h-screen flex flex-col">
+    <header class="border-b border-[var(--color-border)]">
+      <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
+        <a href="/" class="flex items-center gap-2 font-semibold">
+          {config.logo && <img src={config.logo} alt={config.name} class="h-6 w-6" />}
+          <span>{config.name}</span>
+        </a>
+        <div class="flex items-center gap-4">
+          {config.topbar?.github && (
+            <a
+              href={config.topbar.github}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="text-[var(--color-text-secondary)] hover:text-[var(--color-text)]"
+            >
+              GitHub
+            </a>
+          )}
+          <a
+            href="/docs/introduction"
+            class="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
+          >
+            Get Started
+          </a>
+        </div>
+      </div>
+    </header>
+
+    <main class="flex-1 flex items-center justify-center">
+      <div class="max-w-3xl mx-auto px-4 py-20 text-center">
+        <h1 class="text-5xl font-bold tracking-tight text-[var(--color-text)] mb-6">
+          Build beautiful documentation
+        </h1>
+        <p class="text-xl text-[var(--color-text-secondary)] mb-10 max-w-2xl mx-auto">
+          Create stunning documentation sites with MDX, Astro, and Tailwind CSS.
+          Deploy anywhere with static site generation.
+        </p>
+        <div class="flex items-center justify-center gap-4">
+          <a
+            href="/docs/introduction"
+            class="px-6 py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors font-medium"
+          >
+            Get Started
+          </a>
+          <a
+            href="/docs/quickstart"
+            class="px-6 py-3 border border-[var(--color-border)] text-[var(--color-text)] rounded-lg hover:bg-[var(--color-bg-secondary)] transition-colors font-medium"
+          >
+            Quick Start
+          </a>
+        </div>
+      </div>
+    </main>
+
+    <footer class="border-t border-[var(--color-border)]">
+      <div class="max-w-6xl mx-auto px-4 py-6 text-center text-sm text-[var(--color-text-secondary)]">
+        Built with Barodoc
+      </div>
+    </footer>
+  </div>
+</BaseLayout>

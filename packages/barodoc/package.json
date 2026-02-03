@@ -1,0 +1,53 @@
+{
+  "name": "barodoc",
+  "version": "0.0.1",
+  "description": "Documentation framework powered by Astro",
+  "type": "module",
+  "bin": {
+    "barodoc": "./dist/cli.js"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch"
+  },
+  "dependencies": {
+    "@barodoc/core": "workspace:*",
+    "@barodoc/theme-docs": "workspace:*",
+    "cac": "^6.7.14",
+    "chokidar": "^4.0.0",
+    "execa": "^9.5.0",
+    "fs-extra": "^11.2.0",
+    "gray-matter": "^4.0.3",
+    "picocolors": "^1.1.1"
+  },
+  "devDependencies": {
+    "@types/fs-extra": "^11.0.4",
+    "@types/node": "^22.0.0",
+    "tsup": "^8.3.0",
+    "typescript": "^5.7.0"
+  },
+  "keywords": [
+    "documentation",
+    "astro",
+    "mdx",
+    "cli",
+    "barodoc"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/barocss/barodoc.git",
+    "directory": "packages/barodoc"
+  }
+}

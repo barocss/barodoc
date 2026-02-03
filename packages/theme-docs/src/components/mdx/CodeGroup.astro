@@ -1,0 +1,63 @@
+---
+// CodeGroup component for tabbed code blocks
+interface Props {
+  titles?: string[];
+}
+
+const { titles = [] } = Astro.props;
+---
+
+<div class="not-prose my-4 code-group" data-titles={JSON.stringify(titles)}>
+  <div class="code-group-tabs flex border-b border-[var(--color-border)] bg-[var(--color-bg-secondary)] rounded-t-lg"></div>
+  <div class="code-group-content">
+    <slot />
+  </div>
+</div>
+
+<script>
+  function initCodeGroups() {
+    document.querySelectorAll('.code-group').forEach((group) => {
+      const tabsContainer = group.querySelector('.code-group-tabs');
+      const contentContainer = group.querySelector('.code-group-content');
+      const titles = JSON.parse(group.getAttribute('data-titles') || '[]');
+      const codeBlocks = contentContainer?.querySelectorAll('pre');
+
+      if (!tabsContainer || !contentContainer || !codeBlocks?.length) return;
+
+      // Create tabs
+      codeBlocks.forEach((block, index) => {
+        const tab = document.createElement('button');
+        tab.className = 'px-4 py-2 text-sm font-medium transition-colors text-[var(--color-text-secondary)] hover:text-[var(--color-text)]';
+        tab.textContent = titles[index] || `Tab ${index + 1}`;
+        tab.addEventListener('click', () => {
+          // Update tabs
+          tabsContainer.querySelectorAll('button').forEach((t, i) => {
+            if (i === index) {
+              t.classList.add('border-b-2', 'border-primary-600', 'text-primary-600');
+              t.classList.remove('text-[var(--color-text-secondary)]');
+            } else {
+              t.classList.remove('border-b-2', 'border-primary-600', 'text-primary-600');
+              t.classList.add('text-[var(--color-text-secondary)]');
+            }
+          });
+          // Update content
+          codeBlocks.forEach((b, i) => {
+            (b as HTMLElement).style.display = i === index ? 'block' : 'none';
+          });
+        });
+        tabsContainer.appendChild(tab);
+
+        // Hide all but first
+        if (index === 0) {
+          tab.classList.add('border-b-2', 'border-primary-600', 'text-primary-600');
+          tab.classList.remove('text-[var(--color-text-secondary)]');
+        } else {
+          (block as HTMLElement).style.display = 'none';
+        }
+      });
+    });
+  }
+
+  initCodeGroups();
+  document.addEventListener('astro:page-load', initCodeGroups);
+</script>

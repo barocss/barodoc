@@ -1,0 +1,77 @@
+---
+import { i18n, locales, defaultLocale } from "virtual:barodoc/i18n";
+import { getLocaleLabel, getLocalizedPath } from "@barodoc/core";
+
+interface Props {
+  currentLocale: string;
+}
+
+const { currentLocale } = Astro.props;
+const currentPath = Astro.url.pathname;
+
+function getLocalizedUrl(locale: string): string {
+  // Remove current locale from path if present
+  let path = currentPath;
+  for (const loc of locales) {
+    if (path.startsWith(`/${loc}/`) || path === `/${loc}`) {
+      path = path.slice(loc.length + 1) || "/";
+      break;
+    }
+  }
+  
+  // Add new locale
+  if (locale === defaultLocale) {
+    return path;
+  }
+  return `/${locale}${path}`;
+}
+---
+
+<div class="relative">
+  <button
+    id="lang-switcher-btn"
+    class="flex items-center gap-1 px-2 py-1.5 text-sm text-[var(--color-text-secondary)] hover:text-[var(--color-text)] rounded-lg hover:bg-[var(--color-bg-secondary)] transition-colors"
+    aria-label="Select language"
+  >
+    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129"></path>
+    </svg>
+    <span class="hidden sm:inline">{getLocaleLabel(currentLocale, i18n?.labels)}</span>
+    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+    </svg>
+  </button>
+  
+  <div
+    id="lang-switcher-menu"
+    class="hidden absolute right-0 mt-1 py-1 w-32 bg-[var(--color-bg)] border border-[var(--color-border)] rounded-lg shadow-lg z-50"
+  >
+    {locales.map((locale) => (
+      <a
+        href={getLocalizedUrl(locale)}
+        class:list={[
+          "block px-3 py-1.5 text-sm transition-colors",
+          locale === currentLocale
+            ? "bg-primary-50 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300"
+            : "text-[var(--color-text-secondary)] hover:text-[var(--color-text)] hover:bg-[var(--color-bg-secondary)]"
+        ]}
+      >
+        {getLocaleLabel(locale, i18n?.labels)}
+      </a>
+    ))}
+  </div>
+</div>
+
+<script>
+  const btn = document.getElementById('lang-switcher-btn');
+  const menu = document.getElementById('lang-switcher-menu');
+  
+  btn?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    menu?.classList.toggle('hidden');
+  });
+  
+  document.addEventListener('click', () => {
+    menu?.classList.add('hidden');
+  });
+</script>

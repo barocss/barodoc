@@ -1,0 +1,65 @@
+# Documentation Writing Rules
+
+## File Location
+- All documentation files go in `src/content/docs/`
+- Use subdirectories for organization: `guides/`, `components/`, `api/`
+
+## MDX Frontmatter
+Every MDX file must have frontmatter:
+
+```mdx
+---
+title: "Page Title"
+description: "Brief page description"
+---
+```
+
+## Component Imports
+Import components at the top of the file, after frontmatter:
+
+```mdx
+---
+title: "Title"
+---
+
+import Callout from "@/components/mdx/Callout.astro";
+import Card from "@/components/mdx/Card.astro";
+```
+
+## Callout Types
+- `info` - General information
+- `tip` - Helpful tips
+- `warning` - Warnings, caveats
+- `danger` - Critical warnings, breaking changes
+
+## Code Blocks
+- Always specify the language
+- Use CodeGroup for multi-language examples:
+
+```mdx
+<CodeGroup titles={["JavaScript", "TypeScript"]}>
+```javascript
+const x = 1;
+```
+
+```typescript
+const x: number = 1;
+```
+</CodeGroup>
+```
+
+## Navigation
+After creating a page, add it to `barodoc.config.json`:
+
+```json
+{
+  "navigation": [
+    {
+      "group": "Group Name",
+      "pages": ["page-slug"]
+    }
+  ]
+}
+```
+
+Page slug = file path without `.mdx` extension, relative to `src/content/docs/`

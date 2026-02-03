@@ -1,0 +1,48 @@
+---
+title: Callout
+description: Highlight important information
+---
+
+# Callout
+
+Callouts highlight important information in your documentation.
+
+## Usage
+
+Import the Callout component:
+
+```mdx
+import Callout from "@barodoc/theme-docs/components/mdx/Callout.astro";
+
+<Callout type="info">
+  This is an informational callout.
+</Callout>
+```
+
+## Types
+
+### Info
+
+Use for general information and tips.
+
+### Warning
+
+Use for warnings and important notices.
+
+### Tip
+
+Use for helpful tips and best practices.
+
+### Danger
+
+Use for critical warnings and destructive actions.
+
+## Custom Title
+
+Provide a custom title:
+
+```mdx
+<Callout type="info" title="Custom Title">
+  Content with custom title.
+</Callout>
+```

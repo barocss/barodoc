@@ -1,0 +1,64 @@
+---
+import BaseLayout from "./BaseLayout.astro";
+import Header from "../components/Header.astro";
+import Sidebar from "../components/Sidebar.astro";
+import TableOfContents from "../components/TableOfContents.astro";
+import MobileNav from "../components/MobileNav.astro";
+import { defaultLocale } from "virtual:barodoc/i18n";
+import { getLocaleFromPath } from "@barodoc/core";
+
+interface Props {
+  title: string;
+  description?: string;
+  headings?: { depth: number; slug: string; text: string }[];
+}
+
+const { title, description, headings = [] } = Astro.props;
+const currentPath = Astro.url.pathname;
+
+// Get locale from path
+const i18nConfig = { defaultLocale, locales: [defaultLocale] };
+const currentLocale = getLocaleFromPath(currentPath, i18nConfig);
+---
+
+<BaseLayout title={title} description={description}>
+  <Header currentLocale={currentLocale} />
+  
+  <div class="flex min-h-[calc(100vh-3.5rem)]">
+    <!-- Desktop Sidebar -->
+    <aside class="hidden lg:block w-64 shrink-0 border-r border-[var(--color-border)]">
+      <div class="sticky top-14 h-[calc(100vh-3.5rem)] overflow-y-auto py-6 px-4">
+        <Sidebar currentPath={currentPath} currentLocale={currentLocale} />
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 min-w-0">
+      <div class="max-w-3xl mx-auto px-4 md:px-8 py-8">
+        <article class="prose prose-gray dark:prose-invert max-w-none">
+          <slot />
+        </article>
+        
+        <!-- Page Navigation -->
+        <div class="mt-12 pt-6 border-t border-[var(--color-border)]">
+          <div class="flex justify-between text-sm">
+            <div id="prev-page"></div>
+            <div id="next-page"></div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Table of Contents -->
+    {headings.length > 0 && (
+      <aside class="hidden xl:block w-64 shrink-0">
+        <div class="sticky top-14 h-[calc(100vh-3.5rem)] overflow-y-auto py-6 px-4">
+          <TableOfContents headings={headings} />
+        </div>
+      </aside>
+    )}
+  </div>
+
+  <!-- Mobile Navigation -->
+  <MobileNav currentPath={currentPath} currentLocale={currentLocale} />
+</BaseLayout>

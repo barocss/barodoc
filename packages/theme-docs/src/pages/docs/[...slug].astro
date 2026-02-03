@@ -1,0 +1,55 @@
+---
+import { getCollection } from "astro:content";
+import DocsLayout from "../../layouts/DocsLayout.astro";
+import { defaultLocale, locales } from "virtual:barodoc/i18n";
+
+export async function getStaticPaths() {
+  const docs = await getCollection("docs");
+  
+  return docs.map((doc) => {
+    // Handle locale in slug
+    const slugParts = doc.slug.split("/");
+    const hasLocale = locales.includes(slugParts[0]);
+    
+    let locale = defaultLocale;
+    let cleanSlug = doc.slug;
+    
+    if (hasLocale) {
+      locale = slugParts[0];
+      cleanSlug = slugParts.slice(1).join("/");
+    }
+    
+    // Build the path
+    const path = locale === defaultLocale 
+      ? cleanSlug 
+      : `${locale}/${cleanSlug}`;
+    
+    return {
+      params: { slug: path || undefined },
+      props: { doc, locale },
+    };
+  });
+}
+
+interface Props {
+  doc: Awaited<ReturnType<typeof getCollection<"docs">>>[number];
+  locale: string;
+}
+
+const { doc, locale } = Astro.props;
+const { Content, headings } = await doc.render();
+---
+
+<DocsLayout 
+  title={doc.data.title} 
+  description={doc.data.description}
+  headings={headings}
+>
+  <h1>{doc.data.title}</h1>
+  {doc.data.description && (
+    <p class="lead text-xl text-[var(--color-text-secondary)] mt-2 mb-8">
+      {doc.data.description}
+    </p>
+  )}
+  <Content />
+</DocsLayout>

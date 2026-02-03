@@ -1,0 +1,36 @@
+---
+title: Introduction
+description: Barodoc - Documentation framework powered by Astro
+---
+
+# What is Barodoc?
+
+Barodoc is a documentation framework built on Astro, designed to create beautiful documentation sites with minimal configuration.
+
+## Features
+
+- **MDX Support** - Write documentation in MDX with full component support
+- **Dark Mode** - Built-in dark mode with system preference detection
+- **Search** - Full-text search powered by Pagefind
+- **i18n** - Multi-language support out of the box
+- **Static** - Deploy anywhere as static files (GitHub Pages, Vercel, Netlify)
+
+## Quick Example
+
+```bash
+pnpm create barodoc my-docs
+cd my-docs
+pnpm install
+pnpm dev
+```
+
+Your documentation site is now running at `http://localhost:4321`.
+
+## Architecture
+
+Barodoc consists of two main packages:
+
+- `@barodoc/core` - Astro integration handling config, routing, and i18n
+- `@barodoc/theme-docs` - Documentation theme with all UI components
+
+This separation allows for future theme extensibility while keeping the core functionality stable.

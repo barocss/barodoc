@@ -1,0 +1,46 @@
+---
+title: Card
+description: Display content in cards
+---
+
+# Card
+
+Cards display related content or navigation links.
+
+## Usage
+
+```mdx
+import Card from "@barodoc/theme-docs/components/mdx/Card.astro";
+import CardGroup from "@barodoc/theme-docs/components/mdx/CardGroup.astro";
+
+<Card title="Card Title" icon="🚀" href="/docs/page">
+  Card description.
+</Card>
+```
+
+## Card Group
+
+Group multiple cards in a grid:
+
+```mdx
+<CardGroup cols={2}>
+  <Card title="First" icon="1️⃣" href="/docs/first">
+    First card.
+  </Card>
+  <Card title="Second" icon="2️⃣" href="/docs/second">
+    Second card.
+  </Card>
+</CardGroup>
+```
+
+## Props
+
+### Card
+
+- `title` (required) - Card title
+- `icon` - Emoji icon
+- `href` - Link URL
+
+### CardGroup
+
+- `cols` - Number of columns (1, 2, or 3)

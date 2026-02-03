@@ -1,0 +1,32 @@
+---
+title: Tabs
+description: Organize content with tabs
+---
+
+# Tabs
+
+Tabs organize related content into switchable panels.
+
+## Usage
+
+```mdx
+import { Tabs } from "@barodoc/theme-docs";
+
+<Tabs client:load items={[
+  { label: "npm", value: "npm", children: "npm install package" },
+  { label: "pnpm", value: "pnpm", children: "pnpm add package" },
+  { label: "yarn", value: "yarn", children: "yarn add package" }
+]} />
+```
+
+## Props
+
+- `items` (required) - Array of tab items
+- `defaultValue` - Initially active tab
+
+### Tab Item
+
+Each item needs:
+- `label` - Tab button text
+- `value` - Unique identifier
+- `children` - Tab content

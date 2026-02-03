@@ -1,0 +1,33 @@
+{
+  "name": "@barodoc/plugin-search",
+  "version": "0.0.1",
+  "description": "Search plugin for Barodoc (Pagefind)",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup src/index.ts --format esm --dts --clean",
+    "dev": "tsup src/index.ts --format esm --dts --watch"
+  },
+  "peerDependencies": {
+    "@barodoc/core": "workspace:*",
+    "astro": "^5.0.0"
+  },
+  "devDependencies": {
+    "@barodoc/core": "workspace:*",
+    "@types/node": "^22.0.0",
+    "astro": "^5.0.0",
+    "tsup": "^8.3.0",
+    "typescript": "^5.7.0"
+  },
+  "license": "MIT"
+}

@@ -1,0 +1,98 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary-50: oklch(0.97 0.02 250);
+  --color-primary-100: oklch(0.94 0.04 250);
+  --color-primary-200: oklch(0.88 0.08 250);
+  --color-primary-300: oklch(0.78 0.12 250);
+  --color-primary-400: oklch(0.68 0.16 250);
+  --color-primary-500: oklch(0.58 0.18 250);
+  --color-primary-600: oklch(0.50 0.18 250);
+  --color-primary-700: oklch(0.42 0.16 250);
+  --color-primary-800: oklch(0.35 0.12 250);
+  --color-primary-900: oklch(0.28 0.08 250);
+  --color-primary-950: oklch(0.20 0.04 250);
+}
+
+@layer base {
+  :root {
+    --color-bg: #ffffff;
+    --color-bg-secondary: #f9fafb;
+    --color-text: #111827;
+    --color-text-secondary: #6b7280;
+    --color-border: #e5e7eb;
+  }
+
+  .dark {
+    --color-bg: #0a0a0a;
+    --color-bg-secondary: #171717;
+    --color-text: #fafafa;
+    --color-text-secondary: #a1a1aa;
+    --color-border: #27272a;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--color-bg);
+    color: var(--color-text);
+  }
+}
+
+/* Prose styling for MDX content */
+@layer components {
+  .prose {
+    --tw-prose-body: var(--color-text);
+    --tw-prose-headings: var(--color-text);
+    --tw-prose-links: var(--color-primary-600);
+    --tw-prose-code: var(--color-text);
+    --tw-prose-pre-bg: var(--color-bg-secondary);
+  }
+
+  .dark .prose {
+    --tw-prose-links: var(--color-primary-400);
+  }
+
+  /* Code block styling */
+  .prose pre {
+    background-color: var(--color-bg-secondary);
+    border: 1px solid var(--color-border);
+    border-radius: 0.5rem;
+  }
+
+  .prose code:not(pre code) {
+    background-color: var(--color-bg-secondary);
+    padding: 0.125rem 0.375rem;
+    border-radius: 0.25rem;
+    font-size: 0.875em;
+    border: 1px solid var(--color-border);
+  }
+
+  .prose code::before,
+  .prose code::after {
+    content: none;
+  }
+}
+
+/* Shiki dual theme support */
+.astro-code {
+  background-color: var(--color-bg-secondary) !important;
+}
+
+.dark .astro-code,
+.dark .astro-code span {
+  color: var(--shiki-dark) !important;
+  background-color: var(--shiki-dark-bg) !important;
+}
+
+/* Pagefind search styling */
+.pagefind-ui {
+  --pagefind-ui-scale: 1;
+  --pagefind-ui-primary: var(--color-primary-600);
+  --pagefind-ui-text: var(--color-text);
+  --pagefind-ui-background: var(--color-bg);
+  --pagefind-ui-border: var(--color-border);
+  --pagefind-ui-tag: var(--color-bg-secondary);
+}

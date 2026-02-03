@@ -1,0 +1,19 @@
+{
+  "name": "barodoc-docs",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build && pagefind --site dist",
+    "preview": "astro preview"
+  },
+  "dependencies": {
+    "@barodoc/core": "workspace:*",
+    "@barodoc/theme-docs": "workspace:*",
+    "astro": "^5.0.0"
+  },
+  "devDependencies": {
+    "pagefind": "^1.2.0"
+  }
+}

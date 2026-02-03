@@ -1,0 +1,38 @@
+{
+  "name": "Barodoc",
+  "logo": "/logo.svg",
+  "favicon": "/favicon.ico",
+  "theme": {
+    "colors": {
+      "primary": "#0070f3"
+    }
+  },
+  "i18n": {
+    "defaultLocale": "en",
+    "locales": ["en", "ko"],
+    "labels": {
+      "en": "English",
+      "ko": "한국어"
+    }
+  },
+  "navigation": [
+    {
+      "group": "Getting Started",
+      "group:ko": "시작하기",
+      "pages": ["introduction", "quickstart"]
+    },
+    {
+      "group": "Guides",
+      "group:ko": "가이드",
+      "pages": ["guides/installation", "guides/configuration", "guides/i18n"]
+    },
+    {
+      "group": "Components",
+      "group:ko": "컴포넌트",
+      "pages": ["components/callout", "components/card", "components/tabs"]
+    }
+  ],
+  "topbar": {
+    "github": "https://github.com/barocss/barodoc"
+  }
+}
