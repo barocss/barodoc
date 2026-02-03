@@ -1,0 +1,72 @@
+---
+title: Card
+description: 카드 컴포넌트
+---
+
+import { Card, CardGroup } from "@barodoc/theme-docs/components/mdx";
+
+# Card
+
+링크나 정보를 표시하는 카드 컴포넌트입니다.
+
+## 사용법
+
+```mdx
+import { Card, CardGroup } from "@barodoc/theme-docs/components/mdx";
+
+<Card title="시작하기" icon="🚀" href="/ko/docs/quickstart">
+  첫 번째 문서 사이트를 만들어보세요.
+</Card>
+```
+
+## 예시
+
+### 기본 카드
+
+<Card title="문서화" icon="📚">
+  프로젝트 문서를 작성하세요.
+</Card>
+
+### 링크 카드
+
+<Card title="빠른 시작" icon="🚀" href="/ko/docs/quickstart">
+  5분 안에 시작하기
+</Card>
+
+### 카드 그룹
+
+<CardGroup cols={2}>
+  <Card title="설치" icon="📦" href="/ko/docs/guides/installation">
+    Barodoc 설치하기
+  </Card>
+  <Card title="설정" icon="⚙️" href="/ko/docs/guides/configuration">
+    사이트 설정하기
+  </Card>
+</CardGroup>
+
+```mdx
+<CardGroup cols={2}>
+  <Card title="설치" icon="📦" href="/ko/docs/guides/installation">
+    Barodoc 설치하기
+  </Card>
+  <Card title="설정" icon="⚙️" href="/ko/docs/guides/configuration">
+    사이트 설정하기
+  </Card>
+</CardGroup>
+```
+
+## Props
+
+### Card
+
+| Prop | 타입 | 필수 | 설명 |
+|------|------|------|------|
+| `title` | `string` | 예 | 카드 제목 |
+| `icon` | `string` | 아니오 | 이모지 또는 아이콘 |
+| `href` | `string` | 아니오 | 링크 URL |
+
+### CardGroup
+
+| Prop | 타입 | 기본값 | 설명 |
+|------|------|--------|------|
+| `cols` | `number` | `2` | 열 개수 |

@@ -1,0 +1,101 @@
+---
+title: 설정
+description: Barodoc 설정 가이드
+---
+
+# 설정
+
+`barodoc.config.json` 파일로 사이트를 설정합니다.
+
+## 기본 설정
+
+```json
+{
+  "name": "내 문서",
+  "logo": "/logo.svg",
+  "favicon": "/favicon.ico",
+  "navigation": [
+    {
+      "group": "시작하기",
+      "pages": ["introduction", "quickstart"]
+    }
+  ]
+}
+```
+
+## 테마 설정
+
+색상과 폰트를 커스터마이징할 수 있습니다:
+
+```json
+{
+  "theme": {
+    "colors": {
+      "primary": "#0070f3"
+    },
+    "fonts": {
+      "heading": "Pretendard, sans-serif",
+      "body": "Pretendard, sans-serif"
+    }
+  }
+}
+```
+
+## 네비게이션
+
+사이드바 구조를 정의합니다:
+
+```json
+{
+  "navigation": [
+    {
+      "group": "시작하기",
+      "group:en": "Getting Started",
+      "pages": ["introduction", "quickstart"]
+    },
+    {
+      "group": "가이드",
+      "group:en": "Guides",
+      "pages": ["guides/installation", "guides/configuration"]
+    }
+  ]
+}
+```
+
+## 상단 바
+
+소셜 링크를 추가할 수 있습니다:
+
+```json
+{
+  "topbar": {
+    "github": "https://github.com/org/repo",
+    "discord": "https://discord.gg/invite"
+  }
+}
+```
+
+## 검색
+
+Pagefind 검색을 활성화합니다:
+
+```json
+{
+  "search": {
+    "enabled": true
+  }
+}
+```
+
+## 플러그인
+
+플러그인으로 기능을 확장합니다:
+
+```json
+{
+  "plugins": [
+    "@barodoc/plugin-sitemap",
+    ["@barodoc/plugin-analytics", { "provider": "google", "id": "G-XXXXX" }]
+  ]
+}
+```

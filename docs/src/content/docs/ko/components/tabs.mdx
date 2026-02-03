@@ -1,0 +1,77 @@
+---
+title: Tabs
+description: 탭 컴포넌트
+---
+
+import { Tabs, Tab } from "@barodoc/theme-docs";
+
+# Tabs
+
+여러 콘텐츠를 탭으로 전환하여 보여주는 컴포넌트입니다.
+
+## 사용법
+
+```mdx
+import { Tabs, Tab } from "@barodoc/theme-docs";
+
+<Tabs items={[
+  { label: "npm", value: "npm", children: <code>npm install barodoc</code> },
+  { label: "pnpm", value: "pnpm", children: <code>pnpm add barodoc</code> },
+  { label: "yarn", value: "yarn", children: <code>yarn add barodoc</code> },
+]} />
+```
+
+## 예시
+
+### 패키지 매니저 선택
+
+<Tabs
+  client:load
+  items={[
+    { label: "npm", value: "npm", children: <pre><code>npm install barodoc</code></pre> },
+    { label: "pnpm", value: "pnpm", children: <pre><code>pnpm add barodoc</code></pre> },
+    { label: "yarn", value: "yarn", children: <pre><code>yarn add barodoc</code></pre> },
+  ]}
+  defaultValue="pnpm"
+/>
+
+### 코드 예시
+
+<Tabs
+  client:load
+  items={[
+    { 
+      label: "JavaScript", 
+      value: "js", 
+      children: <pre><code>{`const config = require('./config');
+console.log(config.name);`}</code></pre>
+    },
+    { 
+      label: "TypeScript", 
+      value: "ts", 
+      children: <pre><code>{`import config from './config';
+console.log(config.name);`}</code></pre>
+    },
+  ]}
+/>
+
+## Props
+
+| Prop | 타입 | 필수 | 설명 |
+|------|------|------|------|
+| `items` | `TabItem[]` | 예 | 탭 항목 배열 |
+| `defaultValue` | `string` | 아니오 | 초기 활성 탭 |
+
+### TabItem
+
+```typescript
+interface TabItem {
+  label: string;      // 탭 버튼 텍스트
+  value: string;      // 고유 식별자
+  children: ReactNode; // 탭 콘텐츠
+}
+```
+
+## 주의사항
+
+Tabs 컴포넌트는 클라이언트 사이드 상호작용이 필요하므로 `client:load` 지시자를 사용해야 합니다.

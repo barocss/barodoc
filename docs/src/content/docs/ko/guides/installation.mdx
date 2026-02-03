@@ -1,0 +1,63 @@
+---
+title: 설치
+description: Barodoc 설치 가이드
+---
+
+# 설치
+
+Barodoc을 설치하는 여러 방법을 안내합니다.
+
+## 요구 사항
+
+- Node.js 20 이상
+- pnpm, npm, 또는 yarn
+
+## 빠른 설치
+
+새 프로젝트를 시작하는 가장 쉬운 방법:
+
+```bash
+npx barodoc create my-docs
+cd my-docs
+barodoc serve
+```
+
+## 기존 프로젝트에 추가
+
+기존 Astro 프로젝트에 Barodoc을 추가할 수 있습니다:
+
+```bash
+pnpm add @barodoc/core @barodoc/theme-docs
+```
+
+`astro.config.mjs`를 설정하세요:
+
+```javascript
+import { defineConfig } from "astro/config";
+import barodoc from "@barodoc/core";
+import docsTheme from "@barodoc/theme-docs";
+
+export default defineConfig({
+  site: "https://example.com",
+  i18n: {
+    defaultLocale: "ko",
+    locales: ["ko", "en"],
+    routing: { prefixDefaultLocale: false },
+  },
+  integrations: [
+    barodoc({
+      theme: docsTheme(),
+    }),
+  ],
+});
+```
+
+## 전역 설치
+
+CLI를 전역으로 설치하면 어디서든 사용할 수 있습니다:
+
+```bash
+npm install -g barodoc
+```
+
+이제 `barodoc` 명령을 어디서든 실행할 수 있습니다.

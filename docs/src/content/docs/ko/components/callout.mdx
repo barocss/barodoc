@@ -1,0 +1,77 @@
+---
+title: Callout
+description: 강조 박스 컴포넌트
+---
+
+import { Callout } from "@barodoc/theme-docs/components/mdx/Callout.astro";
+
+# Callout
+
+중요한 정보를 강조하는 박스 컴포넌트입니다.
+
+## 사용법
+
+```mdx
+import { Callout } from "@barodoc/theme-docs/components/mdx/Callout.astro";
+
+<Callout type="info" title="알림">
+  중요한 정보입니다.
+</Callout>
+```
+
+## 타입
+
+### Info (기본)
+
+<Callout type="info" title="정보">
+  일반적인 정보를 전달할 때 사용합니다.
+</Callout>
+
+```mdx
+<Callout type="info" title="정보">
+  일반적인 정보를 전달할 때 사용합니다.
+</Callout>
+```
+
+### Warning
+
+<Callout type="warning" title="주의">
+  주의가 필요한 내용에 사용합니다.
+</Callout>
+
+```mdx
+<Callout type="warning" title="주의">
+  주의가 필요한 내용에 사용합니다.
+</Callout>
+```
+
+### Tip
+
+<Callout type="tip" title="팁">
+  유용한 팁이나 조언에 사용합니다.
+</Callout>
+
+```mdx
+<Callout type="tip" title="팁">
+  유용한 팁이나 조언에 사용합니다.
+</Callout>
+```
+
+### Danger
+
+<Callout type="danger" title="위험">
+  위험하거나 되돌릴 수 없는 작업에 사용합니다.
+</Callout>
+
+```mdx
+<Callout type="danger" title="위험">
+  위험하거나 되돌릴 수 없는 작업에 사용합니다.
+</Callout>
+```
+
+## Props
+
+| Prop | 타입 | 기본값 | 설명 |
+|------|------|--------|------|
+| `type` | `"info" \| "warning" \| "tip" \| "danger"` | `"info"` | Callout 스타일 |
+| `title` | `string` | 타입명 | 제목 |

@@ -1,0 +1,95 @@
+---
+title: 다국어 지원
+description: Barodoc 다국어(i18n) 설정 가이드
+---
+
+# 다국어 지원
+
+Barodoc은 여러 언어로 문서를 작성할 수 있습니다.
+
+## 설정
+
+### 1. barodoc.config.json
+
+```json
+{
+  "i18n": {
+    "defaultLocale": "ko",
+    "locales": ["ko", "en"],
+    "labels": {
+      "ko": "한국어",
+      "en": "English"
+    }
+  }
+}
+```
+
+### 2. astro.config.mjs
+
+**중요**: Astro 5.x에서는 i18n을 `astro.config.mjs`에 직접 설정해야 합니다.
+
+```javascript
+export default defineConfig({
+  i18n: {
+    defaultLocale: "ko",
+    locales: ["ko", "en"],
+    routing: {
+      prefixDefaultLocale: false,
+    },
+  },
+  // ...
+});
+```
+
+## 폴더 구조
+
+각 언어별로 폴더를 만듭니다:
+
+```
+docs/src/content/docs/
+├── ko/
+│   ├── introduction.mdx
+│   └── guides/
+│       └── installation.mdx
+└── en/
+    ├── introduction.mdx
+    └── guides/
+        └── installation.mdx
+```
+
+## 네비게이션 번역
+
+`group:LOCALE` 패턴으로 그룹 이름을 번역합니다:
+
+```json
+{
+  "navigation": [
+    {
+      "group": "시작하기",
+      "group:en": "Getting Started",
+      "pages": ["introduction", "quickstart"]
+    }
+  ]
+}
+```
+
+## URL 구조
+
+| 언어 | URL |
+|------|-----|
+| 기본 언어 (ko) | `/docs/introduction` |
+| 영어 | `/en/docs/introduction` |
+
+`prefixDefaultLocale: false` 설정으로 기본 언어에는 접두사가 붙지 않습니다.
+
+## 언어 전환
+
+헤더의 언어 선택기를 통해 언어를 전환할 수 있습니다. 현재 페이지의 다른 언어 버전으로 자동 이동합니다.
+
+## 새 언어 추가하기
+
+1. `barodoc.config.json`에 로케일 추가
+2. `astro.config.mjs`에 로케일 추가
+3. `docs/src/content/docs/` 아래에 언어 폴더 생성
+4. 번역된 문서 파일 작성
+5. 네비게이션 그룹 이름 번역 추가

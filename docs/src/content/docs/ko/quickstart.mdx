@@ -1,0 +1,52 @@
+---
+title: 빠른 시작
+description: Barodoc으로 문서 사이트 빠르게 시작하기
+---
+
+# 빠른 시작
+
+5분 안에 첫 번째 문서 사이트를 만들어보세요.
+
+## 프로젝트 생성
+
+```bash
+npx barodoc create my-docs
+cd my-docs
+```
+
+## 개발 서버 실행
+
+```bash
+barodoc serve
+```
+
+브라우저에서 `http://localhost:4321`을 열어 확인하세요.
+
+## 문서 작성
+
+`docs/` 폴더에 Markdown 파일을 추가하세요:
+
+```markdown
+---
+title: 내 첫 번째 문서
+description: 문서 설명
+---
+
+# 제목
+
+문서 내용을 여기에 작성하세요.
+```
+
+## 프로덕션 빌드
+
+```bash
+barodoc build
+```
+
+`dist/` 폴더에 정적 파일이 생성됩니다. 이 파일들을 웹 서버나 GitHub Pages에 배포하세요.
+
+## 다음 단계
+
+- [설치 가이드](/ko/docs/guides/installation) - 상세 설치 방법
+- [설정](/ko/docs/guides/configuration) - 사이트 설정 방법
+- [다국어](/ko/docs/guides/i18n) - 다국어 지원 설정
