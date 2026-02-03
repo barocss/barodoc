@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Search, Menu, Moon, Sun, Github } from "lucide-react";
+import { Search, Menu, Moon, Sun, Github, Globe, ChevronDown } from "lucide-react";
 import { Button } from "./ui/button";
 import { Separator } from "./ui/separator";
 import {
@@ -17,6 +17,30 @@ interface DocHeaderProps {
   hasMultipleLocales?: boolean;
   currentLocale?: string;
   localeLabels?: Record<string, string>;
+  currentPath?: string;
+  locales?: string[];
+  defaultLocale?: string;
+}
+
+function getLocalizedUrl(
+  path: string,
+  locale: string,
+  defaultLocale: string,
+): string {
+  const docsPrefix = "/docs/";
+  const koPrefix = "/docs/ko/";
+
+  if (path.startsWith(koPrefix)) {
+    path = path === "/docs/ko" ? "/docs" : docsPrefix + path.slice(koPrefix.length);
+  }
+
+  if (locale === defaultLocale) {
+    return path || "/";
+  }
+  if (path === "/" || !path.startsWith(docsPrefix)) {
+    return path === "/" ? "/docs/ko/introduction" : path;
+  }
+  return docsPrefix + "ko/" + path.slice(docsPrefix.length);
 }
 
 export function DocHeader({
@@ -24,10 +48,25 @@ export function DocHeader({
   logo,
   githubUrl,
   hasMultipleLocales,
-  currentLocale,
-  localeLabels,
+  currentLocale = "en",
+  localeLabels = {},
+  currentPath = "",
+  locales = [],
+  defaultLocale = "en",
 }: DocHeaderProps) {
   const [theme, setTheme] = React.useState<"light" | "dark">("light");
+  const [langOpen, setLangOpen] = React.useState(false);
+  const langRef = React.useRef<HTMLDivElement>(null);
+
+  React.useEffect(() => {
+    const close = (e: MouseEvent) => {
+      if (langRef.current && !langRef.current.contains(e.target as Node)) {
+        setLangOpen(false);
+      }
+    };
+    document.addEventListener("click", close);
+    return () => document.removeEventListener("click", close);
+  }, []);
 
   React.useEffect(() => {
     const isDark = document.documentElement.classList.contains("dark");
@@ -51,21 +90,21 @@ export function DocHeader({
 
   return (
     <TooltipProvider>
-      <header className="sticky top-0 z-50 w-full border-b border-[var(--color-border)] bg-[var(--color-bg)]/95 backdrop-blur-md supports-[backdrop-filter]:bg-[var(--color-bg)]/80">
-        <div className="flex h-14 items-center justify-between px-4 max-w-[1120px] mx-auto">
+      <header className="sticky top-0 z-50 w-full min-w-0 border-b border-[var(--color-border)] bg-[var(--color-bg)]/95 backdrop-blur-md supports-[backdrop-filter]:bg-[var(--color-bg)]/80">
+        <div className="flex h-14 items-center justify-between gap-2 px-3 sm:px-4 max-w-[1120px] mx-auto min-w-0">
           {/* Logo */}
-          <div className="flex items-center gap-6">
+          <div className="flex items-center gap-6 min-w-0 shrink">
             <a
               href="/"
-              className="flex items-center gap-2.5 font-semibold text-[var(--color-text)] hover:opacity-80 transition-opacity"
+              className="flex items-center gap-2 min-w-0 shrink overflow-hidden font-semibold text-[var(--color-text)] hover:opacity-80 transition-opacity"
             >
-              {logo && <img src={logo} alt={siteName} className="h-7 w-7" />}
-              <span className="text-lg">{siteName}</span>
+              {logo && <img src={logo} alt={siteName} className="h-7 w-7 shrink-0" />}
+              <span className="text-lg truncate">{siteName}</span>
             </a>
           </div>
 
           {/* Right side actions */}
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-1 shrink-0">
             {/* Search button */}
             <Button
               variant="outline"
@@ -122,6 +161,57 @@ export function DocHeader({
                 </TooltipTrigger>
                 <TooltipContent>GitHub</TooltipContent>
               </Tooltip>
+            )}
+
+            {/* Language switcher */}
+            {hasMultipleLocales && locales.length > 0 && (
+              <>
+                <Separator orientation="vertical" className="hidden md:block h-6 mx-2" />
+                <div className="relative" ref={langRef}>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        className="rounded-xl gap-1 px-2"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setLangOpen((o) => !o);
+                        }}
+                      >
+                        <Globe className="h-4 w-4" />
+                        <span className="text-sm hidden sm:inline">
+                          {localeLabels[currentLocale] ?? currentLocale}
+                        </span>
+                        <ChevronDown className="h-3 w-3" />
+                        <span className="sr-only">Language</span>
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>Language</TooltipContent>
+                  </Tooltip>
+                  {langOpen && (
+                    <div
+                      className="absolute right-0 mt-1 py-1 min-w-[8rem] rounded-lg border border-[var(--color-border)] bg-[var(--color-bg)] shadow-lg z-50"
+                      role="menu"
+                    >
+                      {locales.map((locale) => (
+                        <a
+                          key={locale}
+                          href={getLocalizedUrl(currentPath, locale, defaultLocale)}
+                          className={cn(
+                            "block px-3 py-2 text-sm transition-colors",
+                            locale === currentLocale
+                              ? "bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300"
+                              : "text-[var(--color-text)] hover:bg-[var(--color-bg-secondary)]"
+                          )}
+                          role="menuitem"
+                        >
+                          {localeLabels[locale] ?? locale}
+                        </a>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </>
             )}
 
             {/* Theme toggle */}

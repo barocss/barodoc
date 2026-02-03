@@ -1,17 +1,16 @@
 ---
 import { DocHeader } from "./DocHeader";
-import LanguageSwitcher from "./LanguageSwitcher.astro";
 import config from "virtual:barodoc/config";
 import { locales, defaultLocale } from "virtual:barodoc/i18n";
 
 interface Props {
   currentLocale?: string;
+  currentPath?: string;
 }
 
-const { currentLocale = defaultLocale } = Astro.props;
+const { currentLocale = defaultLocale, currentPath = "" } = Astro.props;
 const hasMultipleLocales = locales.length > 1;
 
-// Build locale labels from config
 const localeLabels: Record<string, string> = config.i18n?.labels || {};
 ---
 
@@ -23,10 +22,7 @@ const localeLabels: Record<string, string> = config.i18n?.labels || {};
   hasMultipleLocales={hasMultipleLocales}
   currentLocale={currentLocale}
   localeLabels={localeLabels}
+  currentPath={currentPath}
+  locales={locales}
+  defaultLocale={defaultLocale}
 />
-
-{hasMultipleLocales && (
-  <div class="hidden">
-    <LanguageSwitcher currentLocale={currentLocale} />
-  </div>
-)}
