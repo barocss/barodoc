@@ -120,7 +120,7 @@ Changesets를 사용합니다:
 pnpm changeset
 
 # 버전 업데이트 (CI에서 자동 실행)
-pnpm version
+pnpm changeset version
 
 # 배포 (CI에서 자동 실행)
 pnpm release
