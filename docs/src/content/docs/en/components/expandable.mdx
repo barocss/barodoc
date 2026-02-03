@@ -1,0 +1,104 @@
+---
+title: Expandable
+description: Toggle to display nested properties and additional content
+---
+import { Expandable, ExpandableList, ExpandableItem } from "@barodoc/theme-docs/components/mdx/Expandable.tsx";
+import { ParamField, ParamFieldGroup } from "@barodoc/theme-docs/components/mdx/ParamField.tsx";
+
+Expandables are useful for showing optional or detailed information that users can reveal when needed.
+
+## Basic Usage
+
+<Expandable client:load title="Show advanced options">
+  These are advanced configuration options that most users won't need to change.
+  
+  - `debug`: Enable debug mode
+  - `verbose`: Show verbose output
+  - `timeout`: Request timeout in milliseconds
+</Expandable>
+
+```mdx
+<Expandable client:load title="Show advanced options">
+  These are advanced configuration options...
+</Expandable>
+```
+
+## Default Open
+
+<Expandable client:load title="Important information" defaultOpen>
+  This content is visible by default because it's important for users to see.
+</Expandable>
+
+```mdx
+<Expandable client:load title="Important information" defaultOpen>
+  This content is visible by default...
+</Expandable>
+```
+
+## Nested Properties
+
+Use ExpandableItem for API documentation with nested object properties:
+
+<ExpandableList>
+  <ExpandableItem client:load title="user" type="object">
+    <ExpandableItem client:load title="id" type="string">
+      Unique user identifier
+    </ExpandableItem>
+    <ExpandableItem client:load title="email" type="string">
+      User's email address
+    </ExpandableItem>
+    <ExpandableItem client:load title="profile" type="object">
+      <ExpandableItem client:load title="name" type="string">
+        Display name
+      </ExpandableItem>
+      <ExpandableItem client:load title="avatar" type="string">
+        Profile image URL
+      </ExpandableItem>
+    </ExpandableItem>
+  </ExpandableItem>
+</ExpandableList>
+
+```mdx
+<ExpandableList>
+  <ExpandableItem client:load title="user" type="object">
+    <ExpandableItem client:load title="id" type="string">
+      Unique user identifier
+    </ExpandableItem>
+    <ExpandableItem client:load title="profile" type="object">
+      <ExpandableItem client:load title="name" type="string">
+        Display name
+      </ExpandableItem>
+    </ExpandableItem>
+  </ExpandableItem>
+</ExpandableList>
+```
+
+## Props
+
+### Expandable
+
+<ParamFieldGroup>
+  <ParamField name="title" type="string" required>
+    Header text for the expandable section
+  </ParamField>
+  <ParamField name="defaultOpen" type="boolean" default="false">
+    Whether to start in expanded state
+  </ParamField>
+  <ParamField name="className" type="string">
+    Additional CSS classes
+  </ParamField>
+</ParamFieldGroup>
+
+### ExpandableItem
+
+<ParamFieldGroup>
+  <ParamField name="title" type="string" required>
+    Property name to display
+  </ParamField>
+  <ParamField name="type" type="string">
+    Property type (e.g., "string", "object", "number")
+  </ParamField>
+  <ParamField name="defaultOpen" type="boolean" default="false">
+    Whether to start in expanded state
+  </ParamField>
+</ParamFieldGroup>

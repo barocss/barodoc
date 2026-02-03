@@ -1,57 +1,86 @@
 ---
 title: Card
-description: 카드 컴포넌트
+description: 카드로 콘텐츠 표시
 ---
+import Card from "@barodoc/theme-docs/components/mdx/Card.astro";
+import CardGroup from "@barodoc/theme-docs/components/mdx/CardGroup.astro";
+import { ParamField, ParamFieldGroup } from "@barodoc/theme-docs/components/mdx/ParamField.tsx";
 
-import { Card, CardGroup } from "@barodoc/theme-docs/components/mdx";
+Card는 관련 콘텐츠나 네비게이션 링크를 표시합니다.
 
-# Card
+## 기본 Card
 
-링크나 정보를 표시하는 카드 컴포넌트입니다.
-
-## 사용법
+<Card title="시작하기" icon="🚀">
+  프로젝트에 Barodoc을 설정하는 방법을 알아보세요.
+</Card>
 
 ```mdx
-import { Card, CardGroup } from "@barodoc/theme-docs/components/mdx";
-
-<Card title="시작하기" icon="🚀" href="/ko/docs/quickstart">
-  첫 번째 문서 사이트를 만들어보세요.
+<Card title="시작하기" icon="🚀">
+  프로젝트에 Barodoc을 설정하는 방법을 알아보세요.
 </Card>
 ```
 
-## 예시
+## 링크가 있는 Card
 
-### 기본 카드
-
-<Card title="문서화" icon="📚">
-  프로젝트 문서를 작성하세요.
+<Card title="문서" icon="📚" href="/docs/introduction">
+  전체 문서를 읽어보세요.
 </Card>
 
-### 링크 카드
-
-<Card title="빠른 시작" icon="🚀" href="/ko/docs/quickstart">
-  5분 안에 시작하기
+```mdx
+<Card title="문서" icon="📚" href="/docs/introduction">
+  전체 문서를 읽어보세요.
 </Card>
+```
 
-### 카드 그룹
+## Card Group
+
+여러 카드를 반응형 그리드로 그룹화:
 
 <CardGroup cols={2}>
-  <Card title="설치" icon="📦" href="/ko/docs/guides/installation">
-    Barodoc 설치하기
+  <Card title="설치" icon="📦" href="/docs/guides/installation">
+    프로젝트에 Barodoc 설치하기.
   </Card>
-  <Card title="설정" icon="⚙️" href="/ko/docs/guides/configuration">
-    사이트 설정하기
+  <Card title="설정" icon="⚙️" href="/docs/guides/configuration">
+    문서 사이트 설정하기.
+  </Card>
+  <Card title="컴포넌트" icon="🧩" href="/docs/components/callout">
+    사용 가능한 컴포넌트 살펴보기.
+  </Card>
+  <Card title="배포" icon="🚀" href="/docs/guides/installation">
+    GitHub Pages에 배포하기.
   </Card>
 </CardGroup>
 
 ```mdx
 <CardGroup cols={2}>
-  <Card title="설치" icon="📦" href="/ko/docs/guides/installation">
-    Barodoc 설치하기
+  <Card title="설치" icon="📦" href="/docs/guides/installation">
+    프로젝트에 Barodoc 설치하기.
   </Card>
-  <Card title="설정" icon="⚙️" href="/ko/docs/guides/configuration">
-    사이트 설정하기
+  <Card title="설정" icon="⚙️" href="/docs/guides/configuration">
+    문서 사이트 설정하기.
   </Card>
+</CardGroup>
+```
+
+## 3열 레이아웃
+
+<CardGroup cols={3}>
+  <Card title="빠름" icon="⚡">
+    Astro 기반으로 빠른 속도.
+  </Card>
+  <Card title="간단" icon="✨">
+    제로 설정으로 시작.
+  </Card>
+  <Card title="유연" icon="🔧">
+    완전히 커스터마이징 가능.
+  </Card>
+</CardGroup>
+
+```mdx
+<CardGroup cols={3}>
+  <Card title="빠름" icon="⚡">Astro 기반.</Card>
+  <Card title="간단" icon="✨">제로 설정.</Card>
+  <Card title="유연" icon="🔧">커스터마이징.</Card>
 </CardGroup>
 ```
 
@@ -59,14 +88,22 @@ import { Card, CardGroup } from "@barodoc/theme-docs/components/mdx";
 
 ### Card
 
-| Prop | 타입 | 필수 | 설명 |
-|------|------|------|------|
-| `title` | `string` | 예 | 카드 제목 |
-| `icon` | `string` | 아니오 | 이모지 또는 아이콘 |
-| `href` | `string` | 아니오 | 링크 URL |
+<ParamFieldGroup>
+  <ParamField name="title" type="string" required>
+    카드 제목 텍스트
+  </ParamField>
+  <ParamField name="icon" type="string">
+    제목 앞에 표시되는 이모지 아이콘
+  </ParamField>
+  <ParamField name="href" type="string">
+    링크 URL (전체 카드를 클릭 가능하게 만듦)
+  </ParamField>
+</ParamFieldGroup>
 
 ### CardGroup
 
-| Prop | 타입 | 기본값 | 설명 |
-|------|------|--------|------|
-| `cols` | `number` | `2` | 열 개수 |
+<ParamFieldGroup>
+  <ParamField name="cols" type="1 | 2 | 3 | 4" default="2">
+    그리드 레이아웃의 열 수
+  </ParamField>
+</ParamFieldGroup>

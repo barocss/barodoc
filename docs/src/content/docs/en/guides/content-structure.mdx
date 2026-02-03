@@ -1,0 +1,69 @@
+---
+title: Content Structure
+description: Where to put content and how URLs are built
+---
+
+Barodoc content lives under `src/content/docs/`. Each locale has its own folder; the folder structure becomes the URL path.
+
+## Directory layout
+
+```
+src/content/docs/
+├── en/                        # Default locale (e.g. /docs/...)
+│   ├── introduction.mdx       # /docs/introduction
+│   ├── quickstart.mdx         # /docs/quickstart
+│   └── guides/
+│       ├── installation.mdx   # /docs/guides/installation
+│       └── deployment.mdx     # /docs/guides/deployment
+└── ko/                        # Second locale (e.g. /ko/docs/...)
+    ├── introduction.mdx       # /ko/docs/introduction
+    └── guides/
+        └── installation.mdx   # /ko/docs/guides/installation
+```
+
+- **Locale folder** (`en`, `ko`, etc.) is required. Even single-language docs use one (e.g. `en/`).
+- **File path = URL slug**: `guides/installation.mdx` → `/docs/guides/installation` (or `/[locale]/docs/guides/installation` when i18n is used).
+- Use **lowercase** and **hyphens** for file names (e.g. `code-group.mdx`, not `CodeGroup.mdx`) so URLs stay consistent.
+
+## Page slug and navigation
+
+In `barodoc.config.json`, `navigation.pages` use the **slug without locale and without `.mdx`**:
+
+- File: `src/content/docs/en/guides/installation.mdx`  
+  Slug for nav: `guides/installation`
+- File: `src/content/docs/en/components/accordion.mdx`  
+  Slug for nav: `components/accordion`
+
+The same slug is used for all locales; each locale has its own file under its folder (`en/...`, `ko/...`).
+
+## Frontmatter
+
+Every doc page should have a title (and optionally description) in frontmatter:
+
+```mdx
+---
+title: Installation
+description: Install Barodoc in your project
+---
+
+# Installation
+...
+```
+
+- **title** – Shown in the browser tab, sidebar, and meta.
+- **description** – Used for meta description and previews.
+
+## MDX and components
+
+- You can use **Markdown** and **MDX** (JSX in Markdown).
+- To use theme components (Tabs, Accordion, ParamField, etc.), import them at the top of the file. In development, use the component path (e.g. `@barodoc/theme-docs/components/mdx/DocAccordion.tsx`). See [Components](/docs/components/accordion) for examples.
+- Interactive components need the `client:load` directive so they hydrate on the client (e.g. `<Tabs client:load ... />`).
+
+## Static assets
+
+Put images and other static files in **`public/`**. Reference them by path from the site root:
+
+- `public/logo.svg` → `/logo.svg`
+- `public/images/diagram.png` → `/images/diagram.png`
+
+Use these paths in `barodoc.config.json` (e.g. `logo`, `favicon`) and in MDX/Markdown (e.g. `![alt](/images/diagram.png)`).

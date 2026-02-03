@@ -1,0 +1,103 @@
+---
+title: API Reference
+description: API 엔드포인트와 요청/응답 파라미터 문서화
+---
+import ApiEndpoint from "@barodoc/theme-docs/components/api/ApiEndpoint.astro";
+import ApiParams from "@barodoc/theme-docs/components/api/ApiParams.astro";
+import ApiParam from "@barodoc/theme-docs/components/api/ApiParam.astro";
+import ApiResponse from "@barodoc/theme-docs/components/api/ApiResponse.astro";
+import { ParamField, ParamFieldGroup } from "@barodoc/theme-docs/components/mdx/ParamField.tsx";
+
+REST API 문서를 만들 때 엔드포인트, 메서드, 경로, 파라미터, 응답을 API 컴포넌트로 정리할 수 있습니다.
+
+## 예시
+
+<ApiEndpoint method="GET" path="/api/users" description="사용자 목록을 반환합니다.">
+  <ApiParams title="Query Parameters">
+    <ApiParam name="limit" type="number" required description="최대 결과 수 (기본: 10)" />
+    <ApiParam name="offset" type="number" description="건너뛸 개수" />
+  </ApiParams>
+  <ApiResponse status={200} description="성공">
+    <ApiParams title="Response body">
+      <ApiParam name="users" type="array" description="사용자 객체 배열" />
+      <ApiParam name="total" type="number" description="전체 개수" />
+    </ApiParams>
+  </ApiResponse>
+</ApiEndpoint>
+
+```mdx
+<ApiEndpoint method="GET" path="/api/users" description="사용자 목록을 반환합니다.">
+  <ApiParams title="Query Parameters">
+    <ApiParam name="limit" type="number" required description="최대 결과 수" />
+    <ApiParam name="offset" type="number" description="건너뛸 개수" />
+  </ApiParams>
+  <ApiResponse status={200} description="성공">
+    <ApiParams title="Response body">
+      <ApiParam name="users" type="array" description="사용자 객체 배열" />
+      <ApiParam name="total" type="number" description="전체 개수" />
+    </ApiParams>
+  </ApiResponse>
+</ApiEndpoint>
+```
+
+## 컴포넌트
+
+### ApiEndpoint
+
+한 개의 엔드포인트를 감쌉니다. HTTP 메서드와 경로를 표시합니다.
+
+<ParamFieldGroup>
+  <ParamField name="method" type="'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE'" required>
+    HTTP 메서드
+  </ParamField>
+  <ParamField name="path" type="string" required>
+    경로 (예: `/api/users`)
+  </ParamField>
+  <ParamField name="description" type="string">
+    짧은 설명
+  </ParamField>
+</ParamFieldGroup>
+
+### ApiParams
+
+파라미터 목록(쿼리, 본문, 응답)을 담는 컨테이너입니다.
+
+<ParamFieldGroup>
+  <ParamField name="title" type="string">
+    섹션 제목 (예: "Query Parameters", "Request body")
+  </ParamField>
+</ParamFieldGroup>
+
+### ApiParam
+
+하나의 파라미터 또는 필드입니다.
+
+<ParamFieldGroup>
+  <ParamField name="name" type="string" required>
+    파라미터 이름
+  </ParamField>
+  <ParamField name="type" type="string" required>
+    타입 (예: `string`, `number`, `array`, `object`)
+  </ParamField>
+  <ParamField name="required" type="boolean">
+    필수 여부
+  </ParamField>
+  <ParamField name="description" type="string">
+    설명
+  </ParamField>
+</ParamFieldGroup>
+
+### ApiResponse
+
+HTTP 상태 코드와 함께 응답 블록을 표시합니다.
+
+<ParamFieldGroup>
+  <ParamField name="status" type="number" required>
+    HTTP 상태 코드 (예: 200, 201, 400, 404)
+  </ParamField>
+  <ParamField name="description" type="string">
+    짧은 설명
+  </ParamField>
+</ParamFieldGroup>
+
+응답 본문 구조는 **ApiResponse** 안에 **ApiParams**와 **ApiParam**으로 작성합니다.

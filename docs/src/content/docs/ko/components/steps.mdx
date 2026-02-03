@@ -1,0 +1,66 @@
+---
+title: Steps
+description: 번호가 매겨진 단계별 가이드 생성
+---
+import { Steps, Step } from "@barodoc/theme-docs/components/mdx/Steps.tsx";
+import { ParamField, ParamFieldGroup } from "@barodoc/theme-docs/components/mdx/ParamField.tsx";
+
+Steps는 사용자가 명확한 시각적 표시와 함께 일련의 지침을 따를 수 있도록 도와줍니다.
+
+## 기본 사용법
+
+<Steps client:load>
+  <Step title="패키지 설치">
+    터미널에서 설치 명령을 실행하세요:
+    ```bash
+    pnpm add @barodoc/core @barodoc/theme-docs
+    ```
+  </Step>
+  <Step title="프로젝트 설정">
+    프로젝트 루트에 `barodoc.config.json` 파일을 생성하고 설정을 구성하세요.
+  </Step>
+  <Step title="개발 시작">
+    개발 서버를 실행하여 문서를 확인하세요:
+    ```bash
+    pnpm dev
+    ```
+  </Step>
+</Steps>
+
+```mdx
+<Steps client:load>
+  <Step title="패키지 설치">
+    터미널에서 설치 명령을 실행하세요:
+    \`\`\`bash
+    pnpm add @barodoc/core @barodoc/theme-docs
+    \`\`\`
+  </Step>
+  <Step title="프로젝트 설정">
+    프로젝트 루트에 `barodoc.config.json` 파일을 생성하세요.
+  </Step>
+  <Step title="개발 시작">
+    개발 서버를 실행하세요.
+  </Step>
+</Steps>
+```
+
+## Props
+
+### Steps
+
+<ParamFieldGroup>
+  <ParamField name="className" type="string">
+    추가 CSS 클래스
+  </ParamField>
+</ParamFieldGroup>
+
+### Step
+
+<ParamFieldGroup>
+  <ParamField name="title" type="string" required>
+    단계 제목 텍스트
+  </ParamField>
+  <ParamField name="children" type="ReactNode">
+    단계 내용 (MDX 지원)
+  </ParamField>
+</ParamFieldGroup>

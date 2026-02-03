@@ -1,0 +1,69 @@
+---
+title: Steps
+description: Create numbered step-by-step guides
+---
+import { Steps, Step } from "@barodoc/theme-docs/components/mdx/Steps.tsx";
+import { ParamField, ParamFieldGroup } from "@barodoc/theme-docs/components/mdx/ParamField.tsx";
+
+Steps help users follow a sequence of instructions with clear visual indicators.
+
+## Basic Usage
+
+<Steps client:load>
+  <Step title="Install the package">
+    Run the installation command in your terminal:
+    ```bash
+    pnpm add @barodoc/core @barodoc/theme-docs
+    ```
+  </Step>
+  <Step title="Configure your project">
+    Create a `barodoc.config.json` file in your project root with your settings.
+  </Step>
+  <Step title="Start development">
+    Run the development server to see your documentation:
+    ```bash
+    pnpm dev
+    ```
+  </Step>
+</Steps>
+
+```mdx
+<Steps client:load>
+  <Step title="Install the package">
+    Run the installation command in your terminal:
+    \`\`\`bash
+    pnpm add @barodoc/core @barodoc/theme-docs
+    \`\`\`
+  </Step>
+  <Step title="Configure your project">
+    Create a `barodoc.config.json` file in your project root.
+  </Step>
+  <Step title="Start development">
+    Run the development server:
+    \`\`\`bash
+    pnpm dev
+    \`\`\`
+  </Step>
+</Steps>
+```
+
+## Props
+
+### Steps
+
+<ParamFieldGroup>
+  <ParamField name="className" type="string">
+    Additional CSS classes
+  </ParamField>
+</ParamFieldGroup>
+
+### Step
+
+<ParamFieldGroup>
+  <ParamField name="title" type="string" required>
+    The step heading text
+  </ParamField>
+  <ParamField name="children" type="ReactNode">
+    Step content (supports MDX)
+  </ParamField>
+</ParamFieldGroup>

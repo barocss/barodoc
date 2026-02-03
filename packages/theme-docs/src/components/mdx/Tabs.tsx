@@ -1,9 +1,9 @@
-import { useState, type ReactNode } from "react";
+import * as React from "react";
 
 interface TabItem {
   label: string;
   value: string;
-  children: ReactNode;
+  children: React.ReactNode;
 }
 
 interface TabsProps {
@@ -12,34 +12,45 @@ interface TabsProps {
 }
 
 export function Tabs({ items, defaultValue }: TabsProps) {
-  const [activeTab, setActiveTab] = useState(defaultValue || items[0]?.value);
+  const [activeTab, setActiveTab] = React.useState(defaultValue || items[0]?.value);
 
   return (
     <div className="not-prose my-4">
       <div className="flex border-b border-[var(--color-border)]">
-        {items.map((item) => (
-          <button
-            key={item.value}
-            onClick={() => setActiveTab(item.value)}
-            className={`px-4 py-2 text-sm font-medium transition-colors ${
-              activeTab === item.value
-                ? "border-b-2 border-primary-600 text-primary-600 dark:text-primary-400 dark:border-primary-400"
-                : "text-[var(--color-text-secondary)] hover:text-[var(--color-text)]"
-            }`}
-          >
-            {item.label}
-          </button>
-        ))}
+        {items.map((item) => {
+          const isActive = activeTab === item.value;
+          return (
+            <button
+              key={item.value}
+              type="button"
+              onClick={() => {
+                console.log('Tab clicked:', item.value);
+                setActiveTab(item.value);
+              }}
+              style={{ cursor: 'pointer' }}
+              className={`px-4 py-2 text-sm font-medium transition-colors ${
+                isActive
+                  ? "border-b-2 border-blue-600 text-blue-600 -mb-px"
+                  : "text-gray-500 hover:text-gray-900"
+              }`}
+            >
+              {item.label}
+            </button>
+          );
+        })}
       </div>
-      <div className="pt-4">
-        {items.map((item) => (
-          <div
-            key={item.value}
-            className={activeTab === item.value ? "block" : "hidden"}
-          >
-            {item.children}
-          </div>
-        ))}
+      <div className="pt-3">
+        {items.map((item) => {
+          const isActive = activeTab === item.value;
+          if (!isActive) return null;
+          return (
+            <div key={item.value}>
+              <pre className="bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-md p-3 text-sm overflow-x-auto">
+                <code>{item.children}</code>
+              </pre>
+            </div>
+          );
+        })}
       </div>
     </div>
   );
@@ -48,7 +59,7 @@ export function Tabs({ items, defaultValue }: TabsProps) {
 interface TabProps {
   label: string;
   value: string;
-  children: ReactNode;
+  children: React.ReactNode;
 }
 
 export function Tab({ children }: TabProps) {

@@ -1,0 +1,49 @@
+---
+title: Badge
+description: Display status labels, tags, or metadata inline
+---
+import { Badge } from "@barodoc/theme-docs/components/mdx/Badge.tsx";
+import { ParamField, ParamFieldGroup } from "@barodoc/theme-docs/components/mdx/ParamField.tsx";
+
+Badges are small labels used to highlight status, categories, or metadata.
+
+## Variants
+
+<div className="flex flex-wrap gap-2 my-4 not-prose">
+  <Badge>Default</Badge>
+  <Badge variant="secondary">Secondary</Badge>
+  <Badge variant="success">Success</Badge>
+  <Badge variant="warning">Warning</Badge>
+  <Badge variant="error">Error</Badge>
+  <Badge variant="info">Info</Badge>
+  <Badge variant="outline">Outline</Badge>
+</div>
+
+```mdx
+<Badge>Default</Badge>
+<Badge variant="secondary">Secondary</Badge>
+<Badge variant="success">Success</Badge>
+<Badge variant="warning">Warning</Badge>
+<Badge variant="error">Error</Badge>
+<Badge variant="info">Info</Badge>
+<Badge variant="outline">Outline</Badge>
+```
+
+## Inline Usage
+
+Use badges inline with text: This feature is <Badge variant="success">New</Badge> and requires <Badge variant="warning">Beta</Badge> access.
+
+```mdx
+This feature is <Badge variant="success">New</Badge> and requires <Badge variant="warning">Beta</Badge> access.
+```
+
+## Props
+
+<ParamFieldGroup>
+  <ParamField name="variant" type="'default' | 'secondary' | 'success' | 'warning' | 'error' | 'info' | 'outline'" default="'default'">
+    Visual style of the badge
+  </ParamField>
+  <ParamField name="className" type="string">
+    Additional CSS classes
+  </ParamField>
+</ParamFieldGroup>

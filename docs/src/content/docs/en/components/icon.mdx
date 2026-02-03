@@ -1,0 +1,95 @@
+---
+title: Icon
+description: Use icons from Lucide icon library
+---
+import { Icon, CheckIcon, XIcon, InfoIcon, WarningIcon } from "@barodoc/theme-docs/components/mdx/Icon.tsx";
+import { ParamField, ParamFieldGroup } from "@barodoc/theme-docs/components/mdx/ParamField.tsx";
+
+Display icons from the Lucide icon library with customizable size and color.
+
+## Basic Usage
+
+<div className="flex items-center gap-4 my-4 not-prose">
+  <Icon name="home" />
+  <Icon name="settings" />
+  <Icon name="user" />
+  <Icon name="search" />
+  <Icon name="menu" />
+</div>
+
+```mdx
+<Icon name="home" />
+<Icon name="settings" />
+<Icon name="user" />
+<Icon name="search" />
+<Icon name="menu" />
+```
+
+## Sizes
+
+<div className="flex items-center gap-4 my-4 not-prose">
+  <Icon name="star" size="sm" />
+  <Icon name="star" size="md" />
+  <Icon name="star" size="lg" />
+  <Icon name="star" size="xl" />
+  <Icon name="star" size={48} />
+</div>
+
+```mdx
+<Icon name="star" size="sm" />   // 16px
+<Icon name="star" size="md" />   // 20px
+<Icon name="star" size="lg" />   // 24px
+<Icon name="star" size="xl" />   // 32px
+<Icon name="star" size={48} />   // 48px
+```
+
+## Colors
+
+<div className="flex items-center gap-4 my-4 not-prose">
+  <Icon name="heart" color="#ef4444" />
+  <Icon name="heart" color="#22c55e" />
+  <Icon name="heart" color="#3b82f6" />
+  <Icon name="heart" color="#f59e0b" />
+</div>
+
+```mdx
+<Icon name="heart" color="#ef4444" />
+<Icon name="heart" color="#22c55e" />
+```
+
+## Pre-built Icons
+
+Common status icons are available as named components:
+
+<div className="flex items-center gap-4 my-4 not-prose">
+  <CheckIcon /> Check
+  <XIcon /> Error
+  <InfoIcon /> Info
+  <WarningIcon /> Warning
+</div>
+
+```mdx
+<CheckIcon />
+<XIcon />
+<InfoIcon />
+<WarningIcon />
+```
+
+## Props
+
+<ParamFieldGroup>
+  <ParamField name="name" type="string" required>
+    Lucide icon name in kebab-case (e.g., "chevron-right", "home")
+  </ParamField>
+  <ParamField name="size" type="'sm' | 'md' | 'lg' | 'xl' | number" default="'md'">
+    Icon size (sm=16px, md=20px, lg=24px, xl=32px, or custom number)
+  </ParamField>
+  <ParamField name="color" type="string">
+    CSS color value (e.g., "#ef4444", "red")
+  </ParamField>
+  <ParamField name="className" type="string">
+    Additional CSS classes
+  </ParamField>
+</ParamFieldGroup>
+
+Browse all available icons at [lucide.dev/icons](https://lucide.dev/icons).

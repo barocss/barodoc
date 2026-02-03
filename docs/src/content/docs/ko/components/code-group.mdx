@@ -1,0 +1,68 @@
+---
+title: Code Group
+description: 여러 코드 블록을 탭 인터페이스로 표시
+---
+import { CodeGroup } from "@barodoc/theme-docs/components/mdx/CodeGroup.tsx";
+import { ParamField, ParamFieldGroup } from "@barodoc/theme-docs/components/mdx/ParamField.tsx";
+
+코드 그룹을 사용하면 여러 코드 예제를 탭 인터페이스로 표시할 수 있어, 같은 기능을 다른 언어로 보여주기 쉽습니다.
+
+## 기본 사용법
+
+<CodeGroup client:load titles={["JavaScript", "Python", "Go"]}>
+
+```javascript
+const greeting = "Hello, World!";
+console.log(greeting);
+```
+
+```python
+greeting = "Hello, World!"
+print(greeting)
+```
+
+```go
+package main
+
+import "fmt"
+
+func main() {
+    greeting := "Hello, World!"
+    fmt.Println(greeting)
+}
+```
+
+</CodeGroup>
+
+## 패키지 매니저 예제
+
+<CodeGroup client:load titles={["npm", "pnpm", "yarn", "bun"]}>
+
+```bash
+npm install @barodoc/core
+```
+
+```bash
+pnpm add @barodoc/core
+```
+
+```bash
+yarn add @barodoc/core
+```
+
+```bash
+bun add @barodoc/core
+```
+
+</CodeGroup>
+
+## Props
+
+<ParamFieldGroup>
+  <ParamField name="titles" type="string[]">
+    각 코드 블록의 탭 레이블 배열
+  </ParamField>
+  <ParamField name="client:load" type="directive" required>
+    클라이언트 사이드 인터랙티브에 필요한 Astro 디렉티브
+  </ParamField>
+</ParamFieldGroup>

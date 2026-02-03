@@ -1,0 +1,49 @@
+---
+title: Badge
+description: 상태 라벨, 태그 또는 메타데이터를 인라인으로 표시
+---
+import { Badge } from "@barodoc/theme-docs/components/mdx/Badge.tsx";
+import { ParamField, ParamFieldGroup } from "@barodoc/theme-docs/components/mdx/ParamField.tsx";
+
+배지는 상태, 카테고리 또는 메타데이터를 강조하는 데 사용되는 작은 라벨입니다.
+
+## 변형
+
+<div className="flex flex-wrap gap-2 my-4 not-prose">
+  <Badge>기본</Badge>
+  <Badge variant="secondary">보조</Badge>
+  <Badge variant="success">성공</Badge>
+  <Badge variant="warning">경고</Badge>
+  <Badge variant="error">오류</Badge>
+  <Badge variant="info">정보</Badge>
+  <Badge variant="outline">아웃라인</Badge>
+</div>
+
+```mdx
+<Badge>기본</Badge>
+<Badge variant="secondary">보조</Badge>
+<Badge variant="success">성공</Badge>
+<Badge variant="warning">경고</Badge>
+<Badge variant="error">오류</Badge>
+<Badge variant="info">정보</Badge>
+<Badge variant="outline">아웃라인</Badge>
+```
+
+## 인라인 사용
+
+텍스트와 함께 배지를 인라인으로 사용: 이 기능은 <Badge variant="success">신규</Badge>이며 <Badge variant="warning">베타</Badge> 접근이 필요합니다.
+
+```mdx
+이 기능은 <Badge variant="success">신규</Badge>이며 <Badge variant="warning">베타</Badge> 접근이 필요합니다.
+```
+
+## Props
+
+<ParamFieldGroup>
+  <ParamField name="variant" type="'default' | 'secondary' | 'success' | 'warning' | 'error' | 'info' | 'outline'" default="'default'">
+    배지의 시각적 스타일
+  </ParamField>
+  <ParamField name="className" type="string">
+    추가 CSS 클래스
+  </ParamField>
+</ParamFieldGroup>

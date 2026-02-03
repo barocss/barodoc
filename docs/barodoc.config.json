@@ -24,12 +24,30 @@
     {
       "group": "Guides",
       "group:ko": "가이드",
-      "pages": ["guides/installation", "guides/configuration", "guides/i18n"]
+      "pages": ["guides/installation", "guides/configuration", "guides/content-structure", "guides/deployment", "guides/i18n"]
     },
     {
       "group": "Components",
       "group:ko": "컴포넌트",
-      "pages": ["components/callout", "components/card", "components/tabs"]
+      "pages": [
+        "components/accordion",
+        "components/api-reference",
+        "components/badge",
+        "components/callout",
+        "components/card",
+        "components/code-group",
+        "components/columns",
+        "components/expandable",
+        "components/file-tree",
+        "components/frame",
+        "components/icon",
+        "components/mermaid",
+        "components/param-field",
+        "components/response-field",
+        "components/steps",
+        "components/tabs",
+        "components/tooltip"
+      ]
     }
   ],
   "topbar": {

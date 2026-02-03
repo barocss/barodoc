@@ -16,31 +16,59 @@ const filteredHeadings = headings.filter(h => h.depth >= 2 && h.depth <= 3);
 ---
 
 {filteredHeadings.length > 0 && (
-  <div>
-    <h4 class="text-xs font-semibold uppercase tracking-wider text-[var(--color-text-secondary)] mb-3">
+  <div class="toc-container">
+    <h4 class="text-xs font-semibold uppercase tracking-wider text-[var(--color-text-muted)] mb-4">
       On this page
     </h4>
-    <nav class="space-y-1">
-      {filteredHeadings.map((heading) => (
-        <a
-          href={`#${heading.slug}`}
-          class:list={[
-            "block text-sm text-[var(--color-text-secondary)] hover:text-[var(--color-text)] transition-colors",
-            heading.depth === 2 ? "py-1" : "py-0.5 pl-3"
-          ]}
-          data-heading={heading.slug}
-        >
-          {heading.text}
-        </a>
-      ))}
+    <nav class="relative">
+      <div class="absolute left-0 top-0 bottom-0 w-px bg-[var(--color-border)]"></div>
+      <ul class="space-y-1">
+        {filteredHeadings.map((heading) => (
+          <li class="relative">
+            <a
+              href={`#${heading.slug}`}
+              class:list={[
+                "toc-link block text-sm text-[var(--color-text-secondary)] hover:text-[var(--color-text)] transition-all duration-150",
+                heading.depth === 2 ? "py-1.5 pl-4" : "py-1 pl-6 text-xs"
+              ]}
+              data-heading={heading.slug}
+            >
+              <span class="relative">{heading.text}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
     </nav>
   </div>
 )}
 
+<style>
+  .toc-link.active {
+    color: var(--color-primary-600);
+    font-weight: 500;
+  }
+  
+  .toc-link.active::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 2px;
+    height: 1.25rem;
+    background: var(--color-primary-500);
+    border-radius: 1px;
+  }
+  
+  :global(.dark) .toc-link.active {
+    color: var(--color-primary-400);
+  }
+</style>
+
 <script>
   function initTOCHighlight() {
     const headings = document.querySelectorAll('article h2, article h3');
-    const tocLinks = document.querySelectorAll('[data-heading]');
+    const tocLinks = document.querySelectorAll('.toc-link');
     
     if (headings.length === 0 || tocLinks.length === 0) return;
 
@@ -50,13 +78,8 @@ const filteredHeadings = headings.filter(h => h.depth >= 2 && h.depth <= 3);
           if (entry.isIntersecting) {
             const id = entry.target.id;
             tocLinks.forEach((link) => {
-              if (link.getAttribute('data-heading') === id) {
-                link.classList.add('text-primary-600', 'dark:text-primary-400', 'font-medium');
-                link.classList.remove('text-[var(--color-text-secondary)]');
-              } else {
-                link.classList.remove('text-primary-600', 'dark:text-primary-400', 'font-medium');
-                link.classList.add('text-[var(--color-text-secondary)]');
-              }
+              const isActive = link.getAttribute('data-heading') === id;
+              link.classList.toggle('active', isActive);
             });
           }
         });

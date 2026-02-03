@@ -20,7 +20,7 @@ const statusColors: Record<number, string> = {
 const statusColor = statusColors[status] || "bg-gray-100 dark:bg-gray-900/30 text-gray-700 dark:text-gray-400";
 ---
 
-<div class="my-4">
+<div class="my-4 px-2">
   <div class="flex items-center gap-2 mb-2">
     <span class:list={["px-2 py-0.5 text-xs font-bold rounded", statusColor]}>
       {status}
@@ -29,7 +29,7 @@ const statusColor = statusColors[status] || "bg-gray-100 dark:bg-gray-900/30 tex
       <span class="text-sm text-[var(--color-text-secondary)]">{description}</span>
     )}
   </div>
-  <div class="border border-[var(--color-border)] rounded-lg overflow-hidden">
+  <div class="border border-[var(--color-border)] rounded-lg overflow-hidden px-2">
     <slot />
   </div>
 </div>

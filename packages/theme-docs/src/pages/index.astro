@@ -1,66 +1,216 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import { ThemeToggle } from "../components/ThemeToggle";
 import config from "virtual:barodoc/config";
+
+const features = [
+  {
+    icon: "📝",
+    title: "MDX Support",
+    description: "Write documentation in MDX with full React component support."
+  },
+  {
+    icon: "🌙",
+    title: "Dark Mode",
+    description: "Built-in dark mode with system preference detection."
+  },
+  {
+    icon: "🔍",
+    title: "Full-text Search",
+    description: "Client-side search powered by Pagefind for fast results."
+  },
+  {
+    icon: "🌐",
+    title: "Internationalization",
+    description: "Multi-language support out of the box with Astro i18n."
+  },
+  {
+    icon: "⚡",
+    title: "Lightning Fast",
+    description: "Static site generation for optimal performance."
+  },
+  {
+    icon: "🎨",
+    title: "Customizable",
+    description: "Easily customize colors, fonts, and components."
+  }
+];
 ---
 
 <BaseLayout title={config.name}>
   <div class="min-h-screen flex flex-col">
-    <header class="border-b border-[var(--color-border)]">
-      <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
-        <a href="/" class="flex items-center gap-2 font-semibold">
-          {config.logo && <img src={config.logo} alt={config.name} class="h-6 w-6" />}
-          <span>{config.name}</span>
-        </a>
-        <div class="flex items-center gap-4">
-          {config.topbar?.github && (
-            <a
-              href={config.topbar.github}
-              target="_blank"
-              rel="noopener noreferrer"
-              class="text-[var(--color-text-secondary)] hover:text-[var(--color-text)]"
-            >
-              GitHub
-            </a>
-          )}
-          <a
-            href="/docs/introduction"
-            class="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
-          >
-            Get Started
+    <!-- Header -->
+    <header class="sticky top-0 z-50 border-b border-[var(--color-border)] bg-[var(--color-bg)]/95 backdrop-blur-md">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex h-16 items-center justify-between">
+          <a href="/" class="flex items-center gap-2.5 font-semibold text-[var(--color-text)]">
+            {config.logo && <img src={config.logo} alt={config.name} class="h-7 w-7" />}
+            <span class="text-lg">{config.name}</span>
           </a>
+          <div class="flex items-center gap-2">
+            {config.topbar?.github && (
+              <a
+                href={config.topbar.github}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="p-2.5 rounded-xl text-[var(--color-text-secondary)] hover:text-[var(--color-text)] hover:bg-[var(--color-bg-secondary)] transition-all"
+                aria-label="GitHub"
+              >
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                  <path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd"></path>
+                </svg>
+              </a>
+            )}
+            <ThemeToggle client:load />
+            <a
+              href="/docs/introduction"
+              class="ml-2 px-4 py-2 bg-primary-600 text-white rounded-xl hover:bg-primary-700 transition-all text-sm font-medium shadow-sm hover:shadow-md"
+            >
+              Get Started
+            </a>
+          </div>
         </div>
       </div>
     </header>
 
-    <main class="flex-1 flex items-center justify-center">
-      <div class="max-w-3xl mx-auto px-4 py-20 text-center">
-        <h1 class="text-5xl font-bold tracking-tight text-[var(--color-text)] mb-6">
-          Build beautiful documentation
-        </h1>
-        <p class="text-xl text-[var(--color-text-secondary)] mb-10 max-w-2xl mx-auto">
-          Create stunning documentation sites with MDX, Astro, and Tailwind CSS.
-          Deploy anywhere with static site generation.
-        </p>
-        <div class="flex items-center justify-center gap-4">
+    <!-- Hero Section -->
+    <main class="flex-1">
+      <div class="relative overflow-hidden">
+        <!-- Background gradient -->
+        <div class="absolute inset-0 bg-gradient-to-b from-primary-50/50 to-transparent dark:from-primary-950/20 dark:to-transparent pointer-events-none"></div>
+        <div class="absolute inset-0 bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(120,119,198,0.15),rgba(255,255,255,0))] dark:bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(120,119,198,0.1),rgba(0,0,0,0))] pointer-events-none"></div>
+        
+        <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-24 sm:pt-28 sm:pb-32">
+          <div class="text-center max-w-4xl mx-auto">
+            <!-- Badge -->
+            <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary-50 dark:bg-primary-950/50 border border-primary-200 dark:border-primary-800 mb-8">
+              <span class="relative flex h-2 w-2">
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary-400 opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-2 w-2 bg-primary-500"></span>
+              </span>
+              <span class="text-sm font-medium text-primary-700 dark:text-primary-300">Powered by Astro</span>
+            </div>
+            
+            <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-[var(--color-text)] mb-6 leading-tight">
+              Build beautiful
+              <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary-600 to-primary-400"> documentation</span>
+            </h1>
+            
+            <p class="text-lg sm:text-xl text-[var(--color-text-secondary)] mb-10 max-w-2xl mx-auto leading-relaxed">
+              Create stunning documentation sites with MDX, Astro, and Tailwind CSS. 
+              Deploy anywhere with static site generation.
+            </p>
+            
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+              <a
+                href="/docs/introduction"
+                class="w-full sm:w-auto px-8 py-3.5 bg-primary-600 text-white rounded-xl hover:bg-primary-700 transition-all font-medium shadow-lg shadow-primary-500/25 hover:shadow-xl hover:shadow-primary-500/30 hover:-translate-y-0.5"
+              >
+                Get Started
+              </a>
+              <a
+                href="/docs/quickstart"
+                class="w-full sm:w-auto px-8 py-3.5 border border-[var(--color-border)] text-[var(--color-text)] rounded-xl hover:bg-[var(--color-bg-secondary)] hover:border-[var(--color-text-muted)] transition-all font-medium"
+              >
+                Quick Start
+              </a>
+            </div>
+            
+            <!-- Install command -->
+            <div class="mt-12 inline-flex items-center gap-3 px-5 py-3 bg-[var(--color-bg-secondary)] border border-[var(--color-border)] rounded-xl">
+              <code class="text-sm text-[var(--color-text-secondary)] font-mono">
+                npx create-barodoc my-docs
+              </code>
+              <button 
+                class="p-1.5 rounded-lg hover:bg-[var(--color-bg-tertiary)] text-[var(--color-text-muted)] hover:text-[var(--color-text)] transition-colors"
+                onclick="navigator.clipboard.writeText('npx create-barodoc my-docs')"
+                aria-label="Copy command"
+              >
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Features Section -->
+      <div class="py-20 bg-[var(--color-bg-secondary)] border-y border-[var(--color-border)]">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div class="text-center mb-16">
+            <h2 class="text-3xl font-bold text-[var(--color-text)] mb-4">
+              Everything you need
+            </h2>
+            <p class="text-lg text-[var(--color-text-secondary)] max-w-2xl mx-auto">
+              Barodoc comes with all the features you need to create beautiful documentation.
+            </p>
+          </div>
+          
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {features.map((feature) => (
+              <div class="group p-6 bg-[var(--color-bg)] rounded-2xl border border-[var(--color-border)] hover:border-primary-300 dark:hover:border-primary-700 hover:shadow-lg transition-all duration-200">
+                <div class="flex items-center justify-center w-12 h-12 rounded-xl bg-primary-50 dark:bg-primary-950/50 mb-4 group-hover:scale-110 transition-transform">
+                  <span class="text-2xl">{feature.icon}</span>
+                </div>
+                <h3 class="text-lg font-semibold text-[var(--color-text)] mb-2">
+                  {feature.title}
+                </h3>
+                <p class="text-sm text-[var(--color-text-secondary)] leading-relaxed">
+                  {feature.description}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <!-- CTA Section -->
+      <div class="py-20">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 class="text-3xl font-bold text-[var(--color-text)] mb-4">
+            Ready to get started?
+          </h2>
+          <p class="text-lg text-[var(--color-text-secondary)] mb-8">
+            Create your documentation site in minutes.
+          </p>
           <a
             href="/docs/introduction"
-            class="px-6 py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors font-medium"
+            class="inline-flex px-8 py-3.5 bg-primary-600 text-white rounded-xl hover:bg-primary-700 transition-all font-medium shadow-lg shadow-primary-500/25 hover:shadow-xl hover:shadow-primary-500/30 hover:-translate-y-0.5"
           >
-            Get Started
-          </a>
-          <a
-            href="/docs/quickstart"
-            class="px-6 py-3 border border-[var(--color-border)] text-[var(--color-text)] rounded-lg hover:bg-[var(--color-bg-secondary)] transition-colors font-medium"
-          >
-            Quick Start
+            Read the docs
           </a>
         </div>
       </div>
     </main>
 
-    <footer class="border-t border-[var(--color-border)]">
-      <div class="max-w-6xl mx-auto px-4 py-6 text-center text-sm text-[var(--color-text-secondary)]">
-        Built with Barodoc
+    <!-- Footer -->
+    <footer class="border-t border-[var(--color-border)] bg-[var(--color-bg-secondary)]">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div class="flex items-center gap-2 text-[var(--color-text-secondary)]">
+            {config.logo && <img src={config.logo} alt={config.name} class="h-5 w-5 opacity-60" />}
+            <span class="text-sm">Built with Barodoc</span>
+          </div>
+          <div class="flex items-center gap-6">
+            {config.topbar?.github && (
+              <a
+                href={config.topbar.github}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="text-sm text-[var(--color-text-secondary)] hover:text-[var(--color-text)] transition-colors"
+              >
+                GitHub
+              </a>
+            )}
+            <a
+              href="/docs/introduction"
+              class="text-sm text-[var(--color-text-secondary)] hover:text-[var(--color-text)] transition-colors"
+            >
+              Documentation
+            </a>
+          </div>
+        </div>
       </div>
     </footer>
   </div>

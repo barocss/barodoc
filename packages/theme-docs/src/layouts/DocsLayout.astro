@@ -4,16 +4,24 @@ import Header from "../components/Header.astro";
 import Sidebar from "../components/Sidebar.astro";
 import TableOfContents from "../components/TableOfContents.astro";
 import MobileNav from "../components/MobileNav.astro";
+import CodeCopy from "../components/CodeCopy.astro";
 import { defaultLocale } from "virtual:barodoc/i18n";
 import { getLocaleFromPath } from "@barodoc/core";
+
+interface PageLink {
+  title: string;
+  href: string;
+}
 
 interface Props {
   title: string;
   description?: string;
   headings?: { depth: number; slug: string; text: string }[];
+  prevPage?: PageLink | null;
+  nextPage?: PageLink | null;
 }
 
-const { title, description, headings = [] } = Astro.props;
+const { title, description, headings = [], prevPage, nextPage } = Astro.props;
 const currentPath = Astro.url.pathname;
 
 // Get locale from path
@@ -24,41 +32,90 @@ const currentLocale = getLocaleFromPath(currentPath, i18nConfig);
 <BaseLayout title={title} description={description}>
   <Header currentLocale={currentLocale} />
   
-  <div class="flex min-h-[calc(100vh-3.5rem)]">
-    <!-- Desktop Sidebar -->
-    <aside class="hidden lg:block w-64 shrink-0 border-r border-[var(--color-border)]">
-      <div class="sticky top-14 h-[calc(100vh-3.5rem)] overflow-y-auto py-6 px-4">
-        <Sidebar currentPath={currentPath} currentLocale={currentLocale} />
-      </div>
-    </aside>
-
-    <!-- Main Content -->
-    <main class="flex-1 min-w-0">
-      <div class="max-w-3xl mx-auto px-4 md:px-8 py-8">
-        <article class="prose prose-gray dark:prose-invert max-w-none">
-          <slot />
-        </article>
-        
-        <!-- Page Navigation -->
-        <div class="mt-12 pt-6 border-t border-[var(--color-border)]">
-          <div class="flex justify-between text-sm">
-            <div id="prev-page"></div>
-            <div id="next-page"></div>
-          </div>
-        </div>
-      </div>
-    </main>
-
-    <!-- Table of Contents -->
-    {headings.length > 0 && (
-      <aside class="hidden xl:block w-64 shrink-0">
-        <div class="sticky top-14 h-[calc(100vh-3.5rem)] overflow-y-auto py-6 px-4">
-          <TableOfContents headings={headings} />
+  <!-- Centered container for docs layout -->
+  <div class="w-full min-h-[calc(100vh-3.5rem)] flex justify-center">
+    <div class="flex w-full max-w-[1120px]">
+      <!-- Desktop Sidebar -->
+      <aside class="hidden lg:block w-[220px] shrink-0">
+        <div class="sticky top-14 h-[calc(100vh-3.5rem)] overflow-y-auto py-6 pr-4">
+          <Sidebar currentPath={currentPath} currentLocale={currentLocale} />
         </div>
       </aside>
-    )}
+
+      <!-- Main Content -->
+      <main class="flex-1 min-w-0 min-w-[650px] max-w-[720px]">
+        <div class="px-8 py-8">
+          <article class="prose prose-gray dark:prose-invert max-w-none">
+            <slot />
+          </article>
+          
+          <!-- Page Navigation -->
+          {(prevPage || nextPage) && (
+            <nav class="mt-8 pt-6 border-t border-[var(--color-border)]" aria-label="Page navigation">
+              <div class="grid grid-cols-2 gap-4">
+                <div class="col-span-1">
+                  {prevPage && (
+                    <a 
+                      href={prevPage.href}
+                      class="group flex flex-col gap-1 p-3 rounded-lg border border-[var(--color-border)] hover:border-primary-300 dark:hover:border-primary-700 hover:bg-[var(--color-bg-secondary)] transition-all"
+                    >
+                      <span class="text-xs text-[var(--color-text-muted)] flex items-center gap-1">
+                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                        </svg>
+                        Previous
+                      </span>
+                      <span class="text-sm font-medium text-[var(--color-text)] group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
+                        {prevPage.title}
+                      </span>
+                    </a>
+                  )}
+                </div>
+                <div class="col-span-1">
+                  {nextPage && (
+                    <a 
+                      href={nextPage.href}
+                      class="group flex flex-col gap-1 p-3 rounded-lg border border-[var(--color-border)] hover:border-primary-300 dark:hover:border-primary-700 hover:bg-[var(--color-bg-secondary)] transition-all text-right"
+                    >
+                      <span class="text-xs text-[var(--color-text-muted)] flex items-center gap-1 justify-end">
+                        Next
+                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                        </svg>
+                      </span>
+                      <span class="text-sm font-medium text-[var(--color-text)] group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
+                        {nextPage.title}
+                      </span>
+                    </a>
+                  )}
+                </div>
+              </div>
+            </nav>
+          )}
+
+          <!-- Page footer -->
+          <footer class="mt-6 pt-4 border-t border-[var(--color-border-light)]">
+            <p class="text-sm text-[var(--color-text-muted)]">
+              Was this page helpful? <a href="#" class="text-primary-600 dark:text-primary-400 hover:underline">Give us feedback</a>
+            </p>
+          </footer>
+        </div>
+      </main>
+
+      <!-- Table of Contents -->
+      {headings.length > 0 && (
+        <aside class="hidden xl:block w-[180px] shrink-0">
+          <div class="sticky top-14 h-[calc(100vh-3.5rem)] overflow-y-auto py-6 pl-6">
+            <TableOfContents headings={headings} />
+          </div>
+        </aside>
+      )}
+    </div>
   </div>
 
   <!-- Mobile Navigation -->
   <MobileNav currentPath={currentPath} currentLocale={currentLocale} />
+  
+  <!-- Code copy functionality -->
+  <CodeCopy />
 </BaseLayout>

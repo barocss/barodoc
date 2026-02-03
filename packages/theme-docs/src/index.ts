@@ -42,6 +42,9 @@ function createThemeIntegration(options?: DocsThemeOptions): AstroIntegration {
           integrations: [mdx(), react()],
           vite: {
             plugins: [tailwindcss()],
+            resolve: {
+              dedupe: ["react", "react-dom"],
+            },
           },
           markdown: {
             shikiConfig: {
@@ -68,4 +71,4 @@ export default function docsTheme(options?: DocsThemeOptions): ThemeExport {
 }
 
 // Re-export components for easy access
-export * from "./components/index.js";
+export * from "./components/index.ts";

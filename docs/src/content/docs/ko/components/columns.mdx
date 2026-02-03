@@ -1,0 +1,59 @@
+---
+title: Columns
+description: 나란히 배치된 콘텐츠를 위한 다중 열 레이아웃 생성
+---
+import { Columns, Column } from "@barodoc/theme-docs/components/mdx/Columns.tsx";
+import { DocCard } from "@barodoc/theme-docs/components/mdx/DocCard.tsx";
+import { ParamField, ParamFieldGroup } from "@barodoc/theme-docs/components/mdx/ParamField.tsx";
+
+Columns는 반응형 그리드 레이아웃에서 콘텐츠를 나란히 표시하는 데 도움이 됩니다.
+
+## 2열
+
+<Columns columns={2}>
+  <Column>
+    **왼쪽 열**
+    
+    이 콘텐츠는 왼쪽에 나타납니다. 비교나 관련 콘텐츠에 적합합니다.
+  </Column>
+  <Column>
+    **오른쪽 열**
+    
+    이 콘텐츠는 오른쪽에 나타납니다. 열은 모바일 장치에서 수직으로 쌓입니다.
+  </Column>
+</Columns>
+
+## 3열
+
+<Columns columns={3}>
+  <DocCard title="빠름" href="#">
+    Astro 기반으로 빠른 성능을 제공합니다.
+  </DocCard>
+  <DocCard title="유연함" href="#">
+    테마와 플러그인으로 모든 것을 커스터마이즈하세요.
+  </DocCard>
+  <DocCard title="현대적" href="#">
+    MDX, Tailwind CSS, React 컴포넌트를 지원합니다.
+  </DocCard>
+</Columns>
+
+## Props
+
+### Columns
+
+<ParamFieldGroup>
+  <ParamField name="columns" type="2 | 3 | 4" default="2">
+    그리드의 열 수
+  </ParamField>
+  <ParamField name="className" type="string">
+    추가 CSS 클래스
+  </ParamField>
+</ParamFieldGroup>
+
+### Column
+
+<ParamFieldGroup>
+  <ParamField name="className" type="string">
+    추가 CSS 클래스
+  </ParamField>
+</ParamFieldGroup>

@@ -1,77 +1,81 @@
 ---
 title: Callout
-description: 강조 박스 컴포넌트
+description: 중요한 정보 강조
 ---
+import Callout from "@barodoc/theme-docs/components/mdx/Callout.astro";
+import { ParamField, ParamFieldGroup } from "@barodoc/theme-docs/components/mdx/ParamField.tsx";
 
-import { Callout } from "@barodoc/theme-docs/components/mdx/Callout.astro";
+Callout은 문서에서 중요한 정보를 강조합니다.
 
-# Callout
+## 유형
 
-중요한 정보를 강조하는 박스 컴포넌트입니다.
+### Info
 
-## 사용법
-
-```mdx
-import { Callout } from "@barodoc/theme-docs/components/mdx/Callout.astro";
-
-<Callout type="info" title="알림">
-  중요한 정보입니다.
-</Callout>
-```
-
-## 타입
-
-### Info (기본)
-
-<Callout type="info" title="정보">
-  일반적인 정보를 전달할 때 사용합니다.
+<Callout type="info">
+  정보 callout입니다. 일반적인 정보와 팁에 사용하세요.
 </Callout>
 
 ```mdx
-<Callout type="info" title="정보">
-  일반적인 정보를 전달할 때 사용합니다.
+<Callout type="info">
+  정보 callout입니다.
 </Callout>
 ```
 
 ### Warning
 
-<Callout type="warning" title="주의">
-  주의가 필요한 내용에 사용합니다.
+<Callout type="warning">
+  경고 callout입니다. 중요한 알림에 사용하세요.
 </Callout>
 
 ```mdx
-<Callout type="warning" title="주의">
-  주의가 필요한 내용에 사용합니다.
+<Callout type="warning">
+  경고 callout입니다.
 </Callout>
 ```
 
 ### Tip
 
-<Callout type="tip" title="팁">
-  유용한 팁이나 조언에 사용합니다.
+<Callout type="tip">
+  팁 callout입니다. 유용한 팁과 모범 사례에 사용하세요.
 </Callout>
 
 ```mdx
-<Callout type="tip" title="팁">
-  유용한 팁이나 조언에 사용합니다.
+<Callout type="tip">
+  팁 callout입니다.
 </Callout>
 ```
 
 ### Danger
 
-<Callout type="danger" title="위험">
-  위험하거나 되돌릴 수 없는 작업에 사용합니다.
+<Callout type="danger">
+  위험 callout입니다. 중요한 경고에 사용하세요.
 </Callout>
 
 ```mdx
-<Callout type="danger" title="위험">
-  위험하거나 되돌릴 수 없는 작업에 사용합니다.
+<Callout type="danger">
+  위험 callout입니다.
+</Callout>
+```
+
+## 커스텀 제목
+
+<Callout type="info" title="커스텀 제목">
+  모든 callout 유형에 커스텀 제목을 지정할 수 있습니다.
+</Callout>
+
+```mdx
+<Callout type="info" title="커스텀 제목">
+  커스텀 제목이 있는 내용.
 </Callout>
 ```
 
 ## Props
 
-| Prop | 타입 | 기본값 | 설명 |
-|------|------|--------|------|
-| `type` | `"info" \| "warning" \| "tip" \| "danger"` | `"info"` | Callout 스타일 |
-| `title` | `string` | 타입명 | 제목 |
+<ParamFieldGroup>
+  <ParamField name="type" type="'info' | 'warning' | 'tip' | 'danger' | 'note'" default="'info'">
+    아이콘과 색상 스킴을 결정하는 Callout 유형
+  </ParamField>
+  <ParamField name="title" type="string">
+    커스텀 제목 (기본값은 type 이름)
+  </ParamField>
+</ParamFieldGroup>

@@ -1,77 +1,100 @@
 ---
 title: Tabs
-description: 탭 컴포넌트
+description: 탭으로 콘텐츠 정리
 ---
+import { Tabs } from "@barodoc/theme-docs/components/mdx/Tabs.tsx";
+import { ParamField, ParamFieldGroup } from "@barodoc/theme-docs/components/mdx/ParamField.tsx";
 
-import { Tabs, Tab } from "@barodoc/theme-docs";
+Tabs는 관련 콘텐츠를 전환 가능한 패널로 정리합니다.
 
-# Tabs
+## 패키지 매니저 예시
 
-여러 콘텐츠를 탭으로 전환하여 보여주는 컴포넌트입니다.
-
-## 사용법
+<Tabs client:load items={[
+  { label: "npm", value: "npm", children: "npm install @barodoc/core" },
+  { label: "pnpm", value: "pnpm", children: "pnpm add @barodoc/core" },
+  { label: "yarn", value: "yarn", children: "yarn add @barodoc/core" }
+]} />
 
 ```mdx
-import { Tabs, Tab } from "@barodoc/theme-docs";
-
-<Tabs items={[
-  { label: "npm", value: "npm", children: <code>npm install barodoc</code> },
-  { label: "pnpm", value: "pnpm", children: <code>pnpm add barodoc</code> },
-  { label: "yarn", value: "yarn", children: <code>yarn add barodoc</code> },
+<Tabs client:load items={[
+  { label: "npm", value: "npm", children: "npm install @barodoc/core" },
+  { label: "pnpm", value: "pnpm", children: "pnpm add @barodoc/core" },
+  { label: "yarn", value: "yarn", children: "yarn add @barodoc/core" }
 ]} />
 ```
 
-## 예시
+## 코드 예시
 
-### 패키지 매니저 선택
+<Tabs client:load items={[
+  { 
+    label: "JavaScript", 
+    value: "js", 
+    children: "const greeting = 'Hello, World!';\nconsole.log(greeting);" 
+  },
+  { 
+    label: "TypeScript", 
+    value: "ts", 
+    children: "const greeting: string = 'Hello, World!';\nconsole.log(greeting);" 
+  },
+  { 
+    label: "Python", 
+    value: "py", 
+    children: "greeting = 'Hello, World!'\nprint(greeting)" 
+  }
+]} />
 
-<Tabs
-  client:load
-  items={[
-    { label: "npm", value: "npm", children: <pre><code>npm install barodoc</code></pre> },
-    { label: "pnpm", value: "pnpm", children: <pre><code>pnpm add barodoc</code></pre> },
-    { label: "yarn", value: "yarn", children: <pre><code>yarn add barodoc</code></pre> },
-  ]}
-  defaultValue="pnpm"
-/>
+```mdx
+<Tabs client:load items={[
+  { label: "JavaScript", value: "js", children: "const greeting = 'Hello';" },
+  { label: "TypeScript", value: "ts", children: "const greeting: string = 'Hello';" },
+  { label: "Python", value: "py", children: "greeting = 'Hello'" }
+]} />
+```
 
-### 코드 예시
+## 기본값 설정
 
-<Tabs
-  client:load
-  items={[
-    { 
-      label: "JavaScript", 
-      value: "js", 
-      children: <pre><code>{`const config = require('./config');
-console.log(config.name);`}</code></pre>
-    },
-    { 
-      label: "TypeScript", 
-      value: "ts", 
-      children: <pre><code>{`import config from './config';
-console.log(config.name);`}</code></pre>
-    },
-  ]}
-/>
+`defaultValue`로 처음 활성화될 탭을 설정:
+
+<Tabs client:load defaultValue="pnpm" items={[
+  { label: "npm", value: "npm", children: "npm install" },
+  { label: "pnpm", value: "pnpm", children: "pnpm install" },
+  { label: "yarn", value: "yarn", children: "yarn" }
+]} />
+
+```mdx
+<Tabs client:load defaultValue="pnpm" items={[
+  { label: "npm", value: "npm", children: "npm install" },
+  { label: "pnpm", value: "pnpm", children: "pnpm install" },
+  { label: "yarn", value: "yarn", children: "yarn" }
+]} />
+```
 
 ## Props
 
-| Prop | 타입 | 필수 | 설명 |
-|------|------|------|------|
-| `items` | `TabItem[]` | 예 | 탭 항목 배열 |
-| `defaultValue` | `string` | 아니오 | 초기 활성 탭 |
+<ParamFieldGroup>
+  <ParamField name="items" type="TabItem[]" required>
+    탭 아이템 배열 (아래 Tab Item 참조)
+  </ParamField>
+  <ParamField name="defaultValue" type="string">
+    처음 활성화될 탭의 value
+  </ParamField>
+  <ParamField name="client:load" type="directive" required>
+    클라이언트 사이드 인터랙티브에 필요한 Astro 디렉티브
+  </ParamField>
+</ParamFieldGroup>
 
-### TabItem
+### Tab Item
 
-```typescript
-interface TabItem {
-  label: string;      // 탭 버튼 텍스트
-  value: string;      // 고유 식별자
-  children: ReactNode; // 탭 콘텐츠
-}
-```
+`items` 배열의 각 아이템:
 
-## 주의사항
-
-Tabs 컴포넌트는 클라이언트 사이드 상호작용이 필요하므로 `client:load` 지시자를 사용해야 합니다.
+<ParamFieldGroup>
+  <ParamField name="label" type="string" required>
+    사용자에게 표시되는 탭 버튼 텍스트
+  </ParamField>
+  <ParamField name="value" type="string" required>
+    탭의 고유 식별자
+  </ParamField>
+  <ParamField name="children" type="string" required>
+    탭이 활성화될 때 표시되는 콘텐츠
+  </ParamField>
+</ParamFieldGroup>

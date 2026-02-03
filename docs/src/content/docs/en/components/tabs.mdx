@@ -2,31 +2,99 @@
 title: Tabs
 description: Organize content with tabs
 ---
-
-# Tabs
+import { Tabs } from "@barodoc/theme-docs/components/mdx/Tabs.tsx";
+import { ParamField, ParamFieldGroup } from "@barodoc/theme-docs/components/mdx/ParamField.tsx";
 
 Tabs organize related content into switchable panels.
 
-## Usage
-
-```mdx
-import { Tabs } from "@barodoc/theme-docs";
+## Package Manager Example
 
 <Tabs client:load items={[
-  { label: "npm", value: "npm", children: "npm install package" },
-  { label: "pnpm", value: "pnpm", children: "pnpm add package" },
-  { label: "yarn", value: "yarn", children: "yarn add package" }
+  { label: "npm", value: "npm", children: "npm install @barodoc/core" },
+  { label: "pnpm", value: "pnpm", children: "pnpm add @barodoc/core" },
+  { label: "yarn", value: "yarn", children: "yarn add @barodoc/core" }
+]} />
+
+```mdx
+<Tabs client:load items={[
+  { label: "npm", value: "npm", children: "npm install @barodoc/core" },
+  { label: "pnpm", value: "pnpm", children: "pnpm add @barodoc/core" },
+  { label: "yarn", value: "yarn", children: "yarn add @barodoc/core" }
+]} />
+```
+
+## Code Examples
+
+<Tabs client:load items={[
+  { 
+    label: "JavaScript", 
+    value: "js", 
+    children: "const greeting = 'Hello, World!';\nconsole.log(greeting);" 
+  },
+  { 
+    label: "TypeScript", 
+    value: "ts", 
+    children: "const greeting: string = 'Hello, World!';\nconsole.log(greeting);" 
+  },
+  { 
+    label: "Python", 
+    value: "py", 
+    children: "greeting = 'Hello, World!'\nprint(greeting)" 
+  }
+]} />
+
+```mdx
+<Tabs client:load items={[
+  { label: "JavaScript", value: "js", children: "const greeting = 'Hello';" },
+  { label: "TypeScript", value: "ts", children: "const greeting: string = 'Hello';" },
+  { label: "Python", value: "py", children: "greeting = 'Hello'" }
+]} />
+```
+
+## Default Value
+
+Set the initially active tab with `defaultValue`:
+
+<Tabs client:load defaultValue="pnpm" items={[
+  { label: "npm", value: "npm", children: "npm install" },
+  { label: "pnpm", value: "pnpm", children: "pnpm install" },
+  { label: "yarn", value: "yarn", children: "yarn" }
+]} />
+
+```mdx
+<Tabs client:load defaultValue="pnpm" items={[
+  { label: "npm", value: "npm", children: "npm install" },
+  { label: "pnpm", value: "pnpm", children: "pnpm install" },
+  { label: "yarn", value: "yarn", children: "yarn" }
 ]} />
 ```
 
 ## Props
 
-- `items` (required) - Array of tab items
-- `defaultValue` - Initially active tab
+<ParamFieldGroup>
+  <ParamField name="items" type="TabItem[]" required>
+    Array of tab items (see Tab Item below)
+  </ParamField>
+  <ParamField name="defaultValue" type="string">
+    Value of the initially active tab
+  </ParamField>
+  <ParamField name="client:load" type="directive" required>
+    Required Astro directive for client-side interactivity
+  </ParamField>
+</ParamFieldGroup>
 
 ### Tab Item
 
-Each item needs:
-- `label` - Tab button text
-- `value` - Unique identifier
-- `children` - Tab content
+Each item in the `items` array:
+
+<ParamFieldGroup>
+  <ParamField name="label" type="string" required>
+    Tab button text displayed to user
+  </ParamField>
+  <ParamField name="value" type="string" required>
+    Unique identifier for the tab
+  </ParamField>
+  <ParamField name="children" type="string" required>
+    Content shown when tab is active
+  </ParamField>
+</ParamFieldGroup>

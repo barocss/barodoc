@@ -2,47 +2,80 @@
 title: Callout
 description: Highlight important information
 ---
-
-# Callout
+import Callout from "@barodoc/theme-docs/components/mdx/Callout.astro";
+import { ParamField, ParamFieldGroup } from "@barodoc/theme-docs/components/mdx/ParamField.tsx";
 
 Callouts highlight important information in your documentation.
-
-## Usage
-
-Import the Callout component:
-
-```mdx
-import Callout from "@barodoc/theme-docs/components/mdx/Callout.astro";
-
-<Callout type="info">
-  This is an informational callout.
-</Callout>
-```
 
 ## Types
 
 ### Info
 
-Use for general information and tips.
+<Callout type="info">
+  This is an informational callout. Use it for general information and tips.
+</Callout>
+
+```mdx
+<Callout type="info">
+  This is an informational callout.
+</Callout>
+```
 
 ### Warning
 
-Use for warnings and important notices.
+<Callout type="warning">
+  This is a warning callout. Use it for important notices.
+</Callout>
+
+```mdx
+<Callout type="warning">
+  This is a warning callout.
+</Callout>
+```
 
 ### Tip
 
-Use for helpful tips and best practices.
+<Callout type="tip">
+  This is a tip callout. Use it for helpful tips and best practices.
+</Callout>
+
+```mdx
+<Callout type="tip">
+  This is a tip callout.
+</Callout>
+```
 
 ### Danger
 
-Use for critical warnings and destructive actions.
+<Callout type="danger">
+  This is a danger callout. Use it for critical warnings.
+</Callout>
+
+```mdx
+<Callout type="danger">
+  This is a danger callout.
+</Callout>
+```
 
 ## Custom Title
 
-Provide a custom title:
+<Callout type="info" title="Custom Title">
+  You can provide a custom title for any callout type.
+</Callout>
 
 ```mdx
 <Callout type="info" title="Custom Title">
   Content with custom title.
 </Callout>
 ```
+
+## Props
+
+<ParamFieldGroup>
+  <ParamField name="type" type="'info' | 'warning' | 'tip' | 'danger' | 'note'" default="'info'">
+    Callout type which determines the icon and color scheme
+  </ParamField>
+  <ParamField name="title" type="string">
+    Custom title (defaults to the type name)
+  </ParamField>
+</ParamFieldGroup>
