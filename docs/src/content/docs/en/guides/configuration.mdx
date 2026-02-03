@@ -34,7 +34,8 @@ Barodoc is configured through `barodoc.config.json`.
   ],
   "topbar": {
     "github": "https://github.com/user/repo"
-  }
+  },
+  "plugins": ["@barodoc/plugin-sitemap"]
 }
 ```
 
@@ -135,5 +136,18 @@ Paths to additional CSS files (relative to project root or from `public/`). They
 ```json
 {
   "customCss": ["./src/custom.css"]
+}
+```
+
+### plugins
+
+Load Barodoc plugins (sitemap, analytics, etc.). In full custom (Astro) mode, install the plugin packages first (e.g. `pnpm add @barodoc/plugin-sitemap`).
+
+```json
+{
+  "plugins": [
+    "@barodoc/plugin-sitemap",
+    ["@barodoc/plugin-analytics", { "provider": "google", "id": "G-XXXXX" }]
+  ]
 }
 ```
