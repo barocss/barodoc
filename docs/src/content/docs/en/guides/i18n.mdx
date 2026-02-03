@@ -7,9 +7,82 @@ description: Multi-language support in Barodoc
 
 Barodoc supports multiple languages out of the box.
 
-## Configuration
+## Locale Folder Structure
 
-Enable i18n in `barodoc.config.json`:
+**Locale folders are required.** Even for single-language projects, you must use a locale folder.
+
+### Single Language Example
+
+```
+src/content/docs/
+└── en/                    # Required
+    ├── introduction.mdx
+    └── guides/
+        └── installation.mdx
+```
+
+### Multiple Languages
+
+```
+src/content/docs/
+├── en/                    # Default language
+│   ├── introduction.mdx
+│   └── guides/
+│       └── installation.mdx
+├── ko/                    # Additional language
+│   └── ...
+└── ja/
+    └── ...
+```
+
+### Why Locale Folders Are Required
+
+1. **Consistency** - All projects have the same structure
+2. **Scalability** - No restructuring needed when adding languages
+3. **Clear separation** - Content is clearly organized by language
+
+## Single Language Setup
+
+For English-only documentation:
+
+### 1. barodoc.config.json
+
+```json
+{
+  "i18n": {
+    "defaultLocale": "en",
+    "locales": ["en"]
+  }
+}
+```
+
+### 2. astro.config.mjs
+
+```javascript
+export default defineConfig({
+  i18n: {
+    defaultLocale: "en",
+    locales: ["en"],
+    routing: {
+      prefixDefaultLocale: false,
+    },
+  },
+  // ...
+});
+```
+
+### Result URLs
+
+| File Path | URL |
+|-----------|-----|
+| `docs/en/introduction.mdx` | `/docs/introduction` |
+| `docs/en/guides/install.mdx` | `/docs/guides/install` |
+
+With `prefixDefaultLocale: false`, the default locale has no `/en/` prefix in URLs.
+
+## Multi-Language Setup
+
+### 1. barodoc.config.json
 
 ```json
 {
@@ -25,27 +98,34 @@ Enable i18n in `barodoc.config.json`:
 }
 ```
 
-## Content Structure
+### 2. astro.config.mjs
 
-Organize content by locale:
+**Important**: In Astro 5.x, i18n must be set directly in `astro.config.mjs`.
 
+```javascript
+export default defineConfig({
+  i18n: {
+    defaultLocale: "en",
+    locales: ["en", "ko", "ja"],
+    routing: {
+      prefixDefaultLocale: false,
+    },
+  },
+  // ...
+});
 ```
-src/content/docs/
-├── en/
-│   ├── introduction.mdx
-│   └── guides/
-│       └── installation.mdx
-├── ko/
-│   ├── introduction.mdx
-│   └── guides/
-│       └── installation.mdx
-└── ja/
-    └── ...
-```
+
+### Result URLs
+
+| File Path | URL |
+|-----------|-----|
+| `docs/en/introduction.mdx` | `/docs/introduction` (default) |
+| `docs/ko/introduction.mdx` | `/ko/docs/introduction` |
+| `docs/ja/introduction.mdx` | `/ja/docs/introduction` |
 
 ## Localized Navigation
 
-Add localized group names:
+Add localized group names using the `group:LOCALE` pattern:
 
 ```json
 {
@@ -60,11 +140,27 @@ Add localized group names:
 }
 ```
 
-## URL Structure
-
-- Default locale: `/docs/introduction`
-- Other locales: `/ko/docs/introduction`, `/ja/docs/introduction`
-
 ## Language Switcher
 
 The language switcher appears automatically in the header when multiple locales are configured.
+
+## Adding a New Language
+
+1. Add locale to `barodoc.config.json`:
+   ```json
+   "locales": ["en", "ko", "ja"]
+   ```
+
+2. Add to `astro.config.mjs`:
+   ```javascript
+   locales: ["en", "ko", "ja"]
+   ```
+
+3. Create locale folder: `src/content/docs/ja/`
+
+4. Add navigation translations:
+   ```json
+   "group:ja": "はじめに"
+   ```
+
+5. Create translated content files

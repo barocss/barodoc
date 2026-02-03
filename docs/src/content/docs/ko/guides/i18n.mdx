@@ -7,7 +7,80 @@ description: Barodoc 다국어(i18n) 설정 가이드
 
 Barodoc은 여러 언어로 문서를 작성할 수 있습니다.
 
-## 설정
+## Locale 폴더 구조
+
+**Locale 폴더는 필수입니다.** 단일 언어여도 locale 폴더를 사용해야 합니다.
+
+### 단일 언어 (예: 한국어만)
+
+```
+docs/src/content/docs/
+└── ko/                    # 필수
+    ├── introduction.mdx
+    └── guides/
+        └── installation.mdx
+```
+
+### 다국어
+
+```
+docs/src/content/docs/
+├── ko/                    # 기본 언어
+│   ├── introduction.mdx
+│   └── guides/
+│       └── installation.mdx
+└── en/                    # 추가 언어
+    ├── introduction.mdx
+    └── guides/
+        └── installation.mdx
+```
+
+### Locale 폴더가 필수인 이유
+
+1. **일관성** - 모든 프로젝트가 동일한 구조
+2. **확장성** - 다국어 추가 시 구조 변경 불필요
+3. **명확한 분리** - 언어별 콘텐츠가 명확히 구분됨
+
+## 단일 언어 설정
+
+한국어만 사용하는 경우:
+
+### 1. barodoc.config.json
+
+```json
+{
+  "i18n": {
+    "defaultLocale": "ko",
+    "locales": ["ko"]
+  }
+}
+```
+
+### 2. astro.config.mjs
+
+```javascript
+export default defineConfig({
+  i18n: {
+    defaultLocale: "ko",
+    locales: ["ko"],
+    routing: {
+      prefixDefaultLocale: false,
+    },
+  },
+  // ...
+});
+```
+
+### 결과 URL
+
+| 파일 경로 | URL |
+|----------|-----|
+| `docs/ko/introduction.mdx` | `/docs/introduction` |
+| `docs/ko/guides/install.mdx` | `/docs/guides/install` |
+
+`prefixDefaultLocale: false`이므로 기본 언어는 URL에 `/ko/`가 붙지 않습니다.
+
+## 다국어 설정
 
 ### 1. barodoc.config.json
 
@@ -41,21 +114,12 @@ export default defineConfig({
 });
 ```
 
-## 폴더 구조
+### 결과 URL
 
-각 언어별로 폴더를 만듭니다:
-
-```
-docs/src/content/docs/
-├── ko/
-│   ├── introduction.mdx
-│   └── guides/
-│       └── installation.mdx
-└── en/
-    ├── introduction.mdx
-    └── guides/
-        └── installation.mdx
-```
+| 파일 경로 | URL |
+|----------|-----|
+| `docs/ko/introduction.mdx` | `/docs/introduction` (기본) |
+| `docs/en/introduction.mdx` | `/en/docs/introduction` |
 
 ## 네비게이션 번역
 

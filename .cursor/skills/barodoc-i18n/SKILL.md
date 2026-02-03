@@ -57,23 +57,74 @@ export default defineConfig({
 
 ## Content Directory Structure
 
-### Quick Mode
+**Locale 폴더는 필수입니다.** 단일 언어여도 locale 폴더를 사용해야 합니다.
+
+### Single Language (단일 언어)
+
+한국어만 사용하는 경우:
+
+```json
+// barodoc.config.json
+{
+  "i18n": {
+    "defaultLocale": "ko",
+    "locales": ["ko"]
+  }
+}
+```
+
+```javascript
+// astro.config.mjs
+i18n: {
+  defaultLocale: "ko",
+  locales: ["ko"],
+  routing: { prefixDefaultLocale: false }
+}
+```
 
 ```
 docs/
-├── en/
+└── ko/                    # 필수 - locale 폴더
+    ├── introduction.md
+    ├── quickstart.md
+    └── guides/
+        └── installation.md
+```
+
+**결과 URL:**
+- `docs/ko/introduction.md` → `/docs/introduction` (no `/ko/` prefix)
+- `docs/ko/guides/installation.md` → `/docs/guides/installation`
+
+### Multiple Languages (다국어)
+
+```json
+// barodoc.config.json
+{
+  "i18n": {
+    "defaultLocale": "en",
+    "locales": ["en", "ko", "ja"]
+  }
+}
+```
+
+```
+docs/
+├── en/                    # 기본 언어
 │   ├── introduction.md
-│   ├── quickstart.md
 │   └── guides/
 │       └── installation.md
-├── ko/
+├── ko/                    # 한국어
 │   ├── introduction.md
-│   ├── quickstart.md
 │   └── guides/
 │       └── installation.md
-└── ja/
+└── ja/                    # 일본어
     └── ...
 ```
+
+**결과 URL:**
+- `docs/en/introduction.md` → `/docs/introduction` (기본 언어, prefix 없음)
+- `docs/ko/introduction.md` → `/ko/docs/introduction`
+- `docs/ja/introduction.md` → `/ja/docs/introduction`
 
 ### Full Custom Mode
 
@@ -87,6 +138,13 @@ src/content/docs/
 │   └── ...
 └── ...
 ```
+
+### Why Locale Folders Are Required
+
+1. **일관성** - 모든 프로젝트가 동일한 구조
+2. **확장성** - 다국어 추가 시 구조 변경 불필요
+3. **Astro 컨벤션** - Content Collections 패턴과 일치
+4. **명확한 분리** - 언어별 콘텐츠가 명확히 구분됨
 
 ## Navigation i18n
 
