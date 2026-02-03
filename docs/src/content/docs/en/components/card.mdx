@@ -2,34 +2,85 @@
 title: Card
 description: Display content in cards
 ---
-
-# Card
+import Card from "@barodoc/theme-docs/components/mdx/Card.astro";
+import CardGroup from "@barodoc/theme-docs/components/mdx/CardGroup.astro";
+import { ParamField, ParamFieldGroup } from "@barodoc/theme-docs/components/mdx/ParamField.tsx";
 
 Cards display related content or navigation links.
 
-## Usage
+## Basic Card
+
+<Card title="Getting Started" icon="🚀">
+  Learn how to set up Barodoc for your project.
+</Card>
 
 ```mdx
-import Card from "@barodoc/theme-docs/components/mdx/Card.astro";
-import CardGroup from "@barodoc/theme-docs/components/mdx/CardGroup.astro";
+<Card title="Getting Started" icon="🚀">
+  Learn how to set up Barodoc for your project.
+</Card>
+```
 
-<Card title="Card Title" icon="🚀" href="/docs/page">
-  Card description.
+## Card with Link
+
+<Card title="Documentation" icon="📚" href="/docs/introduction">
+  Read the full documentation to learn more.
+</Card>
+
+```mdx
+<Card title="Documentation" icon="📚" href="/docs/introduction">
+  Read the full documentation.
 </Card>
 ```
 
 ## Card Group
 
-Group multiple cards in a grid:
+Group multiple cards in a responsive grid:
+
+<CardGroup cols={2}>
+  <Card title="Installation" icon="📦" href="/docs/guides/installation">
+    Install Barodoc in your project.
+  </Card>
+  <Card title="Configuration" icon="⚙️" href="/docs/guides/configuration">
+    Configure your documentation site.
+  </Card>
+  <Card title="Components" icon="🧩" href="/docs/components/callout">
+    Explore available components.
+  </Card>
+  <Card title="Deployment" icon="🚀" href="/docs/guides/installation">
+    Deploy to GitHub Pages.
+  </Card>
+</CardGroup>
 
 ```mdx
 <CardGroup cols={2}>
-  <Card title="First" icon="1️⃣" href="/docs/first">
-    First card.
+  <Card title="Installation" icon="📦" href="/docs/guides/installation">
+    Install Barodoc in your project.
   </Card>
-  <Card title="Second" icon="2️⃣" href="/docs/second">
-    Second card.
+  <Card title="Configuration" icon="⚙️" href="/docs/guides/configuration">
+    Configure your documentation site.
   </Card>
+</CardGroup>
+```
+
+## Three Columns
+
+<CardGroup cols={3}>
+  <Card title="Fast" icon="⚡">
+    Built on Astro for speed.
+  </Card>
+  <Card title="Simple" icon="✨">
+    Zero-config setup.
+  </Card>
+  <Card title="Flexible" icon="🔧">
+    Fully customizable.
+  </Card>
+</CardGroup>
+
+```mdx
+<CardGroup cols={3}>
+  <Card title="Fast" icon="⚡">Built on Astro.</Card>
+  <Card title="Simple" icon="✨">Zero-config.</Card>
+  <Card title="Flexible" icon="🔧">Customizable.</Card>
 </CardGroup>
 ```
 
@@ -37,10 +88,22 @@ Group multiple cards in a grid:
 
 ### Card
 
-- `title` (required) - Card title
-- `icon` - Emoji icon
-- `href` - Link URL
+<ParamFieldGroup>
+  <ParamField name="title" type="string" required>
+    Card title text
+  </ParamField>
+  <ParamField name="icon" type="string">
+    Emoji icon displayed before the title
+  </ParamField>
+  <ParamField name="href" type="string">
+    Link URL (makes the entire card clickable)
+  </ParamField>
+</ParamFieldGroup>
 
 ### CardGroup
 
-- `cols` - Number of columns (1, 2, or 3)
+<ParamFieldGroup>
+  <ParamField name="cols" type="1 | 2 | 3 | 4" default="2">
+    Number of columns in the grid layout
+  </ParamField>
+</ParamFieldGroup>

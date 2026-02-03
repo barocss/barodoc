@@ -1,7 +1,9 @@
 ---
 import { getCollection } from "astro:content";
 import DocsLayout from "../../layouts/DocsLayout.astro";
+import config from "virtual:barodoc/config";
 import { defaultLocale, locales } from "virtual:barodoc/i18n";
+import { getLocalizedNavGroup } from "@barodoc/core";
 
 export async function getStaticPaths() {
   const docs = await getCollection("docs");
@@ -26,7 +28,7 @@ export async function getStaticPaths() {
     
     return {
       params: { slug: path || undefined },
-      props: { doc, locale },
+      props: { doc, locale, cleanSlug },
     };
   });
 }
@@ -34,20 +36,79 @@ export async function getStaticPaths() {
 interface Props {
   doc: Awaited<ReturnType<typeof getCollection<"docs">>>[number];
   locale: string;
+  cleanSlug: string;
 }
 
-const { doc, locale } = Astro.props;
+const { doc, locale, cleanSlug } = Astro.props;
 const { Content, headings } = await doc.render();
+
+// Find the category (navigation group) for this page
+function findCategory(slug: string): string | null {
+  for (const group of config.navigation) {
+    if (group.pages.includes(slug)) {
+      return getLocalizedNavGroup(group, locale, defaultLocale);
+    }
+  }
+  return null;
+}
+
+// Get all pages in order from navigation
+function getAllPages(): string[] {
+  const pages: string[] = [];
+  for (const group of config.navigation) {
+    pages.push(...group.pages);
+  }
+  return pages;
+}
+
+// Get page title from slug
+function getPageTitle(slug: string): string {
+  const parts = slug.split('/');
+  const name = parts[parts.length - 1];
+  return name
+    .split('-')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ');
+}
+
+// Get page href
+function getPageHref(slug: string): string {
+  if (locale === defaultLocale) {
+    return `/docs/${slug}`;
+  }
+  return `/${locale}/docs/${slug}`;
+}
+
+// Find prev/next pages
+const allPages = getAllPages();
+const currentIndex = allPages.indexOf(cleanSlug);
+
+const prevPage = currentIndex > 0 
+  ? { title: getPageTitle(allPages[currentIndex - 1]), href: getPageHref(allPages[currentIndex - 1]) }
+  : null;
+
+const nextPage = currentIndex < allPages.length - 1 
+  ? { title: getPageTitle(allPages[currentIndex + 1]), href: getPageHref(allPages[currentIndex + 1]) }
+  : null;
+
+const category = findCategory(cleanSlug);
 ---
 
 <DocsLayout 
   title={doc.data.title} 
   description={doc.data.description}
   headings={headings}
+  prevPage={prevPage}
+  nextPage={nextPage}
 >
+  {category && (
+    <p class="text-xs font-medium uppercase tracking-wider text-primary-600 dark:text-primary-400 mb-2">
+      {category}
+    </p>
+  )}
   <h1>{doc.data.title}</h1>
   {doc.data.description && (
-    <p class="lead text-xl text-[var(--color-text-secondary)] mt-2 mb-8">
+    <p class="lead text-sm text-[var(--color-text-secondary)] mt-1 mb-4">
       {doc.data.description}
     </p>
   )}

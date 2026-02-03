@@ -3,8 +3,6 @@ title: Configuration
 description: Configure your Barodoc site
 ---
 
-# Configuration
-
 Barodoc is configured through `barodoc.config.json`.
 
 ## Full Example
@@ -50,6 +48,10 @@ The site name displayed in the header.
 
 Path to the logo image in the `public/` directory.
 
+### favicon
+
+Path to the favicon in the `public/` directory.
+
 ### theme.colors
 
 Customize the primary color theme:
@@ -64,15 +66,36 @@ Customize the primary color theme:
 }
 ```
 
+### theme.fonts
+
+Override heading and body fonts:
+
+```json
+{
+  "theme": {
+    "fonts": {
+      "heading": "Inter, sans-serif",
+      "body": "Inter, sans-serif",
+      "code": "JetBrains Mono, monospace"
+    }
+  }
+}
+```
+
+### theme.radius
+
+Border radius for UI elements (e.g. `"0.5rem"`, `"8px"`).
+
 ### navigation
 
-Define the sidebar navigation structure:
+Define the sidebar navigation structure. Use `group` for the default locale and `group:LOCALE` for translated group names (see [I18n](/docs/guides/i18n)):
 
 ```json
 {
   "navigation": [
     {
       "group": "Section Name",
+      "group:ko": "섹션 이름",
       "pages": ["page-slug", "nested/page"]
     }
   ]
@@ -86,7 +109,31 @@ Add links to the top navigation:
 ```json
 {
   "topbar": {
-    "github": "https://github.com/user/repo"
+    "github": "https://github.com/user/repo",
+    "discord": "https://discord.gg/invite",
+    "twitter": "https://twitter.com/username"
   }
+}
+```
+
+### search
+
+Enable or disable full-text search (Pagefind):
+
+```json
+{
+  "search": {
+    "enabled": true
+  }
+}
+```
+
+### customCss
+
+Paths to additional CSS files (relative to project root or from `public/`). They are loaded after the theme styles:
+
+```json
+{
+  "customCss": ["./src/custom.css"]
 }
 ```

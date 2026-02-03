@@ -1,0 +1,80 @@
+---
+title: Columns
+description: Create multi-column layouts for side-by-side content
+---
+import { Columns, Column } from "@barodoc/theme-docs/components/mdx/Columns.tsx";
+import { DocCard } from "@barodoc/theme-docs/components/mdx/DocCard.tsx";
+import { ParamField, ParamFieldGroup } from "@barodoc/theme-docs/components/mdx/ParamField.tsx";
+
+Columns help you display content side by side in a responsive grid layout.
+
+## Two Columns
+
+<Columns columns={2}>
+  <Column>
+    **Left Column**
+    
+    This content appears on the left side. Perfect for comparisons or related content.
+  </Column>
+  <Column>
+    **Right Column**
+    
+    This content appears on the right side. The columns stack on mobile devices.
+  </Column>
+</Columns>
+
+```mdx
+<Columns columns={2}>
+  <Column>
+    **Left Column**
+    Content here...
+  </Column>
+  <Column>
+    **Right Column**
+    Content here...
+  </Column>
+</Columns>
+```
+
+## Three Columns
+
+<Columns columns={3}>
+  <DocCard title="Fast" href="#">
+    Built on Astro for blazing fast performance.
+  </DocCard>
+  <DocCard title="Flexible" href="#">
+    Customize everything with themes and plugins.
+  </DocCard>
+  <DocCard title="Modern" href="#">
+    MDX, Tailwind CSS, and React components.
+  </DocCard>
+</Columns>
+
+```mdx
+<Columns columns={3}>
+  <DocCard title="Fast" href="#">Built on Astro...</DocCard>
+  <DocCard title="Flexible" href="#">Customize everything...</DocCard>
+  <DocCard title="Modern" href="#">MDX, Tailwind CSS...</DocCard>
+</Columns>
+```
+
+## Props
+
+### Columns
+
+<ParamFieldGroup>
+  <ParamField name="columns" type="2 | 3 | 4" default="2">
+    Number of columns in the grid
+  </ParamField>
+  <ParamField name="className" type="string">
+    Additional CSS classes
+  </ParamField>
+</ParamFieldGroup>
+
+### Column
+
+<ParamFieldGroup>
+  <ParamField name="className" type="string">
+    Additional CSS classes
+  </ParamField>
+</ParamFieldGroup>

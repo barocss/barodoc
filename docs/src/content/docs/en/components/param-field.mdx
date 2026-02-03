@@ -1,0 +1,65 @@
+---
+title: ParamField
+description: Document API request parameters with type information
+---
+import { ParamField, ParamFieldGroup } from "@barodoc/theme-docs/components/mdx/ParamField.tsx";
+
+ParamField components help you document API parameters clearly with type information and descriptions.
+
+## Basic Usage
+
+<ParamFieldGroup title="Request Parameters">
+  <ParamField name="id" type="string" required>
+    The unique identifier for the resource
+  </ParamField>
+  <ParamField name="limit" type="number" default="10">
+    Maximum number of results to return
+  </ParamField>
+  <ParamField name="offset" type="number" default="0">
+    Number of results to skip for pagination
+  </ParamField>
+</ParamFieldGroup>
+
+```mdx
+<ParamFieldGroup title="Request Parameters">
+  <ParamField name="id" type="string" required>
+    The unique identifier for the resource
+  </ParamField>
+  <ParamField name="limit" type="number" default="10">
+    Maximum number of results to return
+  </ParamField>
+  <ParamField name="offset" type="number" default="0">
+    Number of results to skip for pagination
+  </ParamField>
+</ParamFieldGroup>
+```
+
+## Body Parameters
+
+<ParamFieldGroup title="Body">
+  <ParamField name="name" type="string" required>
+    User's display name (1-100 characters)
+  </ParamField>
+  <ParamField name="email" type="string" required>
+    User's email address
+  </ParamField>
+  <ParamField name="role" type="'admin' | 'user' | 'guest'" default="'user'">
+    User's role in the system
+  </ParamField>
+  <ParamField name="metadata" type="object">
+    Additional user metadata as key-value pairs
+  </ParamField>
+</ParamFieldGroup>
+
+## Props
+
+### ParamFieldGroup
+- `title` - Group heading (e.g., "Query Parameters", "Body")
+- `className` - Additional CSS classes
+
+### ParamField
+- `name` (required) - Parameter name
+- `type` - Parameter type (e.g., "string", "number")
+- `required` - Mark as required
+- `default` - Default value
+- `children` - Parameter description

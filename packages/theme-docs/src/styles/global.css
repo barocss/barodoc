@@ -1,6 +1,11 @@
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+/* Scan theme package files */
+@source "../**/*.{astro,tsx}";
 
 @theme {
+  /* Primary color palette - Blue */
   --color-primary-50: oklch(0.97 0.02 250);
   --color-primary-100: oklch(0.94 0.04 250);
   --color-primary-200: oklch(0.88 0.08 250);
@@ -16,19 +21,38 @@
 
 @layer base {
   :root {
+    /* Mintlify-style soft colors */
     --color-bg: #ffffff;
-    --color-bg-secondary: #f9fafb;
-    --color-text: #111827;
-    --color-text-secondary: #6b7280;
-    --color-border: #e5e7eb;
+    --color-bg-secondary: #f8fafc;
+    --color-bg-tertiary: #f1f5f9;
+    --color-bg-hover: #f1f5f9;
+    --color-text: #0f172a;
+    --color-text-secondary: #64748b;
+    --color-text-muted: #94a3b8;
+    --color-border: #e2e8f0;
+    --color-border-light: #f1f5f9;
+    
+    /* Shadows */
+    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
   }
 
   .dark {
-    --color-bg: #0a0a0a;
-    --color-bg-secondary: #171717;
+    --color-bg: #0c0c0c;
+    --color-bg-secondary: #141414;
+    --color-bg-tertiary: #1c1c1c;
+    --color-bg-hover: #1c1c1c;
     --color-text: #fafafa;
     --color-text-secondary: #a1a1aa;
+    --color-text-muted: #71717a;
     --color-border: #27272a;
+    --color-border-light: #1c1c1c;
+    
+    /* Dark shadows */
+    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.4), 0 2px 4px -2px rgb(0 0 0 / 0.3);
+    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.4), 0 4px 6px -4px rgb(0 0 0 / 0.3);
   }
 
   html {
@@ -38,47 +62,184 @@
   body {
     background-color: var(--color-bg);
     color: var(--color-text);
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+
+  /* Smooth transitions for all interactive elements */
+  a, button, input, [role="button"] {
+    transition: all 150ms ease-out;
+  }
+  
+  /* Ensure cursor pointer for interactive elements */
+  a[href], button, [role="button"] {
+    cursor: pointer;
   }
 }
 
-/* Prose styling for MDX content */
-@layer components {
-  .prose {
-    --tw-prose-body: var(--color-text);
-    --tw-prose-headings: var(--color-text);
-    --tw-prose-links: var(--color-primary-600);
-    --tw-prose-code: var(--color-text);
-    --tw-prose-pre-bg: var(--color-bg-secondary);
-  }
+/* Prose styling for MDX content - Mintlify style */
+.prose {
+  --tw-prose-body: var(--color-text);
+  --tw-prose-headings: var(--color-text);
+  --tw-prose-links: var(--color-primary-600);
+  --tw-prose-code: var(--color-text);
+  --tw-prose-pre-bg: var(--color-bg-secondary);
+  font-size: 0.875rem !important;
+  line-height: 1.6 !important;
+}
 
-  .dark .prose {
-    --tw-prose-links: var(--color-primary-400);
-  }
+.dark .prose {
+  --tw-prose-links: var(--color-primary-400);
+}
 
-  /* Code block styling */
-  .prose pre {
-    background-color: var(--color-bg-secondary);
-    border: 1px solid var(--color-border);
-    border-radius: 0.5rem;
-  }
+/* Headings - Mintlify style */
+.prose :where(h1):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
+  font-size: 1.75rem !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.025em !important;
+  margin-top: 0 !important;
+  margin-bottom: 0.375rem !important;
+  line-height: 1.25 !important;
+}
 
-  .prose code:not(pre code) {
-    background-color: var(--color-bg-secondary);
-    padding: 0.125rem 0.375rem;
-    border-radius: 0.25rem;
-    font-size: 0.875em;
-    border: 1px solid var(--color-border);
-  }
+.prose :where(h2):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
+  font-size: 1.1875rem !important;
+  font-weight: 600 !important;
+  letter-spacing: -0.02em !important;
+  margin-top: 1.25rem !important;
+  margin-bottom: 0.375rem !important;
+  padding-bottom: 0.25rem !important;
+  border-bottom: 1px solid var(--color-border) !important;
+}
 
-  .prose code::before,
-  .prose code::after {
-    content: none;
-  }
+.prose :where(h3):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
+  font-size: 1rem !important;
+  font-weight: 600 !important;
+  margin-top: 1rem !important;
+  margin-bottom: 0.25rem !important;
+}
+
+.prose :where(h4):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
+  font-size: 0.9375rem !important;
+  font-weight: 600 !important;
+  margin-top: 0.875rem !important;
+  margin-bottom: 0.25rem !important;
+}
+
+/* Paragraphs - tighter spacing */
+.prose :where(p):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
+  margin-top: 0.5rem !important;
+  margin-bottom: 0.5rem !important;
+}
+
+/* Links with underline on hover */
+.prose :where(a):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
+  font-weight: 500 !important;
+  text-decoration: none !important;
+}
+
+.prose :where(a):not(:where([class~="not-prose"],[class~="not-prose"] *)):hover {
+  text-decoration: underline !important;
+  text-underline-offset: 2px !important;
+}
+
+/* Code block styling - Mintlify style */
+.prose :where(pre):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
+  background-color: var(--color-bg) !important;
+  border: 1px solid var(--color-border) !important;
+  border-radius: 0.5rem !important;
+  padding: 0.75rem 1rem !important;
+  font-size: 0.8125rem !important;
+  line-height: 1.5 !important;
+  overflow-x: auto !important;
+  margin: 0.75rem 0 !important;
+}
+
+.prose :where(code):not(:where(pre code, [class~="not-prose"],[class~="not-prose"] *)) {
+  background-color: var(--color-bg-tertiary) !important;
+  padding: 0.125rem 0.375rem !important;
+  border-radius: 0.25rem !important;
+  font-size: 0.85em !important;
+  font-weight: 500 !important;
+  border: 1px solid var(--color-border) !important;
+}
+
+.prose :where(code):not(:where([class~="not-prose"],[class~="not-prose"] *))::before,
+.prose :where(code):not(:where([class~="not-prose"],[class~="not-prose"] *))::after {
+  content: none !important;
+}
+
+/* Lists - tighter spacing */
+.prose :where(ul, ol):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
+  margin-top: 0.375rem !important;
+  margin-bottom: 0.375rem !important;
+  padding-left: 1.25rem !important;
+}
+
+.prose :where(li):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
+  margin-top: 0.125rem !important;
+  margin-bottom: 0.125rem !important;
+}
+
+.prose :where(li):not(:where([class~="not-prose"],[class~="not-prose"] *))::marker {
+  color: var(--color-text-muted) !important;
+}
+
+/* Blockquotes - Mintlify style */
+.prose :where(blockquote):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
+  border-left: 3px solid var(--color-primary-500) !important;
+  background-color: var(--color-bg-secondary) !important;
+  padding: 0.5rem 0.75rem !important;
+  margin: 0.625rem 0 !important;
+  border-radius: 0 0.5rem 0.5rem 0 !important;
+  font-style: normal !important;
+}
+
+.prose :where(blockquote p):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
+  margin: 0 !important;
+}
+
+/* Tables - cleaner look */
+.prose :where(table):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
+  width: 100% !important;
+  border-collapse: collapse !important;
+  margin: 0.625rem 0 !important;
+  font-size: 0.8125rem !important;
+}
+
+.prose :where(th):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
+  background-color: var(--color-bg-secondary) !important;
+  font-weight: 600 !important;
+  text-align: left !important;
+  padding: 0.5rem 0.75rem !important;
+  border-bottom: 2px solid var(--color-border) !important;
+}
+
+.prose :where(td):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
+  padding: 0.5rem 0.75rem !important;
+  border-bottom: 1px solid var(--color-border) !important;
+}
+
+.prose :where(tr:last-child td):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
+  border-bottom: none !important;
+}
+
+/* Horizontal rule */
+.prose :where(hr):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
+  border: none !important;
+  border-top: 1px solid var(--color-border) !important;
+  margin: 1.5rem 0 !important;
+}
+
+/* Images */
+.prose :where(img):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
+  border-radius: 0.5rem !important;
+  border: 1px solid var(--color-border) !important;
 }
 
 /* Shiki dual theme support */
 .astro-code {
-  background-color: var(--color-bg-secondary) !important;
+  background-color: var(--color-bg) !important;
+  border-radius: 0.5rem;
 }
 
 .dark .astro-code,
@@ -95,4 +256,87 @@
   --pagefind-ui-background: var(--color-bg);
   --pagefind-ui-border: var(--color-border);
   --pagefind-ui-tag: var(--color-bg-secondary);
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-text-muted);
+}
+
+/* Selection styling */
+::selection {
+  background-color: var(--color-primary-200);
+  color: var(--color-primary-900);
+}
+
+.dark ::selection {
+  background-color: var(--color-primary-800);
+  color: var(--color-primary-100);
+}
+
+/* Animations for shadcn/ui components */
+@keyframes accordion-down {
+  from {
+    height: 0;
+  }
+  to {
+    height: var(--radix-accordion-content-height);
+  }
+}
+
+@keyframes accordion-up {
+  from {
+    height: var(--radix-accordion-content-height);
+  }
+  to {
+    height: 0;
+  }
+}
+
+@keyframes collapsible-down {
+  from {
+    height: 0;
+  }
+  to {
+    height: var(--radix-collapsible-content-height);
+  }
+}
+
+@keyframes collapsible-up {
+  from {
+    height: var(--radix-collapsible-content-height);
+  }
+  to {
+    height: 0;
+  }
+}
+
+.animate-accordion-down {
+  animation: accordion-down 0.2s ease-out;
+}
+
+.animate-accordion-up {
+  animation: accordion-up 0.2s ease-out;
+}
+
+.animate-collapsible-down {
+  animation: collapsible-down 0.2s ease-out;
+}
+
+.animate-collapsible-up {
+  animation: collapsible-up 0.2s ease-out;
 }

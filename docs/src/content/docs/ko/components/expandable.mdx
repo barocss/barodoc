@@ -1,0 +1,77 @@
+---
+title: Expandable
+description: 중첩 속성 및 추가 콘텐츠 토글
+---
+import { Expandable, ExpandableList, ExpandableItem } from "@barodoc/theme-docs/components/mdx/Expandable.tsx";
+import { ParamField, ParamFieldGroup } from "@barodoc/theme-docs/components/mdx/ParamField.tsx";
+
+Expandable은 사용자가 필요할 때 선택적이거나 상세한 정보를 표시하는 데 유용합니다.
+
+## 기본 사용법
+
+<Expandable client:load title="고급 옵션 보기">
+  대부분의 사용자가 변경할 필요가 없는 고급 설정 옵션입니다.
+  
+  - `debug`: 디버그 모드 활성화
+  - `verbose`: 상세 출력 표시
+  - `timeout`: 밀리초 단위의 요청 타임아웃
+</Expandable>
+
+## 기본 열림
+
+<Expandable client:load title="중요 정보" defaultOpen>
+  이 콘텐츠는 사용자가 확인해야 하는 중요한 내용이므로 기본적으로 표시됩니다.
+</Expandable>
+
+## 중첩 속성
+
+API 문서의 중첩 객체 속성에 ExpandableItem을 사용하세요:
+
+<ExpandableList>
+  <ExpandableItem client:load title="user" type="object">
+    <ExpandableItem client:load title="id" type="string">
+      고유 사용자 식별자
+    </ExpandableItem>
+    <ExpandableItem client:load title="email" type="string">
+      사용자 이메일 주소
+    </ExpandableItem>
+    <ExpandableItem client:load title="profile" type="object">
+      <ExpandableItem client:load title="name" type="string">
+        표시 이름
+      </ExpandableItem>
+      <ExpandableItem client:load title="avatar" type="string">
+        프로필 이미지 URL
+      </ExpandableItem>
+    </ExpandableItem>
+  </ExpandableItem>
+</ExpandableList>
+
+## Props
+
+### Expandable
+
+<ParamFieldGroup>
+  <ParamField name="title" type="string" required>
+    확장 가능한 섹션의 헤더 텍스트
+  </ParamField>
+  <ParamField name="defaultOpen" type="boolean" default="false">
+    펼쳐진 상태로 시작할지 여부
+  </ParamField>
+  <ParamField name="className" type="string">
+    추가 CSS 클래스
+  </ParamField>
+</ParamFieldGroup>
+
+### ExpandableItem
+
+<ParamFieldGroup>
+  <ParamField name="title" type="string" required>
+    표시할 속성 이름
+  </ParamField>
+  <ParamField name="type" type="string">
+    속성 타입 (예: "string", "object", "number")
+  </ParamField>
+  <ParamField name="defaultOpen" type="boolean" default="false">
+    펼쳐진 상태로 시작할지 여부
+  </ParamField>
+</ParamFieldGroup>

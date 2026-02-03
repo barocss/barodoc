@@ -1,0 +1,112 @@
+---
+title: Accordion
+description: FAQ 및 정리된 콘텐츠를 위한 접이식 섹션
+---
+import { SimpleAccordion } from "@barodoc/theme-docs/components/mdx/DocAccordion.tsx";
+import { ParamField, ParamFieldGroup } from "@barodoc/theme-docs/components/mdx/ParamField.tsx";
+
+Accordion 컴포넌트는 접이식 콘텐츠 섹션을 표시하며, FAQ 및 정보 정리에 유용합니다.
+
+## 기본 사용법
+
+<SimpleAccordion client:load items={[
+  { title: "Barodoc이란?", content: "Barodoc은 MDX를 지원하는 Astro 기반 문서화 프레임워크입니다." },
+  { title: "시작하려면?", content: "pnpm add @barodoc/core로 설치하고 빠른 시작 가이드를 따르세요." },
+  { title: "무료인가요?", content: "네, Barodoc은 오픈소스이며 무료로 사용할 수 있습니다." }
+]} />
+
+```mdx
+<SimpleAccordion client:load items={[
+  { title: "Barodoc이란?", content: "Barodoc은 문서화 프레임워크입니다..." },
+  { title: "시작하려면?", content: "pnpm add @barodoc/core로 설치..." },
+  { title: "무료인가요?", content: "네, Barodoc은 오픈소스입니다..." }
+]} />
+```
+
+## 아이콘 사용
+
+<SimpleAccordion client:load items={[
+  { title: "시작하기", content: "빠른 시작 가이드를 따라 첫 문서 사이트를 설정하세요.", icon: "🚀" },
+  { title: "설정", content: "테마, 네비게이션, 플러그인으로 문서를 커스터마이즈하세요.", icon: "⚙️" },
+  { title: "배포", content: "Vercel, Netlify 또는 정적 호스팅 제공업체에 문서를 배포하세요.", icon: "📦" }
+]} />
+
+```mdx
+<SimpleAccordion client:load items={[
+  { title: "시작하기", content: "빠른 시작 가이드를 따라...", icon: "🚀" },
+  { title: "설정", content: "테마, 네비게이션, 플러그인으로...", icon: "⚙️" },
+  { title: "배포", content: "Vercel, Netlify 또는...", icon: "📦" }
+]} />
+```
+
+## 다중 열기
+
+`type="multiple"`로 여러 항목을 동시에 열 수 있습니다:
+
+<SimpleAccordion client:load type="multiple" items={[
+  { title: "프론트엔드", content: "React, Vue, Svelte 등이 지원됩니다." },
+  { title: "백엔드", content: "Node.js, Python, Go 및 기타 백엔드가 원활하게 작동합니다." },
+  { title: "데이터베이스", content: "PostgreSQL, MySQL, MongoDB 등이 문서화되어 있습니다." }
+]} />
+
+```mdx
+<SimpleAccordion client:load type="multiple" items={[
+  { title: "프론트엔드", content: "React, Vue, Svelte..." },
+  { title: "백엔드", content: "Node.js, Python, Go..." },
+  { title: "데이터베이스", content: "PostgreSQL, MySQL, MongoDB..." }
+]} />
+```
+
+## 기본 열림
+
+`defaultValue`로 초기에 열린 항목을 설정합니다:
+
+<SimpleAccordion client:load defaultValue="item-1" items={[
+  { title: "첫 번째 항목", content: "기본적으로 닫혀 있습니다." },
+  { title: "두 번째 항목", content: "기본적으로 열려 있습니다." },
+  { title: "세 번째 항목", content: "기본적으로 닫혀 있습니다." }
+]} />
+
+```mdx
+<SimpleAccordion client:load defaultValue="item-1" items={[
+  { title: "첫 번째 항목", content: "기본적으로 닫혀 있습니다." },
+  { title: "두 번째 항목", content: "기본적으로 열려 있습니다." },
+  { title: "세 번째 항목", content: "기본적으로 닫혀 있습니다." }
+]} />
+```
+
+## Props
+
+<ParamFieldGroup>
+  <ParamField name="items" type="AccordionItem[]" required>
+    아코디언 항목 배열 (아래 Accordion Item 참조)
+  </ParamField>
+  <ParamField name="type" type="'single' | 'multiple'" default="'single'">
+    하나 또는 여러 항목을 동시에 열 수 있는지 여부
+  </ParamField>
+  <ParamField name="collapsible" type="boolean" default="true">
+    type이 "single"일 때 모든 항목을 닫을 수 있는지 여부
+  </ParamField>
+  <ParamField name="defaultValue" type="string | string[]">
+    초기에 열린 항목 - "item-0", "item-1" 등 사용
+  </ParamField>
+  <ParamField name="client:load" type="directive" required>
+    클라이언트 측 상호작용을 위한 필수 Astro 디렉티브
+  </ParamField>
+</ParamFieldGroup>
+
+### Accordion Item
+
+`items` 배열의 각 항목:
+
+<ParamFieldGroup>
+  <ParamField name="title" type="string" required>
+    아코디언 헤더 텍스트
+  </ParamField>
+  <ParamField name="content" type="string" required>
+    아코디언이 펼쳐질 때 표시되는 내용
+  </ParamField>
+  <ParamField name="icon" type="string">
+    표시할 이모지 또는 아이콘 (선택사항)
+  </ParamField>
+</ParamFieldGroup>

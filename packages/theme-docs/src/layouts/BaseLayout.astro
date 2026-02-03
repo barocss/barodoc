@@ -1,7 +1,7 @@
 ---
 import ThemeScript from "../components/ThemeScript.astro";
-import { Search } from "../components/Search";
-import "../styles/global.css";
+import { SearchDialog } from "../components/SearchDialog";
+import "@barodoc/theme-docs/styles/global.css";
 
 interface Props {
   title: string;
@@ -23,6 +23,6 @@ const { title, description = "Documentation" } = Astro.props;
   </head>
   <body class="min-h-screen bg-[var(--color-bg)] text-[var(--color-text)] antialiased">
     <slot />
-    <Search client:load />
+    <SearchDialog client:load />
   </body>
 </html>

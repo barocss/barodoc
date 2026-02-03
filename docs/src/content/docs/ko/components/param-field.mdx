@@ -1,0 +1,51 @@
+---
+title: ParamField
+description: 타입 정보로 API 요청 파라미터 문서화
+---
+import { ParamField, ParamFieldGroup } from "@barodoc/theme-docs/components/mdx/ParamField.tsx";
+
+ParamField 컴포넌트는 API 파라미터를 타입 정보와 설명으로 명확하게 문서화하는 데 도움이 됩니다.
+
+## 기본 사용법
+
+<ParamFieldGroup title="요청 파라미터">
+  <ParamField name="id" type="string" required>
+    리소스의 고유 식별자
+  </ParamField>
+  <ParamField name="limit" type="number" default="10">
+    반환할 최대 결과 수
+  </ParamField>
+  <ParamField name="offset" type="number" default="0">
+    페이지네이션을 위해 건너뛸 결과 수
+  </ParamField>
+</ParamFieldGroup>
+
+## Body 파라미터
+
+<ParamFieldGroup title="Body">
+  <ParamField name="name" type="string" required>
+    사용자 표시 이름 (1-100자)
+  </ParamField>
+  <ParamField name="email" type="string" required>
+    사용자 이메일 주소
+  </ParamField>
+  <ParamField name="role" type="'admin' | 'user' | 'guest'" default="'user'">
+    시스템에서 사용자의 역할
+  </ParamField>
+  <ParamField name="metadata" type="object">
+    키-값 쌍으로 된 추가 사용자 메타데이터
+  </ParamField>
+</ParamFieldGroup>
+
+## Props
+
+### ParamFieldGroup
+- `title` - 그룹 제목 (예: "Query Parameters", "Body")
+- `className` - 추가 CSS 클래스
+
+### ParamField
+- `name` (필수) - 파라미터 이름
+- `type` - 파라미터 타입 (예: "string", "number")
+- `required` - 필수 표시
+- `default` - 기본값
+- `children` - 파라미터 설명

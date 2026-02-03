@@ -1,0 +1,103 @@
+---
+title: API Reference
+description: Document API endpoints with request/response parameters
+---
+import ApiEndpoint from "@barodoc/theme-docs/components/api/ApiEndpoint.astro";
+import ApiParams from "@barodoc/theme-docs/components/api/ApiParams.astro";
+import ApiParam from "@barodoc/theme-docs/components/api/ApiParam.astro";
+import ApiResponse from "@barodoc/theme-docs/components/api/ApiResponse.astro";
+import { ParamField, ParamFieldGroup } from "@barodoc/theme-docs/components/mdx/ParamField.tsx";
+
+Use the API components to document REST endpoints: method, path, parameters, and responses.
+
+## Example
+
+<ApiEndpoint method="GET" path="/api/users" description="Returns a list of users.">
+  <ApiParams title="Query Parameters">
+    <ApiParam name="limit" type="number" required description="Maximum number of results (default: 10)" />
+    <ApiParam name="offset" type="number" description="Number of results to skip" />
+  </ApiParams>
+  <ApiResponse status={200} description="Success">
+    <ApiParams title="Response body">
+      <ApiParam name="users" type="array" description="List of user objects" />
+      <ApiParam name="total" type="number" description="Total count" />
+    </ApiParams>
+  </ApiResponse>
+</ApiEndpoint>
+
+```mdx
+<ApiEndpoint method="GET" path="/api/users" description="Returns a list of users.">
+  <ApiParams title="Query Parameters">
+    <ApiParam name="limit" type="number" required description="Max results (default: 10)" />
+    <ApiParam name="offset" type="number" description="Skip N results" />
+  </ApiParams>
+  <ApiResponse status={200} description="Success">
+    <ApiParams title="Response body">
+      <ApiParam name="users" type="array" description="List of user objects" />
+      <ApiParam name="total" type="number" description="Total count" />
+    </ApiParams>
+  </ApiResponse>
+</ApiEndpoint>
+```
+
+## Components
+
+### ApiEndpoint
+
+Wraps a single endpoint. Shows HTTP method and path.
+
+<ParamFieldGroup>
+  <ParamField name="method" type="'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE'" required>
+    HTTP method
+  </ParamField>
+  <ParamField name="path" type="string" required>
+    Path (e.g. `/api/users`)
+  </ParamField>
+  <ParamField name="description" type="string">
+    Short description
+  </ParamField>
+</ParamFieldGroup>
+
+### ApiParams
+
+Container for a list of parameters (query, body, or response).
+
+<ParamFieldGroup>
+  <ParamField name="title" type="string">
+    Section title (e.g. "Query Parameters", "Request body")
+  </ParamField>
+</ParamFieldGroup>
+
+### ApiParam
+
+One parameter or field.
+
+<ParamFieldGroup>
+  <ParamField name="name" type="string" required>
+    Parameter name
+  </ParamField>
+  <ParamField name="type" type="string" required>
+    Type (e.g. `string`, `number`, `array`, `object`)
+  </ParamField>
+  <ParamField name="required" type="boolean">
+    Mark as required
+  </ParamField>
+  <ParamField name="description" type="string">
+    Description
+  </ParamField>
+</ParamFieldGroup>
+
+### ApiResponse
+
+Response block with status code.
+
+<ParamFieldGroup>
+  <ParamField name="status" type="number" required>
+    HTTP status (e.g. 200, 201, 400, 404)
+  </ParamField>
+  <ParamField name="description" type="string">
+    Short description
+  </ParamField>
+</ParamFieldGroup>
+
+Use **ApiParams** and **ApiParam** inside **ApiResponse** to document the response body shape.

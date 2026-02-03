@@ -1,0 +1,95 @@
+---
+title: Icon
+description: Lucide 아이콘 라이브러리의 아이콘 사용
+---
+import { Icon, CheckIcon, XIcon, InfoIcon, WarningIcon } from "@barodoc/theme-docs/components/mdx/Icon.tsx";
+import { ParamField, ParamFieldGroup } from "@barodoc/theme-docs/components/mdx/ParamField.tsx";
+
+Lucide 아이콘 라이브러리의 아이콘을 커스터마이즈 가능한 크기와 색상으로 표시합니다.
+
+## 기본 사용법
+
+<div className="flex items-center gap-4 my-4 not-prose">
+  <Icon name="home" />
+  <Icon name="settings" />
+  <Icon name="user" />
+  <Icon name="search" />
+  <Icon name="menu" />
+</div>
+
+```mdx
+<Icon name="home" />
+<Icon name="settings" />
+<Icon name="user" />
+<Icon name="search" />
+<Icon name="menu" />
+```
+
+## 크기
+
+<div className="flex items-center gap-4 my-4 not-prose">
+  <Icon name="star" size="sm" />
+  <Icon name="star" size="md" />
+  <Icon name="star" size="lg" />
+  <Icon name="star" size="xl" />
+  <Icon name="star" size={48} />
+</div>
+
+```mdx
+<Icon name="star" size="sm" />   // 16px
+<Icon name="star" size="md" />   // 20px
+<Icon name="star" size="lg" />   // 24px
+<Icon name="star" size="xl" />   // 32px
+<Icon name="star" size={48} />   // 48px
+```
+
+## 색상
+
+<div className="flex items-center gap-4 my-4 not-prose">
+  <Icon name="heart" color="#ef4444" />
+  <Icon name="heart" color="#22c55e" />
+  <Icon name="heart" color="#3b82f6" />
+  <Icon name="heart" color="#f59e0b" />
+</div>
+
+```mdx
+<Icon name="heart" color="#ef4444" />
+<Icon name="heart" color="#22c55e" />
+```
+
+## 미리 만들어진 아이콘
+
+일반적인 상태 아이콘은 명명된 컴포넌트로 사용할 수 있습니다:
+
+<div className="flex items-center gap-4 my-4 not-prose">
+  <CheckIcon /> 확인
+  <XIcon /> 오류
+  <InfoIcon /> 정보
+  <WarningIcon /> 경고
+</div>
+
+```mdx
+<CheckIcon />
+<XIcon />
+<InfoIcon />
+<WarningIcon />
+```
+
+## Props
+
+<ParamFieldGroup>
+  <ParamField name="name" type="string" required>
+    kebab-case의 Lucide 아이콘 이름 (예: "chevron-right", "home")
+  </ParamField>
+  <ParamField name="size" type="'sm' | 'md' | 'lg' | 'xl' | number" default="'md'">
+    아이콘 크기 (sm=16px, md=20px, lg=24px, xl=32px, 또는 커스텀 숫자)
+  </ParamField>
+  <ParamField name="color" type="string">
+    CSS 색상 값 (예: "#ef4444", "red")
+  </ParamField>
+  <ParamField name="className" type="string">
+    추가 CSS 클래스
+  </ParamField>
+</ParamFieldGroup>
+
+사용 가능한 모든 아이콘은 [lucide.dev/icons](https://lucide.dev/icons)에서 확인하세요.

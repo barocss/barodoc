@@ -1,0 +1,109 @@
+---
+title: Deployment
+description: Deploy your Barodoc site to static hosting
+---
+
+Barodoc builds to a static site. Deploy the `dist/` folder to any static host.
+
+## Build
+
+```bash
+pnpm build
+```
+
+Output is in `dist/`. After build, search index is generated with Pagefind (`pagefind --site dist` if configured).
+
+## Vercel
+
+1. Push your repo to GitHub.
+2. In [Vercel](https://vercel.com), import the repository.
+3. **Build command:** `pnpm build` (or `npm run build`)
+4. **Output directory:** `dist`
+5. **Install command:** `pnpm install` (or `npm install`)
+6. Deploy.
+
+No extra config needed. Vercel detects Node and runs the build.
+
+## Netlify
+
+1. Push your repo to GitHub.
+2. In [Netlify](https://netlify.com), add new site from Git.
+3. **Build command:** `pnpm build`
+4. **Publish directory:** `dist`
+5. **Base directory:** leave empty (or set if the docs app is in a subdirectory, e.g. `docs`)
+6. Deploy.
+
+Optional: add `netlify.toml` in the project root:
+
+```toml
+[build]
+  command = "pnpm build"
+  publish = "dist"
+```
+
+## GitHub Pages
+
+1. In repo **Settings → Pages**, set source to **GitHub Actions**.
+2. Create `.github/workflows/deploy.yml`:
+
+```yaml
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "pnpm"
+      - run: pnpm install
+      - run: pnpm build
+      - uses: actions/upload-pages-artifact@3
+        with:
+          path: dist
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@4
+```
+
+3. Push; the workflow will build and deploy. Set **Pages** URL in repo settings if needed (e.g. `username.github.io/repo-name` for project sites).
+
+## Cloudflare Pages
+
+1. Push your repo to GitHub.
+2. In [Cloudflare Pages](https://pages.cloudflare.com), create a project from Git.
+3. **Build command:** `pnpm build`
+4. **Build output directory:** `dist`
+5. **Root directory:** leave empty (or `docs` if the app lives in a subdirectory)
+6. **Node version:** 20 (in **Environment variables**: `NODE_VERSION` = `20`)
+7. Deploy.
+
+## Environment and Node Version
+
+- Use **Node 20+** on the host (or set `NODE_VERSION` / `ENGINE_NODE` where supported).
+- No server-side runtime or env vars are required at build time unless your content or config reads them.

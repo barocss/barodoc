@@ -1,0 +1,61 @@
+---
+title: ResponseField
+description: API 응답 값 및 구조 문서화
+---
+import { ResponseField, ResponseFieldGroup } from "@barodoc/theme-docs/components/mdx/ResponseField.tsx";
+
+ResponseField 컴포넌트는 API 응답 구조를 명확하게 문서화하는 데 도움이 됩니다.
+
+## 기본 사용법
+
+<ResponseFieldGroup title="응답">
+  <ResponseField name="id" type="string">
+    생성된 리소스의 고유 식별자
+  </ResponseField>
+  <ResponseField name="created_at" type="string">
+    생성 시간의 ISO 8601 타임스탬프
+  </ResponseField>
+  <ResponseField name="status" type="'active' | 'pending' | 'inactive'">
+    리소스의 현재 상태
+  </ResponseField>
+</ResponseFieldGroup>
+
+## 복잡한 응답
+
+<ResponseFieldGroup title="사용자 응답">
+  <ResponseField name="data" type="object">
+    모든 사용자 정보를 포함하는 사용자 객체
+  </ResponseField>
+  <ResponseField name="data.id" type="string">
+    고유 사용자 식별자
+  </ResponseField>
+  <ResponseField name="data.email" type="string">
+    사용자 이메일 주소
+  </ResponseField>
+  <ResponseField name="data.profile" type="object">
+    사용자 프로필 정보
+  </ResponseField>
+  <ResponseField name="data.profile.name" type="string">
+    표시 이름
+  </ResponseField>
+  <ResponseField name="data.profile.avatar_url" type="string | null">
+    프로필 이미지 URL, 설정되지 않은 경우 null
+  </ResponseField>
+  <ResponseField name="meta" type="object">
+    페이지네이션 및 요청 메타데이터
+  </ResponseField>
+  <ResponseField name="meta.total" type="number">
+    총 결과 수
+  </ResponseField>
+</ResponseFieldGroup>
+
+## Props
+
+### ResponseFieldGroup
+- `title` - 그룹 제목
+- `className` - 추가 CSS 클래스
+
+### ResponseField
+- `name` (필수) - 필드 이름 (점 표기법 지원)
+- `type` - 필드 타입
+- `children` - 필드 설명

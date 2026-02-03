@@ -1,0 +1,105 @@
+---
+title: File Tree
+description: Display hierarchical file and folder structures
+---
+import { FileTree, TreeFile, TreeFolder } from "@barodoc/theme-docs/components/mdx/FileTree.tsx";
+import { ParamField, ParamFieldGroup } from "@barodoc/theme-docs/components/mdx/ParamField.tsx";
+
+File trees visualize project structures, helping users understand directory layouts.
+
+## Basic Usage
+
+<FileTree client:load>
+  <TreeFolder name="src" defaultOpen>
+    <TreeFolder name="components" defaultOpen>
+      <TreeFile name="Button.tsx" />
+      <TreeFile name="Card.tsx" />
+      <TreeFile name="index.ts" />
+    </TreeFolder>
+    <TreeFolder name="pages">
+      <TreeFile name="index.astro" />
+      <TreeFile name="about.astro" />
+    </TreeFolder>
+    <TreeFile name="styles.css" />
+  </TreeFolder>
+  <TreeFile name="package.json" />
+  <TreeFile name="tsconfig.json" />
+</FileTree>
+
+```mdx
+<FileTree client:load>
+  <TreeFolder name="src" defaultOpen>
+    <TreeFolder name="components" defaultOpen>
+      <TreeFile name="Button.tsx" />
+      <TreeFile name="Card.tsx" />
+      <TreeFile name="index.ts" />
+    </TreeFolder>
+    <TreeFolder name="pages">
+      <TreeFile name="index.astro" />
+      <TreeFile name="about.astro" />
+    </TreeFolder>
+    <TreeFile name="styles.css" />
+  </TreeFolder>
+  <TreeFile name="package.json" />
+  <TreeFile name="tsconfig.json" />
+</FileTree>
+```
+
+## Barodoc Project Structure
+
+<FileTree client:load>
+  <TreeFolder name="my-docs" defaultOpen>
+    <TreeFolder name="src" defaultOpen>
+      <TreeFolder name="content" defaultOpen>
+        <TreeFolder name="docs" defaultOpen>
+          <TreeFolder name="en">
+            <TreeFile name="introduction.mdx" />
+            <TreeFile name="quickstart.mdx" />
+          </TreeFolder>
+          <TreeFolder name="ko">
+            <TreeFile name="introduction.mdx" />
+            <TreeFile name="quickstart.mdx" />
+          </TreeFolder>
+        </TreeFolder>
+      </TreeFolder>
+    </TreeFolder>
+    <TreeFile name="astro.config.mjs" />
+    <TreeFile name="barodoc.config.json" />
+    <TreeFile name="package.json" />
+  </TreeFolder>
+</FileTree>
+
+## Props
+
+### FileTree
+
+<ParamFieldGroup>
+  <ParamField name="className" type="string">
+    Additional CSS classes
+  </ParamField>
+</ParamFieldGroup>
+
+### TreeFolder
+
+<ParamFieldGroup>
+  <ParamField name="name" type="string" required>
+    Folder name to display
+  </ParamField>
+  <ParamField name="defaultOpen" type="boolean" default="false">
+    Whether folder is expanded by default
+  </ParamField>
+  <ParamField name="children" type="ReactNode">
+    Nested TreeFile and TreeFolder components
+  </ParamField>
+</ParamFieldGroup>
+
+### TreeFile
+
+<ParamFieldGroup>
+  <ParamField name="name" type="string" required>
+    File name to display
+  </ParamField>
+  <ParamField name="icon" type="ReactNode">
+    Custom icon component (defaults to file icon)
+  </ParamField>
+</ParamFieldGroup>

@@ -1,0 +1,46 @@
+---
+title: Frame
+description: 스타일 프레임으로 시각적 강조 추가
+---
+import { Frame } from "@barodoc/theme-docs/components/mdx/Frame.tsx";
+import { ParamField, ParamFieldGroup } from "@barodoc/theme-docs/components/mdx/ParamField.tsx";
+
+프레임은 이미지, 비디오 또는 기타 임베디드 콘텐츠에 시각적 강조를 추가합니다.
+
+## 기본 사용법
+
+<Frame caption="Barodoc 대시보드 미리보기">
+  <img src="/logo.svg" alt="Barodoc Logo" className="w-full p-8 bg-white" />
+</Frame>
+
+```mdx
+<Frame caption="Barodoc 대시보드 미리보기">
+  <img src="/images/dashboard.png" alt="대시보드" />
+</Frame>
+```
+
+## 캡션 없이
+
+<Frame>
+  <img src="/logo.svg" alt="Barodoc Logo" className="w-full p-8 bg-white" />
+</Frame>
+
+```mdx
+<Frame>
+  <img src="/images/screenshot.png" alt="스크린샷" />
+</Frame>
+```
+
+## Props
+
+<ParamFieldGroup>
+  <ParamField name="caption" type="string">
+    프레임 아래에 표시되는 선택적 캡션 텍스트
+  </ParamField>
+  <ParamField name="className" type="string">
+    추가 CSS 클래스
+  </ParamField>
+  <ParamField name="children" type="ReactNode" required>
+    프레임 내부에 표시할 콘텐츠 (이미지, 비디오 등)
+  </ParamField>
+</ParamFieldGroup>

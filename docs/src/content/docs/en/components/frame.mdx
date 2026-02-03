@@ -1,0 +1,62 @@
+---
+title: Frame
+description: Add visual emphasis with styled frames
+---
+import { Frame } from "@barodoc/theme-docs/components/mdx/Frame.tsx";
+import { ParamField, ParamFieldGroup } from "@barodoc/theme-docs/components/mdx/ParamField.tsx";
+
+Frames add visual emphasis to images, videos, or other embedded content.
+
+## Basic Usage
+
+<Frame caption="Barodoc dashboard preview">
+  <img src="/logo.svg" alt="Barodoc Logo" className="w-full p-8 bg-white" />
+</Frame>
+
+```mdx
+<Frame caption="Barodoc dashboard preview">
+  <img src="/images/dashboard.png" alt="Dashboard" />
+</Frame>
+```
+
+## Without Caption
+
+<Frame>
+  <img src="/logo.svg" alt="Barodoc Logo" className="w-full p-8 bg-white" />
+</Frame>
+
+```mdx
+<Frame>
+  <img src="/images/screenshot.png" alt="Screenshot" />
+</Frame>
+```
+
+## With Video
+
+<Frame caption="Demo video">
+  <video controls className="w-full">
+    <source src="/videos/demo.mp4" type="video/mp4" />
+  </video>
+</Frame>
+
+```mdx
+<Frame caption="Demo video">
+  <video controls className="w-full">
+    <source src="/videos/demo.mp4" type="video/mp4" />
+  </video>
+</Frame>
+```
+
+## Props
+
+<ParamFieldGroup>
+  <ParamField name="caption" type="string">
+    Optional caption text displayed below the frame
+  </ParamField>
+  <ParamField name="className" type="string">
+    Additional CSS classes
+  </ParamField>
+  <ParamField name="children" type="ReactNode" required>
+    Content to display inside the frame (images, videos, etc.)
+  </ParamField>
+</ParamFieldGroup>

@@ -1,6 +1,8 @@
 ---
-import Sidebar from "./Sidebar.astro";
+import { MobileNavSheet } from "./MobileNavSheet";
+import config from "virtual:barodoc/config";
 import { defaultLocale } from "virtual:barodoc/i18n";
+import { getLocalizedNavGroup } from "@barodoc/core";
 
 interface Props {
   currentPath: string;
@@ -8,53 +10,52 @@ interface Props {
 }
 
 const { currentPath, currentLocale = defaultLocale } = Astro.props;
+
+// Normalize path for comparison
+function normalizePath(path: string): string {
+  return path.replace(/\/$/, '').replace(/^\//, '');
+}
+
+function isActive(page: string): boolean {
+  const normalized = normalizePath(currentPath);
+  const pagePath = normalizePath(page);
+  return normalized === pagePath || 
+    normalized === `docs/${pagePath}` ||
+    normalized === `${currentLocale}/docs/${pagePath}`;
+}
+
+function getPageHref(page: string): string {
+  if (currentLocale === defaultLocale) {
+    return `/docs/${page}`;
+  }
+  return `/${currentLocale}/docs/${page}`;
+}
+
+// Get page title from the page slug
+function getPageTitle(page: string): string {
+  const parts = page.split('/');
+  const name = parts[parts.length - 1];
+  return name
+    .split('-')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ');
+}
+
+// Transform config.navigation to the format expected by MobileNavSheet
+const groups = config.navigation.map((group) => ({
+  title: getLocalizedNavGroup(group, currentLocale, defaultLocale),
+  defaultOpen: true,
+  items: group.pages.map((page) => ({
+    title: getPageTitle(page),
+    href: getPageHref(page),
+    isActive: isActive(page),
+  })),
+}));
 ---
 
-<div id="mobile-nav-overlay" class="fixed inset-0 z-40 bg-black/50 hidden lg:hidden" aria-hidden="true"></div>
-
-<div id="mobile-nav" class="fixed inset-y-0 left-0 z-50 w-72 bg-[var(--color-bg)] border-r border-[var(--color-border)] transform -translate-x-full transition-transform duration-200 ease-in-out lg:hidden">
-  <div class="flex items-center justify-between h-14 px-4 border-b border-[var(--color-border)]">
-    <span class="font-semibold">Navigation</span>
-    <button id="close-mobile-nav" class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800">
-      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-      </svg>
-    </button>
-  </div>
-  <div class="overflow-y-auto h-[calc(100vh-3.5rem)] py-4 px-4">
-    <Sidebar currentPath={currentPath} currentLocale={currentLocale} />
-  </div>
-</div>
-
-<button
-  id="open-mobile-nav"
-  class="fixed bottom-4 left-4 z-30 p-3 bg-primary-600 text-white rounded-full shadow-lg lg:hidden hover:bg-primary-700 transition-colors"
-  aria-label="Open navigation"
->
-  <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-  </svg>
-</button>
-
-<script>
-  const mobileNav = document.getElementById('mobile-nav');
-  const overlay = document.getElementById('mobile-nav-overlay');
-  const openBtn = document.getElementById('open-mobile-nav');
-  const closeBtn = document.getElementById('close-mobile-nav');
-
-  function openNav() {
-    mobileNav?.classList.remove('-translate-x-full');
-    overlay?.classList.remove('hidden');
-    document.body.style.overflow = 'hidden';
-  }
-
-  function closeNav() {
-    mobileNav?.classList.add('-translate-x-full');
-    overlay?.classList.add('hidden');
-    document.body.style.overflow = '';
-  }
-
-  openBtn?.addEventListener('click', openNav);
-  closeBtn?.addEventListener('click', closeNav);
-  overlay?.addEventListener('click', closeNav);
-</script>
+<MobileNavSheet 
+  client:load 
+  groups={groups} 
+  siteName={config.name}
+  logo={config.logo}
+/>

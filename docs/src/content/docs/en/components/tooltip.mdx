@@ -1,0 +1,40 @@
+---
+title: Tooltip
+description: Add contextual help with hover tooltips
+---
+import { Tooltip } from "@barodoc/theme-docs/components/mdx/Tooltip.tsx";
+import { ParamField, ParamFieldGroup } from "@barodoc/theme-docs/components/mdx/ParamField.tsx";
+
+Tooltips provide additional context when users hover over terms or elements.
+
+## Basic Usage
+
+Hover over the <Tooltip client:load tip="Application Programming Interface - a way for programs to communicate with each other">API</Tooltip> to see more information.
+
+```mdx
+Hover over the <Tooltip client:load tip="Application Programming Interface">API</Tooltip> to see more information.
+```
+
+## Multiple Tooltips
+
+Learn about <Tooltip client:load tip="Static Site Generation - pre-rendering pages at build time">SSG</Tooltip>, <Tooltip client:load tip="Server-Side Rendering - generating pages on each request">SSR</Tooltip>, and <Tooltip client:load tip="Incremental Static Regeneration - updating static pages after deployment">ISR</Tooltip> rendering strategies.
+
+```mdx
+Learn about <Tooltip client:load tip="Static Site Generation">SSG</Tooltip>, 
+<Tooltip client:load tip="Server-Side Rendering">SSR</Tooltip>, and 
+<Tooltip client:load tip="Incremental Static Regeneration">ISR</Tooltip>.
+```
+
+## Props
+
+<ParamFieldGroup>
+  <ParamField name="tip" type="string" required>
+    Tooltip content text shown on hover
+  </ParamField>
+  <ParamField name="children" type="ReactNode" required>
+    The text or element to hover over
+  </ParamField>
+  <ParamField name="client:load" type="directive" required>
+    Required Astro directive for client-side interactivity
+  </ParamField>
+</ParamFieldGroup>

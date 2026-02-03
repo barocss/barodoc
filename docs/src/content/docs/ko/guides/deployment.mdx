@@ -1,0 +1,109 @@
+---
+title: Deployment
+description: Barodoc 사이트를 정적 호스팅에 배포하기
+---
+
+Barodoc은 정적 사이트로 빌드됩니다. `dist/` 폴더를 원하는 정적 호스팅에 배포하면 됩니다.
+
+## 빌드
+
+```bash
+pnpm build
+```
+
+결과물은 `dist/`에 생성됩니다. 빌드 후 설정에 따라 Pagefind로 검색 인덱스가 생성됩니다.
+
+## Vercel
+
+1. 저장소를 GitHub에 푸시합니다.
+2. [Vercel](https://vercel.com)에서 저장소를 import합니다.
+3. **Build command:** `pnpm build` (또는 `npm run build`)
+4. **Output directory:** `dist`
+5. **Install command:** `pnpm install` (또는 `npm install`)
+6. Deploy.
+
+추가 설정 없이 배포할 수 있습니다.
+
+## Netlify
+
+1. 저장소를 GitHub에 푸시합니다.
+2. [Netlify](https://netlify.com)에서 Git으로 새 사이트를 추가합니다.
+3. **Build command:** `pnpm build`
+4. **Publish directory:** `dist`
+5. **Base directory:** 비워 두거나, 문서 앱이 하위 디렉터리(예: `docs`)에 있으면 해당 경로 지정
+6. Deploy.
+
+선택: 프로젝트 루트에 `netlify.toml` 추가:
+
+```toml
+[build]
+  command = "pnpm build"
+  publish = "dist"
+```
+
+## GitHub Pages
+
+1. 저장소 **Settings → Pages**에서 소스를 **GitHub Actions**로 설정합니다.
+2. `.github/workflows/deploy.yml` 생성:
+
+```yaml
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "pnpm"
+      - run: pnpm install
+      - run: pnpm build
+      - uses: actions/upload-pages-artifact@3
+        with:
+          path: dist
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@4
+```
+
+3. 푸시하면 워크플로가 빌드 후 배포합니다. 프로젝트 사이트인 경우 **Pages** URL을 저장소 설정에서 확인합니다 (예: `username.github.io/repo-name`).
+
+## Cloudflare Pages
+
+1. 저장소를 GitHub에 푸시합니다.
+2. [Cloudflare Pages](https://pages.cloudflare.com)에서 Git으로 프로젝트를 만듭니다.
+3. **Build command:** `pnpm build`
+4. **Build output directory:** `dist`
+5. **Root directory:** 비워 두거나, 앱이 하위 디렉터리(예: `docs`)에 있으면 해당 경로 지정
+6. **Node version:** 20 (Environment variables에 `NODE_VERSION` = `20` 설정)
+7. Deploy.
+
+## 환경 및 Node 버전
+
+- 호스팅에서 **Node 20 이상**을 사용하세요 (지원되는 경우 `NODE_VERSION` 또는 `ENGINE_NODE` 설정).
+- 빌드 시점에 서버 런타임이나 환경 변수는, 콘텐츠/설정에서 사용하지 않는다면 필요하지 않습니다.

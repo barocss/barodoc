@@ -18,4 +18,26 @@ export default defineConfig({
       theme: docsTheme(),
     }),
   ],
+  vite: {
+    optimizeDeps: {
+      // Exclude native modules and workspace packages from dependency optimization
+      exclude: [
+        "fsevents",
+        "lightningcss",
+        "@tailwindcss/oxide",
+        "@barodoc/theme-docs",
+        "@barodoc/core",
+      ],
+    },
+    ssr: {
+      // Keep native modules external in SSR
+      external: ["fsevents", "lightningcss"],
+      // Process workspace packages (not external)
+      noExternal: ["@barodoc/theme-docs", "@barodoc/core"],
+    },
+    resolve: {
+      dedupe: ["react", "react-dom"],
+      preserveSymlinks: true,
+    },
+  },
 });

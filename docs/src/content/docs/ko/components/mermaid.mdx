@@ -1,0 +1,90 @@
+---
+title: Mermaid
+description: Mermaid 문법으로 다이어그램 및 시각화 생성
+---
+import { Mermaid } from "@barodoc/theme-docs/components/mdx/Mermaid.tsx";
+import { ParamField, ParamFieldGroup } from "@barodoc/theme-docs/components/mdx/ParamField.tsx";
+
+Mermaid를 사용하면 텍스트 기반 문법으로 플로우차트, 시퀀스 다이어그램 및 기타 시각화를 만들 수 있습니다.
+
+## 플로우차트
+
+<Mermaid client:load chart={`
+flowchart TD
+    A[시작] --> B{작동하나요?}
+    B -->|예| C[좋습니다!]
+    B -->|아니요| D[디버그]
+    D --> B
+`} />
+
+```mdx
+<Mermaid client:load chart={\`
+flowchart TD
+    A[시작] --> B{작동하나요?}
+    B -->|예| C[좋습니다!]
+    B -->|아니요| D[디버그]
+    D --> B
+\`} />
+```
+
+## 시퀀스 다이어그램
+
+<Mermaid client:load chart={`
+sequenceDiagram
+    participant 사용자
+    participant API
+    participant 데이터베이스
+    
+    사용자->>API: 데이터 요청
+    API->>데이터베이스: 쿼리
+    데이터베이스-->>API: 결과
+    API-->>사용자: 응답
+`} />
+
+## ER 다이어그램
+
+<Mermaid client:load chart={`
+erDiagram
+    USER ||--o{ POST : creates
+    USER ||--o{ COMMENT : writes
+    POST ||--o{ COMMENT : has
+    
+    USER {
+        string id PK
+        string email
+        string name
+    }
+    POST {
+        string id PK
+        string title
+        string content
+    }
+`} />
+
+## 상태 다이어그램
+
+<Mermaid client:load chart={`
+stateDiagram-v2
+    [*] --> 초안
+    초안 --> 검토
+    검토 --> 발행
+    검토 --> 초안
+    발행 --> 보관
+    보관 --> [*]
+`} />
+
+## Props
+
+<ParamFieldGroup>
+  <ParamField name="chart" type="string" required>
+    Mermaid 다이어그램 문법 문자열
+  </ParamField>
+  <ParamField name="className" type="string">
+    추가 CSS 클래스
+  </ParamField>
+  <ParamField name="client:load" type="directive" required>
+    클라이언트 사이드 렌더링에 필요한 Astro 디렉티브
+  </ParamField>
+</ParamFieldGroup>
+
+더 많은 다이어그램 유형과 문법은 [Mermaid 문서](https://mermaid.js.org/syntax/flowchart.html)를 참조하세요.

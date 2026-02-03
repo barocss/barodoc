@@ -1,0 +1,112 @@
+---
+title: Accordion
+description: Collapsible sections for FAQs and organized content
+---
+import { SimpleAccordion } from "@barodoc/theme-docs/components/mdx/DocAccordion.tsx";
+import { ParamField, ParamFieldGroup } from "@barodoc/theme-docs/components/mdx/ParamField.tsx";
+
+Accordion components display collapsible content sections, useful for FAQs and organizing information.
+
+## Basic Usage
+
+<SimpleAccordion client:load items={[
+  { title: "What is Barodoc?", content: "Barodoc is a documentation framework built on Astro with MDX support." },
+  { title: "How do I get started?", content: "Install with pnpm add @barodoc/core and follow the quickstart guide." },
+  { title: "Is it free?", content: "Yes, Barodoc is open source and free to use." }
+]} />
+
+```mdx
+<SimpleAccordion client:load items={[
+  { title: "What is Barodoc?", content: "Barodoc is a documentation framework..." },
+  { title: "How do I get started?", content: "Install with pnpm add @barodoc/core..." },
+  { title: "Is it free?", content: "Yes, Barodoc is open source..." }
+]} />
+```
+
+## With Icons
+
+<SimpleAccordion client:load items={[
+  { title: "Getting Started", content: "Follow our quickstart guide to set up your first documentation site.", icon: "🚀" },
+  { title: "Configuration", content: "Customize your documentation with themes, navigation, and plugins.", icon: "⚙️" },
+  { title: "Deployment", content: "Deploy your documentation to Vercel, Netlify, or any static hosting provider.", icon: "📦" }
+]} />
+
+```mdx
+<SimpleAccordion client:load items={[
+  { title: "Getting Started", content: "Follow our quickstart guide...", icon: "🚀" },
+  { title: "Configuration", content: "Customize your documentation...", icon: "⚙️" },
+  { title: "Deployment", content: "Deploy your documentation...", icon: "📦" }
+]} />
+```
+
+## Multiple Open
+
+Allow multiple items to be open simultaneously with `type="multiple"`:
+
+<SimpleAccordion client:load type="multiple" items={[
+  { title: "Frontend", content: "React, Vue, Svelte, and more are supported." },
+  { title: "Backend", content: "Node.js, Python, Go, and other backends work seamlessly." },
+  { title: "Database", content: "PostgreSQL, MySQL, MongoDB, and others are documented." }
+]} />
+
+```mdx
+<SimpleAccordion client:load type="multiple" items={[
+  { title: "Frontend", content: "React, Vue, Svelte..." },
+  { title: "Backend", content: "Node.js, Python, Go..." },
+  { title: "Database", content: "PostgreSQL, MySQL, MongoDB..." }
+]} />
+```
+
+## Default Open
+
+Set initially open items with `defaultValue`:
+
+<SimpleAccordion client:load defaultValue="item-1" items={[
+  { title: "First Item", content: "This is closed by default." },
+  { title: "Second Item", content: "This is open by default." },
+  { title: "Third Item", content: "This is also closed by default." }
+]} />
+
+```mdx
+<SimpleAccordion client:load defaultValue="item-1" items={[
+  { title: "First Item", content: "This is closed by default." },
+  { title: "Second Item", content: "This is open by default." },
+  { title: "Third Item", content: "This is also closed by default." }
+]} />
+```
+
+## Props
+
+<ParamFieldGroup>
+  <ParamField name="items" type="AccordionItem[]" required>
+    Array of accordion items (see Accordion Item below)
+  </ParamField>
+  <ParamField name="type" type="'single' | 'multiple'" default="'single'">
+    Whether one or multiple items can be open at once
+  </ParamField>
+  <ParamField name="collapsible" type="boolean" default="true">
+    Allow closing all items when type is "single"
+  </ParamField>
+  <ParamField name="defaultValue" type="string | string[]">
+    Initially open item(s) - use "item-0", "item-1", etc.
+  </ParamField>
+  <ParamField name="client:load" type="directive" required>
+    Required Astro directive for client-side interactivity
+  </ParamField>
+</ParamFieldGroup>
+
+### Accordion Item
+
+Each item in the `items` array:
+
+<ParamFieldGroup>
+  <ParamField name="title" type="string" required>
+    Accordion header text
+  </ParamField>
+  <ParamField name="content" type="string" required>
+    Content shown when accordion is expanded
+  </ParamField>
+  <ParamField name="icon" type="string">
+    Optional emoji or icon to display
+  </ParamField>
+</ParamFieldGroup>

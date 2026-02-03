@@ -1,5 +1,5 @@
 {
-  "name": "barodoc-docs",
+  "name": "docs",
   "version": "0.0.1",
   "private": true,
   "type": "module",
@@ -9,11 +9,17 @@
     "preview": "astro preview"
   },
   "dependencies": {
+    "@astrojs/mdx": "^4.0.0",
+    "@astrojs/react": "^4.0.0",
     "@barodoc/core": "workspace:*",
     "@barodoc/theme-docs": "workspace:*",
-    "astro": "^5.0.0"
+    "astro": "^5.0.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
   },
   "devDependencies": {
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
     "pagefind": "^1.2.0"
   }
 }

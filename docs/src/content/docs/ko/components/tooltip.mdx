@@ -1,0 +1,40 @@
+---
+title: Tooltip
+description: 호버 시 컨텍스트 정보를 표시하는 툴팁
+---
+import { Tooltip } from "@barodoc/theme-docs/components/mdx/Tooltip.tsx";
+import { ParamField, ParamFieldGroup } from "@barodoc/theme-docs/components/mdx/ParamField.tsx";
+
+툴팁은 사용자가 용어나 요소 위에 마우스를 올렸을 때 추가 컨텍스트를 제공합니다.
+
+## 기본 사용법
+
+<Tooltip client:load tip="Application Programming Interface - 프로그램이 서로 통신하는 방법">API</Tooltip> 위에 마우스를 올려 더 많은 정보를 확인하세요.
+
+```mdx
+<Tooltip client:load tip="Application Programming Interface">API</Tooltip> 위에 마우스를 올려 더 많은 정보를 확인하세요.
+```
+
+## 여러 툴팁
+
+<Tooltip client:load tip="Static Site Generation - 빌드 시 페이지를 미리 렌더링">SSG</Tooltip>, <Tooltip client:load tip="Server-Side Rendering - 각 요청마다 페이지 생성">SSR</Tooltip>, <Tooltip client:load tip="Incremental Static Regeneration - 배포 후 정적 페이지 업데이트">ISR</Tooltip> 렌더링 전략에 대해 알아보세요.
+
+```mdx
+<Tooltip client:load tip="Static Site Generation">SSG</Tooltip>, 
+<Tooltip client:load tip="Server-Side Rendering">SSR</Tooltip>, 
+<Tooltip client:load tip="Incremental Static Regeneration">ISR</Tooltip>에 대해 알아보세요.
+```
+
+## Props
+
+<ParamFieldGroup>
+  <ParamField name="tip" type="string" required>
+    호버 시 표시되는 툴팁 콘텐츠 텍스트
+  </ParamField>
+  <ParamField name="children" type="ReactNode" required>
+    마우스를 올릴 텍스트 또는 요소
+  </ParamField>
+  <ParamField name="client:load" type="directive" required>
+    클라이언트 사이드 인터랙티브에 필요한 Astro 디렉티브
+  </ParamField>
+</ParamFieldGroup>

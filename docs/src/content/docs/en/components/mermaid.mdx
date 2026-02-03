@@ -1,0 +1,108 @@
+---
+title: Mermaid
+description: Create diagrams and visualizations with Mermaid syntax
+---
+import { Mermaid } from "@barodoc/theme-docs/components/mdx/Mermaid.tsx";
+import { ParamField, ParamFieldGroup } from "@barodoc/theme-docs/components/mdx/ParamField.tsx";
+
+Mermaid lets you create flowcharts, sequence diagrams, and other visualizations using text-based syntax.
+
+## Flowchart
+
+<Mermaid client:load chart={`
+flowchart TD
+    A[Start] --> B{Is it working?}
+    B -->|Yes| C[Great!]
+    B -->|No| D[Debug]
+    D --> B
+`} />
+
+```mdx
+<Mermaid client:load chart={\`
+flowchart TD
+    A[Start] --> B{Is it working?}
+    B -->|Yes| C[Great!]
+    B -->|No| D[Debug]
+    D --> B
+\`} />
+```
+
+## Sequence Diagram
+
+<Mermaid client:load chart={`
+sequenceDiagram
+    participant User
+    participant API
+    participant Database
+    
+    User->>API: Request data
+    API->>Database: Query
+    Database-->>API: Results
+    API-->>User: Response
+`} />
+
+```mdx
+<Mermaid client:load chart={\`
+sequenceDiagram
+    participant User
+    participant API
+    participant Database
+    
+    User->>API: Request data
+    API->>Database: Query
+    Database-->>API: Results
+    API-->>User: Response
+\`} />
+```
+
+## Entity Relationship Diagram
+
+<Mermaid client:load chart={`
+erDiagram
+    USER ||--o{ POST : creates
+    USER ||--o{ COMMENT : writes
+    POST ||--o{ COMMENT : has
+    
+    USER {
+        string id PK
+        string email
+        string name
+    }
+    POST {
+        string id PK
+        string title
+        string content
+    }
+    COMMENT {
+        string id PK
+        string content
+    }
+`} />
+
+## State Diagram
+
+<Mermaid client:load chart={`
+stateDiagram-v2
+    [*] --> Draft
+    Draft --> Review
+    Review --> Published
+    Review --> Draft
+    Published --> Archived
+    Archived --> [*]
+`} />
+
+## Props
+
+<ParamFieldGroup>
+  <ParamField name="chart" type="string" required>
+    Mermaid diagram syntax as a string
+  </ParamField>
+  <ParamField name="className" type="string">
+    Additional CSS classes
+  </ParamField>
+  <ParamField name="client:load" type="directive" required>
+    Required Astro directive for client-side rendering
+  </ParamField>
+</ParamFieldGroup>
+
+For more diagram types and syntax, see the [Mermaid documentation](https://mermaid.js.org/syntax/flowchart.html).

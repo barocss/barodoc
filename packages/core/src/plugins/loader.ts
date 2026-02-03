@@ -23,7 +23,7 @@ export async function loadPlugins(
 
     try {
       // Dynamic import of the plugin package
-      const pluginModule = await import(name);
+      const pluginModule = await import(/* @vite-ignore */ name);
       const pluginFactory = pluginModule.default || pluginModule;
 
       if (typeof pluginFactory !== "function") {
