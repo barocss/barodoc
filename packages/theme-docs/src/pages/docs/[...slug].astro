@@ -21,7 +21,7 @@ export async function getStaticPaths() {
       cleanSlug = slugParts.slice(1).join("/");
     }
     
-    // Build the path
+    // URL: /docs/introduction (en), /docs/ko/introduction (ko) — locale only inside slug
     const path = locale === defaultLocale 
       ? cleanSlug 
       : `${locale}/${cleanSlug}`;
@@ -71,12 +71,9 @@ function getPageTitle(slug: string): string {
     .join(' ');
 }
 
-// Get page href
+// Get page href (always /docs/...; non-default locale is inside slug)
 function getPageHref(slug: string): string {
-  if (locale === defaultLocale) {
-    return `/docs/${slug}`;
-  }
-  return `/${locale}/docs/${slug}`;
+  return `/docs/${locale === defaultLocale ? slug : `${locale}/${slug}`}`;
 }
 
 // Find prev/next pages

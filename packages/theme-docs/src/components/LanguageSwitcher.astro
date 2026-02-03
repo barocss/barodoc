@@ -10,20 +10,22 @@ const { currentLocale } = Astro.props;
 const currentPath = Astro.url.pathname;
 
 function getLocalizedUrl(locale: string): string {
-  // Remove current locale from path if present
+  // URLs: /docs/... (en), /docs/ko/... (ko) — no /en/ or /ko/ prefix
   let path = currentPath;
-  for (const loc of locales) {
-    if (path.startsWith(`/${loc}/`) || path === `/${loc}`) {
-      path = path.slice(loc.length + 1) || "/";
-      break;
-    }
+  const docsPrefix = "/docs/";
+  const koPrefix = "/docs/ko/";
+
+  if (path.startsWith(koPrefix)) {
+    path = path === koPrefix.slice(0, -1) ? "/docs" : docsPrefix + path.slice(koPrefix.length);
   }
-  
-  // Add new locale
+
   if (locale === defaultLocale) {
-    return path;
+    return path || "/";
   }
-  return `/${locale}${path}`;
+  if (path === "/" || !path.startsWith(docsPrefix)) {
+    return path === "/" ? "/docs/ko/introduction" : path;
+  }
+  return docsPrefix + "ko/" + path.slice(docsPrefix.length);
 }
 ---
 
