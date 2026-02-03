@@ -26,17 +26,6 @@ function createThemeIntegration(options?: DocsThemeOptions): AstroIntegration {
           entrypoint: "@barodoc/theme-docs/pages/docs/[...slug].astro",
         });
 
-        // Inject localized routes for non-default locales
-        injectRoute({
-          pattern: "/[locale]",
-          entrypoint: "@barodoc/theme-docs/pages/index.astro",
-        });
-
-        injectRoute({
-          pattern: "/[locale]/docs/[...slug]",
-          entrypoint: "@barodoc/theme-docs/pages/docs/[...slug].astro",
-        });
-
         // Update Astro config with integrations and Vite plugins
         updateConfig({
           integrations: [mdx(), react()],

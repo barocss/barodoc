@@ -31,5 +31,11 @@
     "@changesets/cli": "^2.27.0",
     "concurrently": "^9.2.1",
     "tsx": "^4.21.0"
+  },
+  "pnpm": {
+    "overrides": {
+      "d3-array": "github:d3/d3-array#main",
+      "d3-shape": "^3.2.0"
+    }
   }
 }

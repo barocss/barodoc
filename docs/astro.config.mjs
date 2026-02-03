@@ -30,9 +30,13 @@ export default defineConfig({
       ],
     },
     ssr: {
-      // Keep native modules external in SSR
-      external: ["fsevents", "lightningcss"],
-      // Process workspace packages (not external)
+      external: [
+        "fsevents",
+        "lightningcss",
+        "mermaid",
+        "d3-array",
+        "d3-contour",
+      ],
       noExternal: ["@barodoc/theme-docs", "@barodoc/core"],
     },
     resolve: {

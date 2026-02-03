@@ -19,16 +19,12 @@ function normalizePath(path: string): string {
 function isActive(page: string): boolean {
   const normalized = normalizePath(currentPath);
   const pagePath = normalizePath(page);
-  return normalized === pagePath || 
-    normalized === `docs/${pagePath}` ||
-    normalized === `${currentLocale}/docs/${pagePath}`;
+  const docsSlug = currentLocale === defaultLocale ? pagePath : `ko/${pagePath}`;
+  return normalized === `docs/${pagePath}` || normalized === `docs/${docsSlug}`;
 }
 
 function getPageHref(page: string): string {
-  if (currentLocale === defaultLocale) {
-    return `/docs/${page}`;
-  }
-  return `/${currentLocale}/docs/${page}`;
+  return currentLocale === defaultLocale ? `/docs/${page}` : `/docs/ko/${page}`;
 }
 
 // Get page title from the page slug
