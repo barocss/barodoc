@@ -1,6 +1,6 @@
 {
   "name": "@barodoc/plugin-search",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Search plugin for Barodoc (Pagefind)",
   "type": "module",
   "main": "./dist/index.js",

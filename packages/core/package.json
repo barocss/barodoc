@@ -1,6 +1,6 @@
 {
   "name": "@barodoc/core",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Core integration for Barodoc documentation framework",
   "type": "module",
   "main": "./dist/index.js",
