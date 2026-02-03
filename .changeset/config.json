@@ -4,10 +4,18 @@
   "commit": false,
   "fixed": [],
   "linked": [
-    ["@barodoc/core", "@barodoc/theme-docs"]
+    [
+      "@barodoc/core", "@barodoc/theme-docs", "create-barodoc",
+      "barodoc",
+      "@barodoc/plugin-sitemap", 
+      "@barodoc/plugin-search", 
+      "@barodoc/plugin-analytics"
+    ]
   ],
   "access": "public",
   "baseBranch": "main",
   "updateInternalDependencies": "patch",
-  "ignore": []
+  "ignore": [
+    "docs"
+  ]
 }
