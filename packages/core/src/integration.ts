@@ -1,6 +1,12 @@
 import type { AstroIntegration } from "astro";
 import { loadConfig } from "./config/loader.js";
+import {
+  loadPlugins,
+  runConfigHook,
+  getPluginIntegrations,
+} from "./plugins/loader.js";
 import type { BarodocOptions, ResolvedBarodocConfig } from "./types.js";
+import type { PluginContext } from "./plugins/types.js";
 
 const VIRTUAL_CONFIG_ID = "virtual:barodoc/config";
 const VIRTUAL_I18N_ID = "virtual:barodoc/i18n";
@@ -53,17 +59,39 @@ export default function barodoc(options: BarodocOptions): AstroIntegration {
         config,
         updateConfig,
         logger,
+        command,
       }) => {
         logger.info("Loading Barodoc configuration...");
 
         // Convert URL to string path
-        const rootPath = config.root instanceof URL 
-          ? config.root.pathname 
+        const rootPath = config.root instanceof URL
+          ? config.root.pathname
           : String(config.root);
 
         // Load config
         resolvedConfig = await loadConfig(configPath, rootPath);
         logger.info(`Loaded config: ${resolvedConfig.name}`);
+
+        const mode = command === "dev" ? "development" : "production";
+        const pluginContext: PluginContext = {
+          config: resolvedConfig,
+          root: rootPath,
+          mode,
+        };
+
+        // Load and run plugins
+        const pluginConfigs = resolvedConfig.plugins ?? [];
+        const plugins = await loadPlugins(pluginConfigs, pluginContext);
+        resolvedConfig = await runConfigHook(
+          plugins,
+          resolvedConfig,
+          pluginContext
+        );
+        pluginContext.config = resolvedConfig;
+
+        if (plugins.length > 0) {
+          logger.info(`Loaded ${plugins.length} plugin(s)`);
+        }
 
         // Setup i18n
         const i18nConfig = resolvedConfig.i18n || {
@@ -71,18 +99,15 @@ export default function barodoc(options: BarodocOptions): AstroIntegration {
           locales: ["en"],
         };
 
-        // Merge theme integration
+        // Theme + plugin integrations
         const themeIntegration = options.theme.integration();
-
-        // Merge theme integration
-        // Note: i18n should be configured in astro.config.mjs, not here
-        // to avoid Astro 5.x merge issues
+        const pluginIntegrations = getPluginIntegrations(plugins, pluginContext);
 
         updateConfig({
           vite: {
             plugins: [createVirtualModulesPlugin(resolvedConfig) as any],
           },
-          integrations: [themeIntegration],
+          integrations: [themeIntegration, ...pluginIntegrations],
         });
 
         logger.info(
