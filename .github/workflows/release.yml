@@ -34,7 +34,7 @@ jobs:
           registry-url: "https://registry.npmjs.org"
 
       - name: Install dependencies
-        run: pnpm install
+        run: pnpm install --frozen-lockfile
 
       - name: Build packages
         run: pnpm build:packages
@@ -50,4 +50,3 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_BARODOC_TOKEN }}
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_BARODOC_TOKEN }}
