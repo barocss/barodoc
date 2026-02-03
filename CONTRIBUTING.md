@@ -142,6 +142,30 @@ pnpm build:packages
 pnpm barodoc --help
 ```
 
+### create-barodoc 동작 확인
+
+`create-barodoc`으로 만든 프로젝트가 CLI(`barodoc serve` / `build`)에서 정상 동작하는지 확인할 때:
+
+1. **저장소 루트에서** (패키지 빌드 후):
+
+   ```bash
+   pnpm build:packages
+   pnpm create barodoc test-docs
+   cd test-docs
+   npx barodoc serve
+   ```
+
+2. **기대하는 구조** (create-barodoc 출력):
+   - `docs/en/introduction.md`, `docs/en/quickstart.md`
+   - `public/logo.svg`
+   - `barodoc.config.json` (name, logo, navigation, i18n.defaultLocale/locales, topbar)
+   - `.gitignore`
+   - `src/`, `package.json`, `astro.config.mjs`는 **없음** (제로 설정 모드)
+
+3. **이 저장소의 docs/와의 차이**  
+   이 리포지터리의 **docs/** 디렉터리는 **풀 커스텀(Astro) 모드**입니다. `docs/` 안에 `src/content/docs/`, `astro.config.mjs`, `package.json`이 있고 `pnpm dev`로 실행합니다.  
+   **create-barodoc**으로 만든 프로젝트는 위 구조처럼 `docs/en/` + `public/` + `barodoc.config.json`만 있고, `npx barodoc serve`로 실행합니다. 두 방식의 콘텐츠 규칙(슬러그, frontmatter)은 동일합니다.
+
 ## 문서 작성
 
 - 한국어와 영어 문서 모두 작성

@@ -1,35 +1,73 @@
 ---
 title: Installation
-description: Install Barodoc in your project
+description: Install Barodoc: CLI (zero-config) or manual Astro setup
 ---
 
-## Using the CLI (Recommended)
+Two ways to use Barodoc: **CLI (zero-config)** for a docs-only project, or **Manual (Astro)** for a full Astro app.
 
-The fastest way to get started:
+## CLI (zero-config, recommended for new docs)
+
+No `package.json` or Astro config in your repo. You only have `docs/`, `public/`, and `barodoc.config.json`.
+
+### Create project
 
 ```bash
 pnpm create barodoc my-docs
+cd my-docs
 ```
 
-## Manual Installation
+### Structure created
 
-If you prefer manual setup:
+| Path | Purpose |
+|------|--------|
+| `docs/en/` | Markdown/MDX files for the default locale. Add `docs/ko/`, etc. for i18n. |
+| `public/` | Static assets (logo, favicon). |
+| `barodoc.config.json` | Site name, `navigation`, `theme`, `i18n`, `topbar`, etc. |
+| `.gitignore` | Ignores `.barodoc/`, `dist/`, `node_modules/`. |
 
-### 1. Create an Astro project
+No `src/` or `astro.config.mjs` in the project. The CLI generates a temporary Astro project under `.barodoc/` when you run commands.
+
+### Commands
+
+```bash
+# Development
+npx barodoc serve
+
+# Optional: custom port or config
+npx barodoc serve --port 3000
+npx barodoc serve --config custom.config.json
+
+# Production build (output: dist/)
+npx barodoc build
+
+# Preview production build
+npx barodoc preview
+```
+
+Install is not required in the project; `npx barodoc` runs the CLI.
+
+---
+
+## Manual installation (Astro integration)
+
+Use this when you want a normal Astro project (e.g. custom routes, other integrations). Content lives under `src/content/docs/`, and you run `pnpm dev` / `pnpm build`.
+
+### 1. Create Astro project
 
 ```bash
 pnpm create astro@latest my-docs
+cd my-docs
 ```
 
 ### 2. Install Barodoc packages
 
 ```bash
-pnpm add @barodoc/core @barodoc/theme-docs
+pnpm add @barodoc/core @barodoc/theme-docs astro
 ```
 
 ### 3. Configure Astro
 
-Update `astro.config.mjs`:
+In `astro.config.mjs`:
 
 ```js
 import { defineConfig } from "astro/config";
@@ -48,30 +86,45 @@ export default defineConfig({
 
 ### 4. Create config file
 
-Create `barodoc.config.json`:
+Create `barodoc.config.json` in the project root:
 
 ```json
 {
   "name": "My Docs",
+  "logo": "/logo.svg",
   "navigation": [
     {
       "group": "Getting Started",
-      "pages": ["introduction"]
+      "pages": ["introduction", "quickstart"]
     }
-  ]
+  ],
+  "i18n": {
+    "defaultLocale": "en",
+    "locales": ["en"]
+  }
 }
 ```
 
 ### 5. Add content
 
-Create `src/content/docs/en/introduction.mdx`:
+Create `src/content/docs/en/introduction.mdx` (and optionally other locales under `src/content/docs/ko/`, etc.). See [Content structure](/docs/guides/content-structure) for layout and slugs.
 
 ```mdx
 ---
 title: Introduction
+description: Welcome to the docs
 ---
 
 # Welcome
 
 Your documentation starts here.
 ```
+
+### 6. Run the project
+
+```bash
+pnpm dev
+pnpm build
+```
+
+Content structure and URL rules are the same as in CLI mode; only the directory is `src/content/docs/` instead of `docs/`.

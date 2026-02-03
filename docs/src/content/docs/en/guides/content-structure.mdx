@@ -3,9 +3,23 @@ title: Content Structure
 description: Where to put content and how URLs are built
 ---
 
-Barodoc content lives under `src/content/docs/`. Each locale has its own folder; the folder structure becomes the URL path.
+Barodoc content is organized by locale; the folder structure becomes the URL path. In **CLI (zero-config)** mode, content lives under **`docs/`** (e.g. `docs/en/`, `docs/ko/`). In **manual Astro** mode, it lives under **`src/content/docs/`** (e.g. `src/content/docs/en/`). The rules below apply to both.
 
 ## Directory layout
+
+**CLI mode** (`docs/` at project root):
+
+```
+docs/
+├── en/
+│   ├── introduction.mdx    → /docs/introduction
+│   └── guides/
+│       └── installation.mdx → /docs/guides/installation
+└── ko/
+    └── ...
+```
+
+**Manual Astro mode** (`src/content/docs/`):
 
 ```
 src/content/docs/

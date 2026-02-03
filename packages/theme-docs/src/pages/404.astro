@@ -1,0 +1,32 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import config from "virtual:barodoc/config";
+
+const pathname = new URL(Astro.request.url).pathname;
+---
+
+<BaseLayout title={`${config.name} · Page not found`} description="The page you are looking for does not exist.">
+  <div class="min-h-screen flex flex-col items-center justify-center px-4">
+    <div class="text-center max-w-md">
+      <p class="text-8xl font-bold text-[var(--color-text-muted)] select-none" aria-hidden="true">404</p>
+      <h1 class="text-2xl font-semibold text-[var(--color-text)] mt-4">Page not found</h1>
+      <p class="text-[var(--color-text-secondary)] mt-2">
+        The page at <code class="text-sm bg-[var(--color-bg-secondary)] px-2 py-1 rounded break-all">{pathname}</code> does not exist.
+      </p>
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-3 mt-8">
+        <a
+          href="/"
+          class="px-5 py-2.5 bg-primary-600 text-white rounded-xl hover:bg-primary-700 transition-colors font-medium"
+        >
+          Home
+        </a>
+        <a
+          href="/docs/introduction"
+          class="px-5 py-2.5 border border-[var(--color-border)] text-[var(--color-text)] rounded-xl hover:bg-[var(--color-bg-secondary)] transition-colors font-medium"
+        >
+          Documentation
+        </a>
+      </div>
+    </div>
+  </div>
+</BaseLayout>

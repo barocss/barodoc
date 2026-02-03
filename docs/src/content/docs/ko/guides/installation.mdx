@@ -1,61 +1,130 @@
 ---
 title: 설치
-description: Barodoc 설치 가이드
+description: Barodoc 설치: CLI(제로 설정) 또는 수동 Astro 설정
 ---
 
-Barodoc을 설치하는 여러 방법을 안내합니다.
+Barodoc을 쓰는 방법은 두 가지입니다. **CLI(제로 설정)**은 문서 전용 프로젝트용이고, **수동(Astro)**은 Astro 앱 전체를 쓰는 경우입니다.
 
-## 요구 사항
+## CLI (제로 설정, 새 문서 사이트 권장)
 
-- Node.js 20 이상
-- pnpm, npm, 또는 yarn
+프로젝트에 `package.json`이나 Astro 설정이 없습니다. `docs/`, `public/`, `barodoc.config.json`만 있습니다.
 
-## 빠른 설치
-
-새 프로젝트를 시작하는 가장 쉬운 방법:
+### 프로젝트 생성
 
 ```bash
-npx barodoc create my-docs
+pnpm create barodoc my-docs
 cd my-docs
-barodoc serve
 ```
 
-## 기존 프로젝트에 추가
+### 생성되는 구조
 
-기존 Astro 프로젝트에 Barodoc을 추가할 수 있습니다:
+| 경로 | 용도 |
+|------|------|
+| `docs/en/` | 기본 로케일용 Markdown/MDX. i18n 시 `docs/ko/` 등 추가. |
+| `public/` | 정적 파일 (로고, 파비콘). |
+| `barodoc.config.json` | 사이트 이름, `navigation`, `theme`, `i18n`, `topbar` 등. |
+| `.gitignore` | `.barodoc/`, `dist/`, `node_modules/` 제외. |
+
+프로젝트 안에는 `src/`나 `astro.config.mjs`가 없습니다. 명령 실행 시 CLI가 `.barodoc/` 아래에 임시 Astro 프로젝트를 만듭니다.
+
+### 명령어
 
 ```bash
-pnpm add @barodoc/core @barodoc/theme-docs
+# 개발
+npx barodoc serve
+
+# 선택: 포트/설정 파일 지정
+npx barodoc serve --port 3000
+npx barodoc serve --config custom.config.json
+
+# 프로덕션 빌드 (결과: dist/)
+npx barodoc build
+
+# 빌드 미리보기
+npx barodoc preview
 ```
 
-`astro.config.mjs`를 설정하세요:
+프로젝트 안에서 별도 설치 없이 `npx barodoc`으로 실행합니다.
 
-```javascript
+---
+
+## 수동 설치 (Astro 통합)
+
+일반 Astro 프로젝트가 필요할 때(커스텀 라우트, 다른 통합 등) 사용합니다. 콘텐츠는 `src/content/docs/`에 두고 `pnpm dev` / `pnpm build`로 실행합니다.
+
+### 1. Astro 프로젝트 생성
+
+```bash
+pnpm create astro@latest my-docs
+cd my-docs
+```
+
+### 2. Barodoc 패키지 설치
+
+```bash
+pnpm add @barodoc/core @barodoc/theme-docs astro
+```
+
+### 3. Astro 설정
+
+`astro.config.mjs`에 다음을 추가합니다:
+
+```js
 import { defineConfig } from "astro/config";
 import barodoc from "@barodoc/core";
 import docsTheme from "@barodoc/theme-docs";
 
 export default defineConfig({
-  site: "https://example.com",
-  i18n: {
-    defaultLocale: "ko",
-    locales: ["ko", "en"],
-    routing: { prefixDefaultLocale: false },
-  },
   integrations: [
     barodoc({
+      config: "./barodoc.config.json",
       theme: docsTheme(),
     }),
   ],
 });
 ```
 
-## 전역 설치
+### 4. 설정 파일 생성
 
-CLI를 전역으로 설치하면 어디서든 사용할 수 있습니다:
+프로젝트 루트에 `barodoc.config.json` 생성:
 
-```bash
-npm install -g barodoc
+```json
+{
+  "name": "My Docs",
+  "logo": "/logo.svg",
+  "navigation": [
+    {
+      "group": "시작하기",
+      "pages": ["introduction", "quickstart"]
+    }
+  ],
+  "i18n": {
+    "defaultLocale": "en",
+    "locales": ["en"]
+  }
+}
 ```
 
-이제 `barodoc` 명령을 어디서든 실행할 수 있습니다.
+### 5. 콘텐츠 추가
+
+`src/content/docs/en/introduction.mdx`를 만들고, 필요하면 `src/content/docs/ko/` 등 다른 로케일도 추가합니다. 구조와 슬러그는 [콘텐츠 구조](/ko/docs/guides/content-structure)를 참고하세요.
+
+```mdx
+---
+title: 소개
+description: 문서에 오신 것을 환영합니다
+---
+
+# 환영합니다
+
+문서 내용을 여기에 작성하세요.
+```
+
+### 6. 실행
+
+```bash
+pnpm dev
+pnpm build
+```
+
+콘텐츠 구조와 URL 규칙은 CLI 모드와 동일하고, 디렉터리만 `docs/` 대신 `src/content/docs/`를 사용합니다.
