@@ -77,29 +77,29 @@
   }
 }
 
-/* Prose styling for MDX content - Mintlify style */
+/* Prose styling for MDX content -  */
 .prose {
   --tw-prose-body: var(--color-text);
   --tw-prose-headings: var(--color-text);
   --tw-prose-links: var(--color-primary-600);
   --tw-prose-code: var(--color-text);
   --tw-prose-pre-bg: var(--color-bg-secondary);
-  font-size: 0.875rem !important;
-  line-height: 1.6 !important;
+  /* font-size: 0.875rem !important; */
+  /* line-height: 1.6 !important; */
 }
 
 .dark .prose {
   --tw-prose-links: var(--color-primary-400);
 }
 
-/* Headings - Mintlify style */
+/* Headings -  */
 .prose :where(h1):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
   font-size: 1.75rem !important;
   font-weight: 700 !important;
   letter-spacing: -0.025em !important;
   margin-top: 0 !important;
   margin-bottom: 0.375rem !important;
-  line-height: 1.25 !important;
+  /* line-height: 1.25 !important; */
 }
 
 .prose :where(h2):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
@@ -143,14 +143,14 @@
   text-underline-offset: 2px !important;
 }
 
-/* Code block styling - Mintlify style */
+/* Code block styling -  */
 .prose :where(pre):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
   background-color: var(--color-bg) !important;
   border: 1px solid var(--color-border) !important;
   border-radius: 0.5rem !important;
   padding: 0.75rem 1rem !important;
   font-size: 0.8125rem !important;
-  line-height: 1.5 !important;
+  line-height: 1.45 !important;
   overflow-x: auto !important;
   margin: 0.75rem 0 !important;
 }
@@ -185,7 +185,7 @@
   color: var(--color-text-muted) !important;
 }
 
-/* Blockquotes - Mintlify style */
+/* Blockquotes -  */
 .prose :where(blockquote):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
   border-left: 3px solid var(--color-primary-500) !important;
   background-color: var(--color-bg-secondary) !important;
@@ -241,12 +241,48 @@
 .astro-code {
   background-color: var(--color-bg) !important;
   border-radius: 0.5rem;
+  line-height: 1.45;
+}
+
+.astro-code code {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Tighter line spacing: Shiki outputs each line as span.line */
+.astro-code span.line {
+  display: block;
+  line-height: 1.45;
+  margin: 0;
+  padding: 0;
 }
 
 .dark .astro-code,
 .dark .astro-code span {
   color: var(--shiki-dark) !important;
   background-color: var(--shiki-dark-bg) !important;
+}
+
+/* Line numbers: applied when barodoc.config.json has "lineNumbers": true */
+.astro-code.line-numbers {
+  counter-reset: line;
+}
+
+.astro-code.line-numbers span.line {
+  display: block;
+  counter-increment: line;
+}
+
+.astro-code.line-numbers span.line::before {
+  content: counter(line);
+  display: inline-block;
+  min-width: 2.5rem;
+  margin-right: 1rem;
+  padding-right: 0.5rem;
+  text-align: right;
+  color: var(--color-text-muted);
+  user-select: none;
+  border-right: 1px solid var(--color-border);
 }
 
 /* Pagefind search styling */

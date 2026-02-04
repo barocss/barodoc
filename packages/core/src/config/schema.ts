@@ -41,6 +41,8 @@ export const searchSchema = z.object({
   enabled: z.boolean().optional(),
 }).optional();
 
+export const lineNumbersSchema = z.boolean().optional();
+
 export const pluginConfigSchema = z.union([
   z.string(),
   z.tuple([z.string(), z.record(z.unknown())]),
@@ -55,6 +57,7 @@ export const barodocConfigSchema = z.object({
   navigation: z.array(navItemSchema),
   topbar: topbarSchema,
   search: searchSchema,
+  lineNumbers: lineNumbersSchema,
   plugins: z.array(pluginConfigSchema).optional(),
   customCss: z.array(z.string()).optional(),
 });

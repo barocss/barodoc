@@ -3,23 +3,31 @@ title: Code Group
 description: 여러 코드 블록을 탭 인터페이스로 표시
 ---
 import CodeGroup from "@barodoc/theme-docs/components/mdx/CodeGroup.astro";
+import CodeItem from "@barodoc/theme-docs/components/mdx/CodeItem.astro";
 import { ParamField, ParamFieldGroup } from "@barodoc/theme-docs/components/mdx/ParamField.tsx";
 
-코드 그룹을 사용하면 여러 코드 예제를 탭 인터페이스로 표시할 수 있어, 같은 기능을 다른 언어로 보여주기 쉽습니다.
+코드 그룹은 여러 코드 예제를 탭으로 보여줍니다. 각 CodeItem 안에 펜스드 코드 블록 하나를 넣으면 되고, 문법 강조는 Shiki가 처리합니다.
 
 ## 기본 사용법
 
-<CodeGroup titles={["JavaScript", "Python", "Go"]}>
+<CodeGroup>
+  <CodeItem title="JavaScript">
 
 ```javascript
 const greeting = "Hello, World!";
 console.log(greeting);
 ```
 
+  </CodeItem>
+  <CodeItem title="Python">
+
 ```python
 greeting = "Hello, World!"
 print(greeting)
 ```
+
+  </CodeItem>
+  <CodeItem title="Go">
 
 ```go
 package main
@@ -32,34 +40,49 @@ func main() {
 }
 ```
 
+  </CodeItem>
 </CodeGroup>
 
 ## 패키지 매니저 예제
 
-<CodeGroup titles={["npm", "pnpm", "yarn", "bun"]}>
+<CodeGroup>
+  <CodeItem title="npm">
 
 ```bash
 npm install @barodoc/core
 ```
 
+  </CodeItem>
+  <CodeItem title="pnpm">
+
 ```bash
 pnpm add @barodoc/core
 ```
+
+  </CodeItem>
+  <CodeItem title="yarn">
 
 ```bash
 yarn add @barodoc/core
 ```
 
+  </CodeItem>
+  <CodeItem title="bun">
+
 ```bash
 bun add @barodoc/core
 ```
 
+  </CodeItem>
 </CodeGroup>
 
 ## Props
 
 <ParamFieldGroup>
-  <ParamField name="titles" type="string[]">
-    각 코드 블록의 탭 레이블 배열
+  <ParamField name="CodeItem — title" type="string">
+    이 코드 블록의 탭 레이블.
+  </ParamField>
+  <ParamField name="CodeGroup — titles" type="string[]">
+    선택. CodeGroup에 CodeItem 없이 <code>pre</code>를 직접 넣을 때만 사용. CodeItem 사용 시 무시됨.
   </ParamField>
 </ParamFieldGroup>
