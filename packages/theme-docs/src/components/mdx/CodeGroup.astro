@@ -1,5 +1,7 @@
 ---
-// CodeGroup component for tabbed code blocks
+// CodeGroup component for tabbed code blocks.
+// When using CodeItem children, each CodeItem's title is used for the tab label.
+// Optional titles array is only used when not using CodeItem (direct pre children).
 interface Props {
   titles?: string[];
 }
@@ -9,7 +11,7 @@ const { titles = [] } = Astro.props;
 
 <div class="code-group not-prose my-4 rounded-lg border border-[var(--color-border)] overflow-hidden" data-titles={JSON.stringify(titles)}>
   <div class="code-group-tabs flex flex-wrap gap-0 border-b border-[var(--color-border)] bg-[var(--color-bg-tertiary)]"></div>
-  <div class="code-group-content bg-[var(--color-bg-secondary)] px-5 py-4">
+  <div class="code-group-content bg-[var(--color-bg-secondary)]">
     <slot />
   </div>
 </div>
@@ -19,16 +21,29 @@ const { titles = [] } = Astro.props;
     document.querySelectorAll('.code-group').forEach((group) => {
       const tabsContainer = group.querySelector('.code-group-tabs');
       const contentContainer = group.querySelector('.code-group-content');
-      const titles = JSON.parse(group.getAttribute('data-titles') || '[]');
-      const codeBlocks = contentContainer?.querySelectorAll('pre');
+      const fallbackTitles = JSON.parse(group.getAttribute('data-titles') || '[]');
 
-      if (!tabsContainer || !contentContainer || !codeBlocks?.length) return;
+      const codeItems = contentContainer?.querySelectorAll(':scope > .code-item');
+      const directPres = contentContainer?.querySelectorAll(':scope > pre');
 
-      // Create tabs
-      codeBlocks.forEach((block, index) => {
+      // When CodeItem children exist: use them for tabs (titles from data-title), one tab per .code-item
+      const useCodeItems = (codeItems?.length ?? 0) > 0;
+      const tabPanels = useCodeItems
+        ? Array.from(codeItems!)
+        : Array.from(directPres || []);
+      const titles = useCodeItems && codeItems?.length
+        ? Array.from(codeItems!).map((el) => (el as HTMLElement).getAttribute('data-title') ?? '')
+        : fallbackTitles;
+      const numTabs = tabPanels.length;
+
+      if (!tabsContainer || !contentContainer || numTabs === 0) return;
+
+      // Create tabs from titles; show/hide tabPanels
+      tabPanels.forEach((_panel, index) => {
         const tab = document.createElement('button');
         tab.className = 'shrink-0 px-4 py-2 text-sm font-medium transition-colors whitespace-nowrap text-[var(--color-text-muted)] hover:text-[var(--color-text)]';
-        tab.textContent = titles[index] || `Tab ${index + 1}`;
+        tab.textContent = titles[index]?.trim() || `Tab ${index + 1}`;
+        const panel = tabPanels[index] as HTMLElement;
         tab.addEventListener('click', () => {
           tabsContainer.querySelectorAll('button').forEach((t, i) => {
             if (i === index) {
@@ -39,8 +54,8 @@ const { titles = [] } = Astro.props;
               t.classList.add('text-[var(--color-text-muted)]');
             }
           });
-          codeBlocks.forEach((b, i) => {
-            (b as HTMLElement).style.display = i === index ? 'block' : 'none';
+          tabPanels.forEach((p, i) => {
+            (p as HTMLElement).style.display = i === index ? 'block' : 'none';
           });
         });
         tabsContainer.appendChild(tab);
@@ -49,7 +64,7 @@ const { titles = [] } = Astro.props;
           tab.classList.add('border-b-2', 'border-primary-500', 'text-[var(--color-text)]', '-mb-px');
           tab.classList.remove('text-[var(--color-text-muted)]');
         } else {
-          (block as HTMLElement).style.display = 'none';
+          panel.style.display = 'none';
         }
       });
     });

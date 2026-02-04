@@ -55,6 +55,9 @@ export interface BarodocConfig {
   search?: {
     enabled?: boolean;
   };
+
+  /** When true, code blocks render with line numbers. */
+  lineNumbers?: boolean;
   
   plugins?: PluginConfig[];
   
@@ -63,7 +66,7 @@ export interface BarodocConfig {
 
 export interface ThemeExport {
   name: string;
-  integration: () => AstroIntegration;
+  integration: (config: ResolvedBarodocConfig) => AstroIntegration;
   pages?: Record<string, () => Promise<unknown>>;
   layouts?: Record<string, () => Promise<unknown>>;
   components?: Record<string, () => Promise<unknown>>;

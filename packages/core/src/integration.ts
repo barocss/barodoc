@@ -100,7 +100,7 @@ export default function barodoc(options: BarodocOptions): AstroIntegration {
         };
 
         // Theme + plugin integrations
-        const themeIntegration = options.theme.integration();
+        const themeIntegration = options.theme.integration(resolvedConfig);
         const pluginIntegrations = getPluginIntegrations(plugins, pluginContext);
 
         updateConfig({

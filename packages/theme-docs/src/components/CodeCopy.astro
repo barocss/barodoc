@@ -100,13 +100,45 @@
     background: transparent !important;
   }
 
-  /* Inside CodeGroup: no extra border/background so the group is one unified block */
+  /* Inside CodeGroup: no extra border/background, add padding so code has internal spacing */
   .code-group .code-block-wrapper {
     margin: 0;
     border: none;
     border-radius: 0;
     background: transparent;
+    /* padding: 1rem 1.25rem; */
   }
+
+  .code-group .code-block-wrapper pre {
+    padding: 0 !important;
+  }
+
+  /* pre not wrapped by CodeCopy (direct child of code-group-content) */
+  .code-group .code-group-content > pre {
+    padding: 1rem 1.25rem !important;
+  }
+
+  /* CodeItem: one code block per tab; only the code area is visible, no extra wrapper space */
+  .code-group .code-item {
+    margin: 0;
+    padding: 0;
+    display: block;
+  }
+
+  .code-group .code-item:not(:first-child) {
+    display: none; /* toggled by CodeGroup script */
+  }
+
+  /* .code-group .code-item .code-block-wrapper,
+  .code-group .code-item > pre {
+    margin: 0 !important;
+    border: none !important;
+    padding: 0.25rem 0rem !important;
+  } */
+
+  /* .code-group .code-item .code-block-wrapper pre {
+    padding: 0 !important;
+  } */
   
   .code-block-header {
     display: flex;

@@ -3,23 +3,31 @@ title: Code Group
 description: Display multiple code blocks in a tabbed interface
 ---
 import CodeGroup from "@barodoc/theme-docs/components/mdx/CodeGroup.astro";
+import CodeItem from "@barodoc/theme-docs/components/mdx/CodeItem.astro";
 import { ParamField, ParamFieldGroup } from "@barodoc/theme-docs/components/mdx/ParamField.tsx";
 
-Code groups allow you to display multiple code examples in a tabbed interface, making it easy to show the same functionality in different languages.
+Code groups display multiple code examples in tabs. Put one fenced code block inside each CodeItem; Shiki handles syntax highlighting.
 
-## Basic Usage
+## Basic usage
 
-<CodeGroup titles={["JavaScript", "Python", "Go"]}>
+<CodeGroup>
+  <CodeItem title="JavaScript">
 
 ```javascript
 const greeting = "Hello, World!";
 console.log(greeting);
 ```
 
+  </CodeItem>
+  <CodeItem title="Python">
+
 ```python
 greeting = "Hello, World!"
 print(greeting)
 ```
+
+  </CodeItem>
+  <CodeItem title="Go">
 
 ```go
 package main
@@ -32,59 +40,49 @@ func main() {
 }
 ```
 
+  </CodeItem>
 </CodeGroup>
 
-```mdx
-<CodeGroup titles={["JavaScript", "Python", "Go"]}>
+## Package manager example
 
-\`\`\`javascript
-const greeting = "Hello, World!";
-console.log(greeting);
-\`\`\`
-
-\`\`\`python
-greeting = "Hello, World!"
-print(greeting)
-\`\`\`
-
-\`\`\`go
-package main
-import "fmt"
-func main() {
-    greeting := "Hello, World!"
-    fmt.Println(greeting)
-}
-\`\`\`
-
-</CodeGroup>
-```
-
-## Package Manager Example
-
-<CodeGroup titles={["npm", "pnpm", "yarn", "bun"]}>
+<CodeGroup>
+  <CodeItem title="npm">
 
 ```bash
 npm install @barodoc/core
 ```
 
+  </CodeItem>
+  <CodeItem title="pnpm">
+
 ```bash
 pnpm add @barodoc/core
 ```
+
+  </CodeItem>
+  <CodeItem title="yarn">
 
 ```bash
 yarn add @barodoc/core
 ```
 
+  </CodeItem>
+  <CodeItem title="bun">
+
 ```bash
 bun add @barodoc/core
 ```
 
+  </CodeItem>
 </CodeGroup>
 
 ## Props
 
 <ParamFieldGroup>
-  <ParamField name="titles" type="string[]">
-    Array of tab labels for each code block
+  <ParamField name="CodeItem — title" type="string">
+    Tab label for this code block.
+  </ParamField>
+  <ParamField name="CodeGroup — titles" type="string[]">
+    Optional. Fallback when CodeGroup has direct <code>pre</code> children (no CodeItem). Ignored when using CodeItem.
   </ParamField>
 </ParamFieldGroup>

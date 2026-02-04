@@ -52,5 +52,6 @@
   ],
   "topbar": {
     "github": "https://github.com/barocss/barodoc"
-  }
+  },
+  "lineNumbers": true
 }

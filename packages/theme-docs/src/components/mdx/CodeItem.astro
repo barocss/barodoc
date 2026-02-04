@@ -1,0 +1,13 @@
+---
+// Wraps a single code block inside CodeGroup. Use one CodeItem per tab.
+// Put one fenced code block (```lang ... ```) inside; MDX/Shiki handle syntax highlighting.
+interface Props {
+  title?: string;
+}
+
+const { title = "" } = Astro.props;
+---
+
+<div class="code-item" data-title={title}>
+  <slot />
+</div>
