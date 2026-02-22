@@ -76,9 +76,21 @@ export async function createProject(options: ProjectOptions): Promise<string> {
 
   console.log(pc.dim(`Creating temporary project in ${BARODOC_DIR}/`));
 
-  // Clean up existing
-  await fs.remove(projectDir);
-  await fs.ensureDir(projectDir);
+  // Preserve node_modules if it exists to avoid reinstalling on every run
+  const nodeModulesDir = path.join(projectDir, "node_modules");
+  const hasNodeModules = fs.existsSync(nodeModulesDir);
+
+  if (hasNodeModules) {
+    const entries = await fs.readdir(projectDir);
+    for (const entry of entries) {
+      if (entry !== "node_modules") {
+        await fs.remove(path.join(projectDir, entry));
+      }
+    }
+  } else {
+    await fs.remove(projectDir);
+    await fs.ensureDir(projectDir);
+  }
 
   // Create package.json
   await fs.writeJSON(
@@ -157,9 +169,16 @@ export async function createProject(options: ProjectOptions): Promise<string> {
  * Install dependencies in temporary project
  */
 export async function installDependencies(projectDir: string): Promise<void> {
+  const nodeModulesDir = path.join(projectDir, "node_modules");
+
+  if (fs.existsSync(nodeModulesDir)) {
+    console.log(pc.dim("Using cached dependencies..."));
+    console.log();
+    return;
+  }
+
   console.log(pc.dim("Installing dependencies..."));
 
-  // Detect available package manager: prefer npm for universal compatibility
   await execa("npm", ["install", "--prefer-offline"], {
     cwd: projectDir,
     stdio: "inherit",
@@ -185,11 +204,14 @@ function generateAstroConfig(
   configPath: string | null,
   docsDir: string
 ): string {
+  const siteLine = config.site ? `\n  site: ${JSON.stringify(config.site)},` : "";
+  const baseLine = config.base ? `\n  base: ${JSON.stringify(config.base)},` : "";
+
   return `import { defineConfig } from "astro/config";
 import barodoc from "@barodoc/core";
 import docsTheme from "@barodoc/theme-docs";
 
-export default defineConfig({
+export default defineConfig({${siteLine}${baseLine}
   integrations: [
     barodoc({
       config: "./barodoc.config.json",
@@ -209,7 +231,7 @@ function generateContentConfig(): string {
 const docsCollection = defineCollection({
   type: "content",
   schema: z.object({
-    title: z.string(),
+    title: z.string().optional(),
     description: z.string().optional(),
   }),
 });

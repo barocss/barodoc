@@ -52,6 +52,8 @@ export const barodocConfigSchema = z.object({
   name: z.string(),
   logo: z.string().optional(),
   favicon: z.string().optional(),
+  site: z.string().optional(),
+  base: z.string().optional(),
   theme: themeConfigSchema,
   i18n: i18nConfigSchema,
   navigation: z.array(navItemSchema),
