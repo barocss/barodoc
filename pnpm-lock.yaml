@@ -155,6 +155,21 @@ importers:
         specifier: ^5.7.0
         version: 5.9.3
 
+  packages/plugin-llms-txt:
+    devDependencies:
+      '@barodoc/core':
+        specifier: workspace:*
+        version: link:../core
+      '@types/node':
+        specifier: ^22.0.0
+        version: 22.19.8
+      tsup:
+        specifier: ^8.3.0
+        version: 8.5.1(jiti@2.6.1)(postcss@8.5.6)(tsx@4.21.0)(typescript@5.9.3)
+      typescript:
+        specifier: ^5.7.0
+        version: 5.9.3
+
   packages/plugin-search:
     devDependencies:
       '@barodoc/core':
@@ -2167,8 +2182,8 @@ packages:
     resolution: {integrity: sha512-iJc4TwyANnOGR1OmWhsS9ayRS3s+XQ185FmuHObThD+5AeJCakAAbWv8KimMTt08xCCLNgneQwFp+JRJOr9qGQ==}
     engines: {node: '>=0.10'}
 
-  d3-array@https://codeload.github.com/d3/d3-array/tar.gz/be0ae0d2b36ab91b833294ad2cfc5d5905acbd0f:
-    resolution: {tarball: https://codeload.github.com/d3/d3-array/tar.gz/be0ae0d2b36ab91b833294ad2cfc5d5905acbd0f}
+  d3-array@git+https://github.com/d3/d3-array.git#be0ae0d2b36ab91b833294ad2cfc5d5905acbd0f:
+    resolution: {commit: be0ae0d2b36ab91b833294ad2cfc5d5905acbd0f, repo: https://github.com/d3/d3-array.git, type: git}
     version: 3.2.4
     engines: {node: '>=12'}
 
@@ -5954,7 +5969,7 @@ snapshots:
 
   cytoscape@3.33.1: {}
 
-  d3-array@https://codeload.github.com/d3/d3-array/tar.gz/be0ae0d2b36ab91b833294ad2cfc5d5905acbd0f:
+  d3-array@git+https://github.com/d3/d3-array.git#be0ae0d2b36ab91b833294ad2cfc5d5905acbd0f:
     dependencies:
       internmap: 2.0.3
 
@@ -5976,7 +5991,7 @@ snapshots:
 
   d3-contour@4.0.2:
     dependencies:
-      d3-array: https://codeload.github.com/d3/d3-array/tar.gz/be0ae0d2b36ab91b833294ad2cfc5d5905acbd0f
+      d3-array: git+https://github.com/d3/d3-array.git#be0ae0d2b36ab91b833294ad2cfc5d5905acbd0f
 
   d3-delaunay@6.0.4:
     dependencies:
@@ -6011,7 +6026,7 @@ snapshots:
 
   d3-geo@3.1.1:
     dependencies:
-      d3-array: https://codeload.github.com/d3/d3-array/tar.gz/be0ae0d2b36ab91b833294ad2cfc5d5905acbd0f
+      d3-array: git+https://github.com/d3/d3-array.git#be0ae0d2b36ab91b833294ad2cfc5d5905acbd0f
 
   d3-hierarchy@3.1.2: {}
 
@@ -6029,7 +6044,7 @@ snapshots:
 
   d3-sankey@0.12.3:
     dependencies:
-      d3-array: https://codeload.github.com/d3/d3-array/tar.gz/be0ae0d2b36ab91b833294ad2cfc5d5905acbd0f
+      d3-array: git+https://github.com/d3/d3-array.git#be0ae0d2b36ab91b833294ad2cfc5d5905acbd0f
       d3-shape: 3.2.0
 
   d3-scale-chromatic@3.1.0:
@@ -6039,7 +6054,7 @@ snapshots:
 
   d3-scale@4.0.2:
     dependencies:
-      d3-array: https://codeload.github.com/d3/d3-array/tar.gz/be0ae0d2b36ab91b833294ad2cfc5d5905acbd0f
+      d3-array: git+https://github.com/d3/d3-array.git#be0ae0d2b36ab91b833294ad2cfc5d5905acbd0f
       d3-format: 3.1.2
       d3-interpolate: 3.0.1
       d3-time: 3.1.0
@@ -6057,7 +6072,7 @@ snapshots:
 
   d3-time@3.1.0:
     dependencies:
-      d3-array: https://codeload.github.com/d3/d3-array/tar.gz/be0ae0d2b36ab91b833294ad2cfc5d5905acbd0f
+      d3-array: git+https://github.com/d3/d3-array.git#be0ae0d2b36ab91b833294ad2cfc5d5905acbd0f
 
   d3-timer@3.0.1: {}
 
@@ -6080,7 +6095,7 @@ snapshots:
 
   d3@7.9.0:
     dependencies:
-      d3-array: https://codeload.github.com/d3/d3-array/tar.gz/be0ae0d2b36ab91b833294ad2cfc5d5905acbd0f
+      d3-array: git+https://github.com/d3/d3-array.git#be0ae0d2b36ab91b833294ad2cfc5d5905acbd0f
       d3-axis: 3.0.0
       d3-brush: 3.0.0
       d3-chord: 3.0.1
