@@ -5,11 +5,14 @@
   "fixed": [],
   "linked": [
     [
-      "@barodoc/core", "@barodoc/theme-docs", "create-barodoc",
+      "@barodoc/core",
+      "@barodoc/theme-docs",
+      "create-barodoc",
       "barodoc",
-      "@barodoc/plugin-sitemap", 
-      "@barodoc/plugin-search", 
-      "@barodoc/plugin-analytics"
+      "@barodoc/plugin-sitemap",
+      "@barodoc/plugin-search",
+      "@barodoc/plugin-analytics",
+      "@barodoc/plugin-llms-txt"
     ]
   ],
   "access": "public",

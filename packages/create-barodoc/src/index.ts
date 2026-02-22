@@ -35,6 +35,7 @@ async function main() {
   // Create directory structure
   await fs.ensureDir(path.join(targetDir, "docs/en"));
   await fs.ensureDir(path.join(targetDir, "public"));
+  await fs.ensureDir(path.join(targetDir, ".github/workflows"));
 
   // Create barodoc.config.json
   await fs.writeJSON(
@@ -62,7 +63,12 @@ async function main() {
   // Create sample docs
   await fs.writeFile(
     path.join(targetDir, "docs/en/introduction.md"),
-    `# Introduction
+    `---
+title: Introduction
+description: Welcome to your documentation site
+---
+
+# Introduction
 
 Welcome to your documentation site!
 
@@ -81,25 +87,37 @@ Edit this file at \`docs/en/introduction.md\` to customize your documentation.
 
   await fs.writeFile(
     path.join(targetDir, "docs/en/quickstart.md"),
-    `# Quick Start
+    `---
+title: Quick Start
+description: Get started with your documentation site
+---
 
-## Development
+# Quick Start
+
+## Local Development
 
 \`\`\`bash
 npx barodoc serve
 \`\`\`
 
-## Build
+## Production Build
 
 \`\`\`bash
 npx barodoc build
 \`\`\`
 
-## Preview
+## Deployment
 
-\`\`\`bash
-npx barodoc preview
-\`\`\`
+This project includes a GitHub Actions workflow that automatically builds and deploys
+your documentation to GitHub Pages on every push to \`main\`.
+
+To enable GitHub Pages:
+1. Go to your repository **Settings → Pages**
+2. Set **Source** to **GitHub Actions**
+3. Push to \`main\` — your docs will be live!
+
+> If your site is hosted at a subpath (e.g. \`https://username.github.io/repo-name\`),
+> add \`"base": "/repo-name"\` to your \`barodoc.config.json\`.
 `
   );
 
@@ -113,6 +131,69 @@ npx barodoc preview
   <rect x="18" y="50" width="56" height="3" rx="1.5" fill="currentColor" opacity="0.5"/>
   <rect x="18" y="58" width="48" height="3" rx="1.5" fill="currentColor" opacity="0.5"/>
 </svg>
+`
+  );
+
+  // Create GitHub Actions workflow for GitHub Pages deployment
+  await fs.writeFile(
+    path.join(targetDir, ".github/workflows/deploy.yml"),
+    `name: Deploy Documentation
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Cache npm dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm
+          key: \${{ runner.os }}-npm-barodoc
+          restore-keys: |
+            \${{ runner.os }}-npm-
+
+      - name: Build documentation
+        run: npx barodoc build
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: "./dist"
+
+  deploy:
+    environment:
+      name: github-pages
+      url: \${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
 `
   );
 
@@ -133,7 +214,7 @@ node_modules/
   console.log(`  ${pc.cyan(`cd ${name}`)}`);
   console.log(`  ${pc.cyan("npx barodoc serve")}`);
   console.log();
-  console.log(pc.dim("No npm install needed! Just run the commands above."));
+  console.log(pc.dim("To deploy: push to GitHub and enable Pages in repo Settings → Pages"));
   console.log();
 }
 

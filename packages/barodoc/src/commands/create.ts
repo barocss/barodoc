@@ -1,6 +1,7 @@
 import path from "path";
 import pc from "picocolors";
 import fs from "fs-extra";
+import { generateAgentRules } from "../runtime/agentRules.js";
 
 export async function create(name: string): Promise<void> {
   const targetDir = path.resolve(process.cwd(), name);
@@ -99,6 +100,12 @@ barodoc preview
   <rect x="18" y="58" width="48" height="3" rx="1.5" fill="currentColor" opacity="0.5"/>
 </svg>
 `
+  );
+
+  // Create CLAUDE.md for AI agent rules
+  await fs.writeFile(
+    path.join(targetDir, "CLAUDE.md"),
+    generateAgentRules(name)
   );
 
   // Create .gitignore

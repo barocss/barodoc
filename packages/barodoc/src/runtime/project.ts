@@ -1,6 +1,7 @@
 import fs from "fs-extra";
 import path from "path";
 import pc from "picocolors";
+import { execa } from "execa";
 import type { BarodocConfig } from "@barodoc/core";
 
 const BARODOC_DIR = ".barodoc";
@@ -75,9 +76,21 @@ export async function createProject(options: ProjectOptions): Promise<string> {
 
   console.log(pc.dim(`Creating temporary project in ${BARODOC_DIR}/`));
 
-  // Clean up existing
-  await fs.remove(projectDir);
-  await fs.ensureDir(projectDir);
+  // Preserve node_modules if it exists to avoid reinstalling on every run
+  const nodeModulesDir = path.join(projectDir, "node_modules");
+  const hasNodeModules = fs.existsSync(nodeModulesDir);
+
+  if (hasNodeModules) {
+    const entries = await fs.readdir(projectDir);
+    for (const entry of entries) {
+      if (entry !== "node_modules") {
+        await fs.remove(path.join(projectDir, entry));
+      }
+    }
+  } else {
+    await fs.remove(projectDir);
+    await fs.ensureDir(projectDir);
+  }
 
   // Create package.json
   await fs.writeJSON(
@@ -86,6 +99,13 @@ export async function createProject(options: ProjectOptions): Promise<string> {
       name: "barodoc-temp",
       type: "module",
       private: true,
+      dependencies: {
+        astro: "^5.0.0",
+        "@barodoc/core": "^1.0.0",
+        "@barodoc/theme-docs": "^1.0.0",
+        react: "^19.0.0",
+        "react-dom": "^19.0.0",
+      },
     },
     { spaces: 2 }
   );
@@ -146,11 +166,50 @@ export async function createProject(options: ProjectOptions): Promise<string> {
 }
 
 /**
- * Clean up temporary project
+ * Install dependencies in temporary project
+ */
+export async function installDependencies(
+  projectDir: string,
+  force = false
+): Promise<void> {
+  const nodeModulesDir = path.join(projectDir, "node_modules");
+
+  if (!force && fs.existsSync(nodeModulesDir)) {
+    console.log(pc.dim("Using cached dependencies..."));
+    console.log();
+    return;
+  }
+
+  if (force && fs.existsSync(nodeModulesDir)) {
+    console.log(pc.dim("Clearing cached dependencies..."));
+    await fs.remove(nodeModulesDir);
+  }
+
+  console.log(pc.dim("Installing dependencies..."));
+
+  await execa("npm", ["install", "--prefer-offline"], {
+    cwd: projectDir,
+    stdio: "inherit",
+  });
+
+  console.log(pc.green("✓ Dependencies installed"));
+  console.log();
+}
+
+/**
+ * Clean up temporary project files but preserve node_modules cache
  */
 export async function cleanupProject(root: string): Promise<void> {
   const projectDir = path.join(root, BARODOC_DIR);
-  await fs.remove(projectDir);
+
+  if (!fs.existsSync(projectDir)) return;
+
+  const entries = await fs.readdir(projectDir);
+  for (const entry of entries) {
+    if (entry !== "node_modules") {
+      await fs.remove(path.join(projectDir, entry));
+    }
+  }
 }
 
 /**
@@ -161,11 +220,14 @@ function generateAstroConfig(
   configPath: string | null,
   docsDir: string
 ): string {
+  const siteLine = config.site ? `\n  site: ${JSON.stringify(config.site)},` : "";
+  const baseLine = config.base ? `\n  base: ${JSON.stringify(config.base)},` : "";
+
   return `import { defineConfig } from "astro/config";
 import barodoc from "@barodoc/core";
 import docsTheme from "@barodoc/theme-docs";
 
-export default defineConfig({
+export default defineConfig({${siteLine}${baseLine}
   integrations: [
     barodoc({
       config: "./barodoc.config.json",
@@ -185,7 +247,7 @@ function generateContentConfig(): string {
 const docsCollection = defineCollection({
   type: "content",
   schema: z.object({
-    title: z.string(),
+    title: z.string().optional(),
     description: z.string().optional(),
   }),
 });

@@ -7,6 +7,9 @@ import { serve } from "./commands/serve.js";
 import { build } from "./commands/build.js";
 import { create } from "./commands/create.js";
 import { preview } from "./commands/preview.js";
+import { init } from "./commands/init.js";
+import { eject } from "./commands/eject.js";
+import { check } from "./commands/check.js";
 
 const cli = cac("barodoc");
 
@@ -14,6 +17,8 @@ cli
   .command("serve [dir]", "Start development server")
   .option("-p, --port <port>", "Port to listen on", { default: 4321 })
   .option("-h, --host", "Expose to network")
+  .option("--open", "Open browser on start")
+  .option("--clean", "Force reinstall dependencies")
   .option("-c, --config <file>", "Config file path")
   .action(async (dir: string = ".", options) => {
     await serve(dir, options);
@@ -22,6 +27,7 @@ cli
 cli
   .command("build [dir]", "Build for production")
   .option("-o, --output <dir>", "Output directory", { default: "dist" })
+  .option("--clean", "Force reinstall dependencies")
   .option("-c, --config <file>", "Config file path")
   .action(async (dir: string = ".", options) => {
     await build(dir, options);
@@ -39,6 +45,28 @@ cli
   .command("create <name>", "Create a new Barodoc project")
   .action(async (name: string) => {
     await create(name);
+  });
+
+cli
+  .command("init [dir]", "Initialize Barodoc in an existing directory")
+  .option("-c, --config <file>", "Config file path")
+  .action(async (dir: string = ".", options) => {
+    await init(dir);
+  });
+
+cli
+  .command("check [dir]", "Validate docs against navigation config")
+  .option("--fix", "Auto-fix missing files and orphan navigation entries")
+  .option("-c, --config <file>", "Config file path")
+  .action(async (dir: string = ".", options) => {
+    await check(dir, options);
+  });
+
+cli
+  .command("eject [dir]", "Eject to a full Astro project")
+  .option("-c, --config <file>", "Config file path")
+  .action(async (dir: string = ".", options) => {
+    await eject(dir, options);
   });
 
 cli.help();

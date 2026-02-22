@@ -5,12 +5,15 @@ import {
   isCustomProject,
   loadProjectConfig,
   createProject,
+  installDependencies,
   findDocsDir,
 } from "../runtime/project.js";
 
 export interface ServeOptions {
   port: number;
   host?: boolean;
+  open?: boolean;
+  clean?: boolean;
   config?: string;
 }
 
@@ -47,6 +50,8 @@ export async function serve(dir: string, options: ServeOptions): Promise<void> {
   console.log(pc.green("✓ Project created"));
   console.log();
 
+  await installDependencies(projectDir, options.clean);
+
   // Run astro dev in the temporary project
   await runAstroDev(projectDir, options);
 }
@@ -63,6 +68,10 @@ async function runAstroDev(
 
   if (options.host) {
     args.push("--host");
+  }
+
+  if (options.open) {
+    args.push("--open");
   }
 
   try {
