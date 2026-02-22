@@ -168,13 +168,21 @@ export async function createProject(options: ProjectOptions): Promise<string> {
 /**
  * Install dependencies in temporary project
  */
-export async function installDependencies(projectDir: string): Promise<void> {
+export async function installDependencies(
+  projectDir: string,
+  force = false
+): Promise<void> {
   const nodeModulesDir = path.join(projectDir, "node_modules");
 
-  if (fs.existsSync(nodeModulesDir)) {
+  if (!force && fs.existsSync(nodeModulesDir)) {
     console.log(pc.dim("Using cached dependencies..."));
     console.log();
     return;
+  }
+
+  if (force && fs.existsSync(nodeModulesDir)) {
+    console.log(pc.dim("Clearing cached dependencies..."));
+    await fs.remove(nodeModulesDir);
   }
 
   console.log(pc.dim("Installing dependencies..."));
@@ -189,11 +197,19 @@ export async function installDependencies(projectDir: string): Promise<void> {
 }
 
 /**
- * Clean up temporary project
+ * Clean up temporary project files but preserve node_modules cache
  */
 export async function cleanupProject(root: string): Promise<void> {
   const projectDir = path.join(root, BARODOC_DIR);
-  await fs.remove(projectDir);
+
+  if (!fs.existsSync(projectDir)) return;
+
+  const entries = await fs.readdir(projectDir);
+  for (const entry of entries) {
+    if (entry !== "node_modules") {
+      await fs.remove(path.join(projectDir, entry));
+    }
+  }
 }
 
 /**

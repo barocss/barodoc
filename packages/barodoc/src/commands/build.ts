@@ -13,6 +13,7 @@ import {
 
 export interface BuildOptions {
   output: string;
+  clean?: boolean;
   config?: string;
 }
 
@@ -50,7 +51,7 @@ export async function build(dir: string, options: BuildOptions): Promise<void> {
   console.log(pc.green("✓ Project created"));
   console.log();
 
-  await installDependencies(projectDir);
+  await installDependencies(projectDir, options.clean);
 
   try {
     // Run astro build
