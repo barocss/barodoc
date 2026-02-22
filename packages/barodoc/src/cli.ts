@@ -9,6 +9,7 @@ import { create } from "./commands/create.js";
 import { preview } from "./commands/preview.js";
 import { init } from "./commands/init.js";
 import { eject } from "./commands/eject.js";
+import { check } from "./commands/check.js";
 
 const cli = cac("barodoc");
 
@@ -51,6 +52,14 @@ cli
   .option("-c, --config <file>", "Config file path")
   .action(async (dir: string = ".", options) => {
     await init(dir);
+  });
+
+cli
+  .command("check [dir]", "Validate docs against navigation config")
+  .option("--fix", "Auto-fix missing files and orphan navigation entries")
+  .option("-c, --config <file>", "Config file path")
+  .action(async (dir: string = ".", options) => {
+    await check(dir, options);
   });
 
 cli

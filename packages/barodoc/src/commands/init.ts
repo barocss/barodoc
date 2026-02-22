@@ -1,6 +1,7 @@
 import path from "path";
 import pc from "picocolors";
 import fs from "fs-extra";
+import { generateAgentRules } from "../runtime/agentRules.js";
 
 export async function init(dir: string): Promise<void> {
   const root = path.resolve(process.cwd(), dir);
@@ -125,6 +126,13 @@ barodoc preview
   if (!(await fs.pathExists(publicDir))) {
     await fs.ensureDir(publicDir);
     console.log(pc.green("✓ Created public/"));
+  }
+
+  // Create CLAUDE.md for AI agent rules
+  const claudeMdPath = path.join(root, "CLAUDE.md");
+  if (!(await fs.pathExists(claudeMdPath))) {
+    await fs.writeFile(claudeMdPath, generateAgentRules(projectName));
+    console.log(pc.green("✓ Created CLAUDE.md (AI agent documentation rules)"));
   }
 
   // Add .barodoc/ and dist/ to .gitignore if it exists, or create one
