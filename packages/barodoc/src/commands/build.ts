@@ -6,6 +6,7 @@ import {
   isCustomProject,
   loadProjectConfig,
   createProject,
+  installDependencies,
   cleanupProject,
   findDocsDir,
 } from "../runtime/project.js";
@@ -48,6 +49,8 @@ export async function build(dir: string, options: BuildOptions): Promise<void> {
 
   console.log(pc.green("✓ Project created"));
   console.log();
+
+  await installDependencies(projectDir);
 
   try {
     // Run astro build

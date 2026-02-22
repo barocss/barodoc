@@ -5,6 +5,7 @@ import {
   isCustomProject,
   loadProjectConfig,
   createProject,
+  installDependencies,
   findDocsDir,
 } from "../runtime/project.js";
 
@@ -46,6 +47,8 @@ export async function serve(dir: string, options: ServeOptions): Promise<void> {
 
   console.log(pc.green("✓ Project created"));
   console.log();
+
+  await installDependencies(projectDir);
 
   // Run astro dev in the temporary project
   await runAstroDev(projectDir, options);

@@ -1,6 +1,7 @@
 import fs from "fs-extra";
 import path from "path";
 import pc from "picocolors";
+import { execa } from "execa";
 import type { BarodocConfig } from "@barodoc/core";
 
 const BARODOC_DIR = ".barodoc";
@@ -86,6 +87,13 @@ export async function createProject(options: ProjectOptions): Promise<string> {
       name: "barodoc-temp",
       type: "module",
       private: true,
+      dependencies: {
+        astro: "^5.0.0",
+        "@barodoc/core": "^1.0.0",
+        "@barodoc/theme-docs": "^1.0.0",
+        react: "^19.0.0",
+        "react-dom": "^19.0.0",
+      },
     },
     { spaces: 2 }
   );
@@ -143,6 +151,22 @@ export async function createProject(options: ProjectOptions): Promise<string> {
   }
 
   return projectDir;
+}
+
+/**
+ * Install dependencies in temporary project
+ */
+export async function installDependencies(projectDir: string): Promise<void> {
+  console.log(pc.dim("Installing dependencies..."));
+
+  // Detect available package manager: prefer npm for universal compatibility
+  await execa("npm", ["install", "--prefer-offline"], {
+    cwd: projectDir,
+    stdio: "inherit",
+  });
+
+  console.log(pc.green("✓ Dependencies installed"));
+  console.log();
 }
 
 /**
