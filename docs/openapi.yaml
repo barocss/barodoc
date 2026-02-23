@@ -1,0 +1,435 @@
+openapi: "3.0.3"
+info:
+  title: "Swagger Petstore"
+  version: "1.0.0"
+  description: "A sample API that uses a petstore as an example to demonstrate features in the OpenAPI 3.0 specification"
+
+paths:
+  /pet:
+    post:
+      tags: ["Pet"]
+      summary: "Add a new pet to the store"
+      description: "Creates a new pet resource in the store."
+      operationId: "addPet"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Pet"
+      responses:
+        "200":
+          description: "Pet created"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Pet"
+        "405":
+          description: "Invalid input"
+    put:
+      tags: ["Pet"]
+      summary: "Update an existing pet"
+      description: "Updates a pet in the store with form data."
+      operationId: "updatePet"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Pet"
+      responses:
+        "200":
+          description: "Pet updated"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Pet"
+        "400":
+          description: "Invalid ID supplied"
+        "404":
+          description: "Pet not found"
+        "405":
+          description: "Validation exception"
+
+  /pet/findByStatus:
+    get:
+      tags: ["Pet"]
+      summary: "Finds pets by status"
+      description: "Multiple status values can be provided with comma separated strings."
+      operationId: "findPetsByStatus"
+      parameters:
+        - name: status
+          in: query
+          description: "Status values that need to be considered for filter"
+          required: true
+          schema:
+            type: string
+            enum: ["available", "pending", "sold"]
+      responses:
+        "200":
+          description: "Successful operation"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Pet"
+        "400":
+          description: "Invalid status value"
+
+  /pet/findByTags:
+    get:
+      tags: ["Pet"]
+      summary: "Finds pets by tags"
+      description: "Multiple tags can be provided with comma separated strings."
+      operationId: "findPetsByTags"
+      parameters:
+        - name: tags
+          in: query
+          description: "Tags to filter by"
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: "Successful operation"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Pet"
+        "400":
+          description: "Invalid tag value"
+
+  /pet/{petId}:
+    get:
+      tags: ["Pet"]
+      summary: "Find pet by ID"
+      description: "Returns a single pet by its numeric ID."
+      operationId: "getPetById"
+      parameters:
+        - name: petId
+          in: path
+          description: "ID of pet to return"
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: "Successful operation"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Pet"
+        "400":
+          description: "Invalid ID supplied"
+        "404":
+          description: "Pet not found"
+    delete:
+      tags: ["Pet"]
+      summary: "Deletes a pet"
+      description: "Deletes a pet by its numeric ID. Optionally pass an api_key header."
+      operationId: "deletePet"
+      parameters:
+        - name: petId
+          in: path
+          description: "Pet id to delete"
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: api_key
+          in: header
+          description: "API key for authorization"
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: "Pet deleted"
+        "400":
+          description: "Invalid ID supplied"
+        "404":
+          description: "Pet not found"
+
+  /store/inventory:
+    get:
+      tags: ["Store"]
+      summary: "Returns pet inventories by status"
+      description: "Returns a map of status codes to quantities."
+      operationId: "getInventory"
+      responses:
+        "200":
+          description: "Successful operation"
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /store/order:
+    post:
+      tags: ["Store"]
+      summary: "Place an order for a pet"
+      description: "Creates a new order in the store."
+      operationId: "placeOrder"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Order"
+      responses:
+        "200":
+          description: "Successful operation"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Order"
+        "400":
+          description: "Invalid order"
+
+  /store/order/{orderId}:
+    get:
+      tags: ["Store"]
+      summary: "Find purchase order by ID"
+      description: "Returns an order by its ID. Valid IDs are 1 to 10."
+      operationId: "getOrderById"
+      parameters:
+        - name: orderId
+          in: path
+          description: "ID of order to fetch (1-10)"
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: "Successful operation"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Order"
+        "400":
+          description: "Invalid ID supplied"
+        "404":
+          description: "Order not found"
+    delete:
+      tags: ["Store"]
+      summary: "Delete purchase order by ID"
+      description: "Deletes an order by its ID."
+      operationId: "deleteOrder"
+      parameters:
+        - name: orderId
+          in: path
+          description: "ID of the order to delete"
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: "Order deleted"
+        "400":
+          description: "Invalid ID supplied"
+        "404":
+          description: "Order not found"
+
+  /user:
+    post:
+      tags: ["User"]
+      summary: "Create user"
+      description: "Creates a new user account."
+      operationId: "createUser"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/User"
+      responses:
+        "200":
+          description: "User created"
+
+  /user/login:
+    get:
+      tags: ["User"]
+      summary: "Logs user into the system"
+      description: "Authenticates a user and returns a session token."
+      operationId: "loginUser"
+      parameters:
+        - name: username
+          in: query
+          description: "The user name for login"
+          required: true
+          schema:
+            type: string
+        - name: password
+          in: query
+          description: "The password for login in clear text"
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: "Successful operation (returns session token in X-Rate-Limit and X-Expires-After headers)"
+        "400":
+          description: "Invalid username/password supplied"
+
+  /user/logout:
+    get:
+      tags: ["User"]
+      summary: "Logs out current logged in user session"
+      description: "Terminates the current user session."
+      operationId: "logoutUser"
+      responses:
+        "200":
+          description: "Successful operation"
+
+  /user/{username}:
+    get:
+      tags: ["User"]
+      summary: "Get user by user name"
+      description: "Returns user details by username."
+      operationId: "getUserByName"
+      parameters:
+        - name: username
+          in: path
+          description: "The name of the user to fetch"
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: "Successful operation"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "400":
+          description: "Invalid username supplied"
+        "404":
+          description: "User not found"
+    put:
+      tags: ["User"]
+      summary: "Update user"
+      description: "Updates an existing user by username."
+      operationId: "updateUser"
+      parameters:
+        - name: username
+          in: path
+          description: "Name of user to update"
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/User"
+      responses:
+        "200":
+          description: "User updated"
+        "400":
+          description: "Invalid user supplied"
+        "404":
+          description: "User not found"
+    delete:
+      tags: ["User"]
+      summary: "Delete user"
+      description: "Deletes a user by username."
+      operationId: "deleteUser"
+      parameters:
+        - name: username
+          in: path
+          description: "The name of the user to delete"
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: "User deleted"
+        "400":
+          description: "Invalid username supplied"
+        "404":
+          description: "User not found"
+
+components:
+  schemas:
+    Pet:
+      type: object
+      required: ["name", "photoUrls"]
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: "Pet ID (auto-generated on creation)"
+        name:
+          type: string
+          description: "Pet name"
+        photoUrls:
+          type: string
+          description: "Photo URL (comma-separated for multiple)"
+        status:
+          type: string
+          description: "Pet status in the store"
+          enum: ["available", "pending", "sold"]
+
+    Order:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: "Order ID"
+        petId:
+          type: integer
+          format: int64
+          description: "ID of the pet being ordered"
+        quantity:
+          type: integer
+          format: int32
+          description: "Number of pets ordered"
+        shipDate:
+          type: string
+          format: date-time
+          description: "Estimated ship date (ISO 8601)"
+        status:
+          type: string
+          description: "Order status"
+          enum: ["placed", "approved", "delivered"]
+        complete:
+          type: boolean
+          description: "Whether the order is complete"
+
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: "User ID"
+        username:
+          type: string
+          description: "Login username"
+        firstName:
+          type: string
+          description: "First name"
+        lastName:
+          type: string
+          description: "Last name"
+        email:
+          type: string
+          description: "Email address"
+        password:
+          type: string
+          description: "Account password"
+        phone:
+          type: string
+          description: "Phone number"
+        userStatus:
+          type: integer
+          format: int32
+          description: "User status (0=active)"

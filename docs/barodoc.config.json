@@ -48,6 +48,11 @@
         "components/tabs",
         "components/tooltip"
       ]
+    },
+    {
+      "group": "API Reference",
+      "group:ko": "API 레퍼런스",
+      "pages": ["api/pet", "api/store", "api/user"]
     }
   ],
   "topbar": {
@@ -57,5 +62,14 @@
   "editLink": {
     "baseUrl": "https://github.com/barocss/barodoc/edit/main/docs/src/content/docs/"
   },
-  "lastUpdated": true
+  "lastUpdated": true,
+  "plugins": [
+    ["@barodoc/plugin-openapi", {
+      "specFile": "openapi.yaml",
+      "basePath": "api",
+      "groupBy": "tags",
+      "baseUrl": "https://petstore.swagger.io/v2",
+      "playground": true
+    }]
+  ]
 }
