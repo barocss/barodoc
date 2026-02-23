@@ -101,6 +101,11 @@ export async function createProject(options: ProjectOptions): Promise<string> {
       private: true,
       dependencies: {
         astro: "^5.0.0",
+        "@astrojs/mdx": "^4.0.0",
+        "@astrojs/react": "^4.0.0",
+        "@tailwindcss/typography": "^0.5.19",
+        "@tailwindcss/vite": "^4.0.0",
+        tailwindcss: "^4.0.0",
         "@barodoc/core": "^1.0.0",
         "@barodoc/theme-docs": "^1.0.0",
         react: "^19.0.0",
