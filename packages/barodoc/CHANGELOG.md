@@ -1,5 +1,13 @@
 # barodoc
 
+## 4.0.1
+
+### Patch Changes
+
+- a62607e: Fix missing dependencies in quick mode temporary project
+
+  Add @astrojs/mdx, @astrojs/react, @tailwindcss/vite, @tailwindcss/typography, and tailwindcss to the generated .barodoc/package.json so that `barodoc serve` and `barodoc build` work in zero-config mode.
+
 ## 3.0.0
 
 ### Minor Changes
