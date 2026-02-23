@@ -4,6 +4,7 @@ import DocsLayout from "../../layouts/DocsLayout.astro";
 import config from "virtual:barodoc/config";
 import { defaultLocale, locales } from "virtual:barodoc/i18n";
 import { getLocalizedNavGroup } from "@barodoc/core";
+import readingTime from "reading-time";
 
 export async function getStaticPaths() {
   const docs = await getCollection("docs");
@@ -41,6 +42,7 @@ interface Props {
 
 const { doc, locale, cleanSlug } = Astro.props;
 const { Content, headings } = await doc.render();
+const readTime = readingTime(doc.body ?? "");
 
 // Find the category (navigation group) for this page
 function findCategory(slug: string): string | null {
@@ -122,6 +124,8 @@ breadcrumbs.push({ label: doc.data.title });
   editUrl={editUrl}
   lastUpdated={lastUpdated}
   breadcrumbs={breadcrumbs}
+  readingTime={readTime.text}
+  filePath={doc.id}
 >
   {category && (
     <p class="text-xs font-semibold uppercase tracking-widest text-primary-600 dark:text-primary-400 mb-3">

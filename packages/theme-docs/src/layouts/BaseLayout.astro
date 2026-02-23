@@ -45,6 +45,9 @@ const themeCSS = config.theme?.colors ? generateThemeCSS(config.theme.colors) : 
     <meta name="twitter:description" content={description} />
     {ogImageUrl && <meta name="twitter:image" content={ogImageUrl} />}
 
+    <!-- KaTeX math rendering -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.css" crossorigin="anonymous" />
+
     <title>{title}</title>
     <ThemeScript />
     <ClientRouter />

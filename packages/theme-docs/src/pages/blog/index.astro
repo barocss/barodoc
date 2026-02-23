@@ -1,0 +1,92 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Header from "../../components/Header.astro";
+import Banner from "../../components/Banner.astro";
+import { defaultLocale } from "virtual:barodoc/i18n";
+import { getLocaleFromPath } from "@barodoc/core";
+import config from "virtual:barodoc/config";
+
+const currentPath = Astro.url.pathname;
+const i18nConfig = { defaultLocale, locales: [defaultLocale] };
+const currentLocale = getLocaleFromPath(currentPath, i18nConfig);
+
+let posts: Awaited<ReturnType<typeof getCollection<"blog">>> = [];
+try {
+  posts = await getCollection("blog");
+} catch {
+  // blog collection may not exist
+}
+
+const sortedPosts = posts.sort((a, b) => {
+  const dateA = a.data.date ? new Date(a.data.date).getTime() : 0;
+  const dateB = b.data.date ? new Date(b.data.date).getTime() : 0;
+  return dateB - dateA;
+});
+---
+
+<BaseLayout title={`Blog - ${config.name}`} description="Latest blog posts and updates">
+  <Banner />
+  <Header currentLocale={currentLocale} currentPath={currentPath} />
+  
+  <div class="w-full min-w-0 min-h-[calc(100vh-3.5rem)] flex justify-center">
+    <div class="w-full max-w-[960px] px-4 py-10 sm:px-6 lg:px-8">
+      <header class="mb-10">
+        <h1 class="text-3xl font-bold tracking-tight text-[var(--bd-text-heading)]">Blog</h1>
+        <p class="mt-2 text-[var(--bd-text-secondary)]">Latest posts and updates</p>
+      </header>
+
+      {sortedPosts.length === 0 ? (
+        <p class="text-[var(--bd-text-muted)]">No posts yet.</p>
+      ) : (
+        <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {sortedPosts.map((post) => (
+            <a
+              href={`/blog/${post.slug}`}
+              class="group flex flex-col rounded-lg border border-[var(--bd-border)] hover:border-primary-400/50 dark:hover:border-primary-500/40 hover:shadow-[var(--bd-shadow-sm)] transition-all overflow-hidden"
+            >
+              {post.data.image && (
+                <div class="aspect-[16/9] overflow-hidden bg-[var(--bd-bg-subtle)]">
+                  <img
+                    src={post.data.image}
+                    alt={post.data.title}
+                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    loading="lazy"
+                  />
+                </div>
+              )}
+              <div class="flex flex-col gap-2 p-5">
+                {post.data.tags && post.data.tags.length > 0 && (
+                  <div class="flex flex-wrap gap-1.5">
+                    {post.data.tags.slice(0, 3).map((tag: string) => (
+                      <span class="text-[11px] font-medium px-2 py-0.5 rounded-full bg-primary-50 text-primary-700 dark:bg-primary-950 dark:text-primary-300">
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                )}
+                <h2 class="text-base font-semibold text-[var(--bd-text)] group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors leading-snug">
+                  {post.data.title}
+                </h2>
+                {post.data.excerpt && (
+                  <p class="text-sm text-[var(--bd-text-muted)] line-clamp-2">
+                    {post.data.excerpt}
+                  </p>
+                )}
+                <div class="mt-auto pt-2 flex items-center gap-2 text-xs text-[var(--bd-text-muted)]">
+                  {post.data.author && <span>{post.data.author}</span>}
+                  {post.data.author && post.data.date && <span>&middot;</span>}
+                  {post.data.date && (
+                    <time datetime={new Date(post.data.date).toISOString()}>
+                      {new Date(post.data.date).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" })}
+                    </time>
+                  )}
+                </div>
+              </div>
+            </a>
+          ))}
+        </div>
+      )}
+    </div>
+  </div>
+</BaseLayout>

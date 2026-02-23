@@ -24,6 +24,11 @@ export { Expandable, ExpandableList, ExpandableItem } from "./mdx/Expandable.tsx
 export { Icon, CheckIcon, XIcon, InfoIcon, WarningIcon } from "./mdx/Icon.tsx";
 export { Steps, Step } from "./mdx/Steps.tsx";
 export { Mermaid } from "./mdx/Mermaid.tsx";
+export { ImageZoom } from "./mdx/ImageZoom.tsx";
+export { Video } from "./mdx/Video.tsx";
+export { ApiPlayground } from "./mdx/ApiPlayground.tsx";
+
+export { VersionSwitcher } from "./VersionSwitcher.tsx";
 
 // Legacy exports for backwards compatibility
 export { Tabs, Tab } from "./mdx/Tabs.tsx";

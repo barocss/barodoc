@@ -1,0 +1,71 @@
+---
+import { execSync } from "node:child_process";
+
+interface Props {
+  filePath?: string;
+}
+
+interface Contributor {
+  name: string;
+  email: string;
+  avatarUrl: string;
+}
+
+const { filePath } = Astro.props;
+
+let contributors: Contributor[] = [];
+
+if (filePath) {
+  try {
+    const raw = execSync(
+      `git log --format='%aN|%aE' -- "${filePath}"`,
+      { encoding: "utf-8", timeout: 5000 }
+    ).trim();
+
+    if (raw) {
+      const seen = new Map<string, Contributor>();
+      for (const line of raw.split("\n")) {
+        const [name, email] = line.split("|");
+        if (!name || seen.has(email)) continue;
+        const hash = email.trim().toLowerCase();
+        seen.set(email, {
+          name: name.trim(),
+          email: email.trim(),
+          avatarUrl: `https://gravatar.com/avatar/${await computeHash(hash)}?s=64&d=mp`,
+        });
+      }
+      contributors = Array.from(seen.values());
+    }
+  } catch {
+    // git not available or file not tracked
+  }
+}
+
+async function computeHash(input: string): Promise<string> {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(input);
+  const hashBuffer = await crypto.subtle.digest("SHA-256", data);
+  return Array.from(new Uint8Array(hashBuffer))
+    .map((b) => b.toString(16).padStart(2, "0"))
+    .join("");
+}
+---
+
+{contributors.length > 0 && (
+  <div class="bd-contributors">
+    <span class="bd-contributors-label">Contributors</span>
+    <div class="bd-contributors-avatars">
+      {contributors.map((c) => (
+        <img
+          src={c.avatarUrl}
+          alt={c.name}
+          title={c.name}
+          class="bd-contributor-avatar"
+          loading="lazy"
+          width="28"
+          height="28"
+        />
+      ))}
+    </div>
+  </div>
+)}

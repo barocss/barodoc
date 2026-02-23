@@ -1,0 +1,39 @@
+---
+import { getCollection } from "astro:content";
+import BlogLayout from "../../layouts/BlogLayout.astro";
+import readingTime from "reading-time";
+
+export async function getStaticPaths() {
+  let posts: Awaited<ReturnType<typeof getCollection<"blog">>> = [];
+  try {
+    posts = await getCollection("blog");
+  } catch {
+    return [];
+  }
+
+  return posts.map((post) => ({
+    params: { slug: post.slug },
+    props: { post },
+  }));
+}
+
+interface Props {
+  post: Awaited<ReturnType<typeof getCollection<"blog">>>[number];
+}
+
+const { post } = Astro.props;
+const { Content } = await post.render();
+const readTime = readingTime(post.body ?? "");
+---
+
+<BlogLayout
+  title={post.data.title}
+  description={post.data.description || post.data.excerpt}
+  date={post.data.date ? new Date(post.data.date) : undefined}
+  author={post.data.author}
+  image={post.data.image}
+  tags={post.data.tags}
+  readingTime={readTime.text}
+>
+  <Content />
+</BlogLayout>

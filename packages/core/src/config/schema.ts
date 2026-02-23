@@ -87,6 +87,17 @@ export const pluginConfigSchema = z.union([
   z.tuple([z.string(), z.record(z.unknown())]),
 ]);
 
+export const blogConfigSchema = z.object({
+  enabled: z.boolean().optional(),
+}).optional();
+
+export const versionConfigSchema = z.object({
+  label: z.string(),
+  path: z.string(),
+}).strict();
+
+export const versionsSchema = z.array(versionConfigSchema).optional();
+
 export const barodocConfigSchema = z.object({
   name: z.string(),
   logo: z.string().optional(),
@@ -103,6 +114,8 @@ export const barodocConfigSchema = z.object({
   lastUpdated: z.boolean().optional(),
   announcement: announcementSchema,
   feedback: feedbackSchema,
+  blog: blogConfigSchema,
+  versions: versionsSchema,
   plugins: z.array(pluginConfigSchema).optional(),
   customCss: z.array(z.string()).optional(),
 });
