@@ -1,5 +1,13 @@
 # barodoc
 
+## 5.0.0
+
+### Patch Changes
+
+- Updated dependencies [84d4c7f]
+  - @barodoc/core@5.0.0
+  - @barodoc/theme-docs@5.0.0
+
 ## 4.0.1
 
 ### Patch Changes
