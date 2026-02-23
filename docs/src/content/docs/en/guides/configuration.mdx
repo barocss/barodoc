@@ -1,6 +1,9 @@
 ---
 title: Configuration
 description: Configure your Barodoc site
+tags: [config, setup, customization]
+related: [guides/installation, guides/content-structure]
+difficulty: intermediate
 ---
 
 Barodoc is configured through `barodoc.config.json`.
@@ -136,6 +139,73 @@ Paths to additional CSS files (relative to project root or from `public/`). They
 ```json
 {
   "customCss": ["./src/custom.css"]
+}
+```
+
+### site
+
+The full URL of your deployed site (e.g. `"https://docs.example.com"`). Used for canonical URLs and OG meta tags.
+
+### base
+
+Base path if the site is deployed under a subdirectory (e.g. `"/docs"`).
+
+### lineNumbers
+
+When `true`, code blocks render with line numbers.
+
+```json
+{
+  "lineNumbers": true
+}
+```
+
+### editLink
+
+Show an "Edit this page" link on each documentation page. `baseUrl` is the GitHub (or other host) edit URL prefix:
+
+```json
+{
+  "editLink": {
+    "baseUrl": "https://github.com/user/repo/edit/main/docs/src/content/docs/"
+  }
+}
+```
+
+### lastUpdated
+
+When `true`, shows a git-based "Last updated" timestamp in the page footer:
+
+```json
+{
+  "lastUpdated": true
+}
+```
+
+### announcement
+
+Top-of-page banner for site-wide notices. Optionally links somewhere and can be dismissed:
+
+```json
+{
+  "announcement": {
+    "text": "v2.0 is out!",
+    "link": "https://github.com/user/repo/releases",
+    "dismissible": true
+  }
+}
+```
+
+### feedback
+
+Page feedback widget ("Was this helpful?"). When `endpoint` is set, posts `{ page, helpful }` JSON to that URL:
+
+```json
+{
+  "feedback": {
+    "enabled": true,
+    "endpoint": "https://api.example.com/feedback"
+  }
 }
 ```
 

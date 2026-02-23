@@ -1,0 +1,88 @@
+---
+title: Overrides & Customization
+description: Customize components and layouts without ejecting from quick mode
+tags: [overrides, customization, components, layouts]
+related: [guides/configuration, guides/cli]
+difficulty: intermediate
+---
+
+Barodoc supports progressive customization. You can override theme components and layouts without ejecting to a full Astro project.
+
+## Customization levels
+
+| Level | What you add | Use case |
+|-------|-------------|----------|
+| **0 — Pure data** | `barodoc.config.json` + `docs/` | Content-only repository |
+| **1 — Component override** | `overrides/components/` | Add or replace MDX components |
+| **2 — Layout override** | `overrides/layouts/` | Replace page layouts (header, footer, sidebar) |
+| **3 — Full Astro** | `astro.config.mjs` + `package.json` | Complete control (`barodoc eject`) |
+
+## Directory structure
+
+```
+my-docs/
+├── barodoc.config.json
+├── docs/
+│   └── en/
+│       └── introduction.mdx
+├── overrides/                   # Optional
+│   ├── components/
+│   │   ├── CustomBanner.tsx     # New MDX component
+│   │   └── Callout.tsx          # Override built-in Callout
+│   └── layouts/
+│       └── DocsLayout.astro     # Override docs layout
+└── public/
+    └── logo.svg
+```
+
+## Component overrides
+
+Place `.tsx` or `.astro` files in `overrides/components/`. They are registered under the `@overrides/components` Vite alias.
+
+### Adding a custom component
+
+Create `overrides/components/CustomBanner.tsx`:
+
+```tsx
+export default function CustomBanner({ text }: { text: string }) {
+  return (
+    <div style={{
+      padding: "1rem 1.5rem",
+      borderRadius: "0.5rem",
+      background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+      color: "#fff",
+      fontWeight: 600,
+    }}>
+      {text}
+    </div>
+  );
+}
+```
+
+Use it in MDX:
+
+```mdx
+import CustomBanner from "@overrides/components/CustomBanner";
+
+<CustomBanner text="Welcome to our docs!" />
+```
+
+### Overriding a built-in component
+
+To override the built-in `Callout` component, create `overrides/components/Callout.tsx` (or `.astro`). Barodoc's Vite alias resolution prioritizes override paths.
+
+## Layout overrides
+
+Place `.astro` files in `overrides/layouts/`. These override the theme's default layouts using the `@overrides/layouts` Vite alias.
+
+For example, to customize the docs page layout, create `overrides/layouts/DocsLayout.astro`.
+
+## How it works
+
+1. When `barodoc serve` or `barodoc build` runs in quick mode, the CLI detects `overrides/` and symlinks it into the temporary `.barodoc/` project.
+2. `@barodoc/core` registers Vite aliases (`@overrides/components`, `@overrides/layouts`) pointing to the override directories.
+3. Theme components can import from these aliases. Override files take priority.
+
+## When to eject
+
+If your customizations grow beyond component/layout overrides — for example, adding custom Astro pages, API routes, or advanced integrations — run `barodoc eject` to convert to a full Astro project.

@@ -18,16 +18,22 @@ markdown files that are fully compatible with barodoc.
 
 \`\`\`
 docs/
-  {locale}/          # e.g., en/, ko/, ja/
-    {slug}.md        # Markdown or MDX files
+  {locale}/              # e.g., en/, ko/, ja/
+    {slug}.md            # Markdown or MDX files
     {slug}.mdx
+    {category}/{slug}.mdx  # Nested paths (e.g., guides/installation.mdx)
 
-public/              # Static assets (images, logo, etc.)
-barodoc.config.json  # Site configuration
+overrides/               # Optional: component/layout overrides
+  components/            # Custom or overridden MDX components
+  layouts/               # Layout overrides
+
+public/                  # Static assets (images, logo, etc.)
+barodoc.config.json      # Site configuration
 \`\`\`
 
 - Each page is a single \`.md\` or \`.mdx\` file inside \`docs/{locale}/\`.
 - The filename (without extension) becomes the **slug** used in navigation.
+- Nested paths are supported: \`docs/en/guides/installation.mdx\` → slug \`guides/installation\`.
 - Use \`.mdx\` when you need to include interactive components (Callout, Steps, etc.).
 - Use \`.md\` for plain text-only pages.
 
@@ -41,11 +47,25 @@ Every page **should** include frontmatter at the top:
 ---
 title: Page Title
 description: A brief description shown in search results and meta tags.
+tags: [topic1, topic2]
+related: [other-page-slug, guides/related-guide]
+category: guides
+difficulty: beginner
 ---
 \`\`\`
 
-- \`title\` — Optional. If omitted, the first \`#\` heading is used.
-- \`description\` — Recommended. Used for SEO and search result snippets.
+| Field | Type | Description |
+|-------|------|-------------|
+| \`title\` | string | Optional. If omitted, the first \`#\` heading is used. |
+| \`description\` | string | Recommended. Used for SEO and search result snippets. |
+| \`tags\` | string[] | Classification tags for search and AI filtering. |
+| \`related\` | string[] | Slugs of related pages. Must be valid slugs in navigation. |
+| \`category\` | string | Explicit category. Auto-detected from navigation group if omitted. |
+| \`difficulty\` | \`"beginner"\` \| \`"intermediate"\` \| \`"advanced"\` | Content difficulty. |
+| \`api_reference\` | boolean | Marks the page as API reference content. |
+| \`lastUpdated\` | date | Manual override for last-updated timestamp. |
+
+**Rules for \`related\`:** Only use slugs that exist in \`barodoc.config.json\` navigation. \`barodoc check\` validates these.
 
 ---
 
@@ -204,21 +224,52 @@ If the project has multiple locales:
 
 - Use \`##\` for top-level sections within a page (the page \`#\` title is auto-rendered).
 - Keep descriptions concise (1–2 sentences for \`description\` frontmatter).
-- Use fenced code blocks with language identifiers for syntax highlighting.
+- **Always include a language identifier on fenced code blocks** (e.g., \\\`\\\`\\\`bash, \\\`\\\`\\\`json, \\\`\\\`\\\`typescript). This is required for syntax highlighting and AI code classification.
 - Prefer \`<Callout type="warning">\` over bold text for important notices.
 - Use \`<Steps>\` for any multi-step process (installation, setup, etc.).
 - Images go in \`public/\` and are referenced as \`/image.png\`.
+- When referencing other doc pages, use the slug (e.g., \`guides/configuration\`), not file paths.
 
 ---
 
-## Validation
+## Overrides (Custom Components)
+
+Place custom components in \`overrides/components/\` to extend or replace theme components:
+
+\`\`\`
+overrides/
+  components/
+    CustomBanner.tsx      # New component
+    Callout.tsx           # Overrides built-in Callout
+\`\`\`
+
+Import in MDX via the alias:
+
+\`\`\`mdx
+import CustomBanner from "@overrides/components/CustomBanner";
+
+<CustomBanner text="Hello" />
+\`\`\`
+
+---
+
+## CLI Commands
 
 \`\`\`bash
-# Check for issues (missing files, orphan pages, frontmatter)
+# Check for issues (missing files, orphan pages, frontmatter, invalid related links)
 barodoc check
 
 # Auto-fix navigation mismatches
 barodoc check --fix
+
+# Generate docs-manifest.json (structured metadata + content for AI agents)
+barodoc manifest
+
+# Generate RAG-optimized chunks
+barodoc manifest --chunks
+
+# Generate JSON Schema for config and frontmatter
+barodoc schema
 
 # Start dev server
 barodoc serve

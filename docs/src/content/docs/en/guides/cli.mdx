@@ -1,0 +1,127 @@
+---
+title: CLI Commands
+description: Barodoc CLI reference — serve, build, check, manifest, and more
+tags: [cli, commands, tools]
+related: [guides/installation, guides/configuration]
+difficulty: beginner
+---
+
+Barodoc ships a CLI (`barodoc`) for developing, building, and validating your documentation.
+
+## serve
+
+Start a development server with hot reload:
+
+```bash
+barodoc serve [dir]
+```
+
+| Flag | Description |
+|------|-------------|
+| `-p, --port <port>` | Port to listen on (default: `4321`) |
+| `-h, --host` | Expose to network |
+| `--open` | Open browser on start |
+| `--clean` | Force reinstall dependencies |
+| `-c, --config <file>` | Config file path |
+
+## build
+
+Build the site for production:
+
+```bash
+barodoc build [dir]
+```
+
+| Flag | Description |
+|------|-------------|
+| `-o, --output <dir>` | Output directory (default: `dist`) |
+| `--clean` | Force reinstall dependencies |
+| `-c, --config <file>` | Config file path |
+
+## preview
+
+Preview a production build locally:
+
+```bash
+barodoc preview [dir]
+```
+
+| Flag | Description |
+|------|-------------|
+| `-p, --port <port>` | Port to listen on (default: `4321`) |
+| `-o, --output <dir>` | Build output directory (default: `dist`) |
+
+## check
+
+Validate your documentation against the navigation config and frontmatter schema:
+
+```bash
+barodoc check [dir]
+```
+
+| Flag | Description |
+|------|-------------|
+| `--fix` | Auto-fix missing files and orphan navigation entries |
+| `-c, --config <file>` | Config file path |
+
+**What it validates:**
+
+- Navigation entries that reference non-existent files
+- Files on disk that are not referenced in navigation (orphans)
+- Missing recommended frontmatter fields (`description`)
+- `related` frontmatter values that point to invalid slugs
+
+Example output:
+
+```
+  barodoc check
+
+  Missing files (1)
+  Navigation references files that don't exist on disk.
+
+  ✗ missing-page → docs/en/missing-page.md
+
+  Invalid related links (1)
+  Frontmatter 'related' references slugs not in navigation.
+
+  ⚠ quickstart → invalid: non-existent-page
+```
+
+## manifest
+
+Generate `docs-manifest.json` — a structured JSON file containing all document metadata, headings, code blocks, and navigation. Designed for AI agent consumption:
+
+```bash
+barodoc manifest [dir]
+```
+
+| Flag | Description |
+|------|-------------|
+| `-o, --output <file>` | Output file path (default: `docs-manifest.json`) |
+| `-c, --config <file>` | Config file path |
+
+The output includes per-page: `slug`, `title`, `description`, `tags`, `related`, `difficulty`, `headings`, `codeBlocks`, `wordCount`, and the full `navigation` tree.
+
+## init
+
+Initialize Barodoc in an existing directory:
+
+```bash
+barodoc init [dir]
+```
+
+## create
+
+Scaffold a new Barodoc project:
+
+```bash
+barodoc create <name>
+```
+
+## eject
+
+Eject from quick mode to a full Astro project:
+
+```bash
+barodoc eject [dir]
+```

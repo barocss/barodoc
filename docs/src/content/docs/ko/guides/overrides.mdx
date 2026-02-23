@@ -1,0 +1,88 @@
+---
+title: 오버라이드 & 커스터마이징
+description: quick mode에서 eject 없이 컴포넌트와 레이아웃을 커스터마이징
+tags: [overrides, customization, components, layouts]
+related: [guides/configuration, guides/cli]
+difficulty: intermediate
+---
+
+Barodoc은 점진적 커스터마이징을 지원합니다. 전체 Astro 프로젝트로 eject하지 않고도 테마 컴포넌트와 레이아웃을 오버라이드할 수 있습니다.
+
+## 커스터마이징 레벨
+
+| 레벨 | 추가 항목 | 사용 사례 |
+|------|----------|----------|
+| **0 — 순수 데이터** | `barodoc.config.json` + `docs/` | 콘텐츠 전용 리포지토리 |
+| **1 — 컴포넌트 오버라이드** | `overrides/components/` | MDX 컴포넌트 추가 또는 교체 |
+| **2 — 레이아웃 오버라이드** | `overrides/layouts/` | 페이지 레이아웃 교체 (헤더, 푸터, 사이드바) |
+| **3 — 전체 Astro** | `astro.config.mjs` + `package.json` | 완전한 제어 (`barodoc eject`) |
+
+## 디렉토리 구조
+
+```
+my-docs/
+├── barodoc.config.json
+├── docs/
+│   └── en/
+│       └── introduction.mdx
+├── overrides/                   # 선택사항
+│   ├── components/
+│   │   ├── CustomBanner.tsx     # 새 MDX 컴포넌트
+│   │   └── Callout.tsx          # 빌트인 Callout 오버라이드
+│   └── layouts/
+│       └── DocsLayout.astro     # 문서 레이아웃 오버라이드
+└── public/
+    └── logo.svg
+```
+
+## 컴포넌트 오버라이드
+
+`overrides/components/`에 `.tsx` 또는 `.astro` 파일을 놓으면 `@overrides/components` Vite alias로 등록됩니다.
+
+### 커스텀 컴포넌트 추가
+
+`overrides/components/CustomBanner.tsx` 생성:
+
+```tsx
+export default function CustomBanner({ text }: { text: string }) {
+  return (
+    <div style={{
+      padding: "1rem 1.5rem",
+      borderRadius: "0.5rem",
+      background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+      color: "#fff",
+      fontWeight: 600,
+    }}>
+      {text}
+    </div>
+  );
+}
+```
+
+MDX에서 사용:
+
+```mdx
+import CustomBanner from "@overrides/components/CustomBanner";
+
+<CustomBanner text="문서에 오신 것을 환영합니다!" />
+```
+
+### 빌트인 컴포넌트 오버라이드
+
+빌트인 `Callout` 컴포넌트를 오버라이드하려면 `overrides/components/Callout.tsx` (또는 `.astro`)를 생성합니다. Barodoc의 Vite alias resolution이 override 경로를 우선 적용합니다.
+
+## 레이아웃 오버라이드
+
+`overrides/layouts/`에 `.astro` 파일을 놓으면 테마의 기본 레이아웃을 `@overrides/layouts` Vite alias로 오버라이드합니다.
+
+예를 들어, 문서 페이지 레이아웃을 커스터마이징하려면 `overrides/layouts/DocsLayout.astro`를 생성합니다.
+
+## 동작 원리
+
+1. `barodoc serve` 또는 `barodoc build` 실행 시 CLI가 `overrides/`를 감지하고 임시 `.barodoc/` 프로젝트에 symlink합니다.
+2. `@barodoc/core`가 Vite alias (`@overrides/components`, `@overrides/layouts`)를 override 디렉토리를 가리키도록 등록합니다.
+3. 테마 컴포넌트가 이 alias에서 import하며, override 파일이 우선 적용됩니다.
+
+## eject 시점
+
+커스터마이징이 컴포넌트/레이아웃 오버라이드를 넘어설 때 — 예를 들어, 커스텀 Astro 페이지, API 라우트, 고급 인테그레이션이 필요할 때 — `barodoc eject`로 전체 Astro 프로젝트로 전환합니다.

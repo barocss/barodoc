@@ -1,6 +1,9 @@
 ---
 title: Content Structure
 description: Where to put content and how URLs are built
+tags: [content, structure, frontmatter]
+related: [guides/configuration, guides/i18n]
+difficulty: beginner
 ---
 
 Barodoc content is organized by locale; the folder structure becomes the URL path. In **CLI (zero-config)** mode, content lives under **`docs/`** (e.g. `docs/en/`, `docs/ko/`). In **manual Astro** mode, it lives under **`src/content/docs/`** (e.g. `src/content/docs/en/`). The rules below apply to both.
@@ -52,20 +55,33 @@ The same slug is used for all locales; each locale has its own file under its fo
 
 ## Frontmatter
 
-Every doc page should have a title (and optionally description) in frontmatter:
+Every doc page should have a title in frontmatter. Additional fields are available for classification, linking, and AI consumption:
 
 ```mdx
 ---
 title: Installation
 description: Install Barodoc in your project
+tags: [setup, cli]
+related: [quickstart, guides/configuration]
+category: guides
+difficulty: beginner
+api_reference: false
 ---
 
 # Installation
 ...
 ```
 
-- **title** – Shown in the browser tab, sidebar, and meta.
-- **description** – Used for meta description and previews.
+| Field | Type | Description |
+|-------|------|-------------|
+| `title` | `string` | Page title. Shown in browser tab, sidebar, and meta. |
+| `description` | `string` | Meta description and previews. |
+| `tags` | `string[]` | Classification tags for search and AI agent filtering. |
+| `related` | `string[]` | Slugs of related pages. `barodoc check` validates these point to real pages. |
+| `category` | `string` | Explicit category override. Auto-detected from navigation group if omitted. |
+| `difficulty` | `"beginner" \| "intermediate" \| "advanced"` | Content difficulty level. |
+| `api_reference` | `boolean` | Marks the page as API reference content. |
+| `lastUpdated` | `date` | Manual override for last-updated timestamp. |
 
 ## MDX and components
 

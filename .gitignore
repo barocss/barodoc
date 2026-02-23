@@ -31,3 +31,9 @@ pnpm-debug.log*
 # Pagefind
 public/pagefind/
 docs/public/pagefind/
+
+# Generated outputs (barodoc manifest / barodoc schema)
+docs-manifest.json
+docs-manifest-chunks.jsonl
+config-schema.json
+frontmatter-schema.json

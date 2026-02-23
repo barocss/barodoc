@@ -1,4 +1,6 @@
 import type { AstroIntegration } from "astro";
+import { existsSync } from "node:fs";
+import { join } from "node:path";
 import { loadConfig } from "./config/loader.js";
 import {
   loadPlugins,
@@ -103,9 +105,25 @@ export default function barodoc(options: BarodocOptions): AstroIntegration {
         const themeIntegration = options.theme.integration(resolvedConfig);
         const pluginIntegrations = getPluginIntegrations(plugins, pluginContext);
 
+        // Detect overrides directory for component/layout customization
+        const overridesDir = join(rootPath, "overrides");
+        const overridesAlias: Record<string, string> = {};
+
+        if (existsSync(join(overridesDir, "components"))) {
+          overridesAlias["@overrides/components"] = join(overridesDir, "components");
+          logger.info("Overrides: components/ detected");
+        }
+        if (existsSync(join(overridesDir, "layouts"))) {
+          overridesAlias["@overrides/layouts"] = join(overridesDir, "layouts");
+          logger.info("Overrides: layouts/ detected");
+        }
+
         updateConfig({
           vite: {
             plugins: [createVirtualModulesPlugin(resolvedConfig) as any],
+            resolve: Object.keys(overridesAlias).length > 0
+              ? { alias: overridesAlias }
+              : undefined,
           },
           integrations: [themeIntegration, ...pluginIntegrations],
         });
