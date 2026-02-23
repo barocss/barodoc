@@ -1,0 +1,37 @@
+{
+  "name": "@barodoc/plugin-og-image",
+  "version": "0.0.1",
+  "description": "Open Graph image generation plugin for Barodoc",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup src/index.ts --format esm --dts --clean",
+    "dev": "tsup src/index.ts --format esm --dts --watch"
+  },
+  "dependencies": {
+    "satori": "^0.12.0",
+    "sharp": "^0.33.0"
+  },
+  "peerDependencies": {
+    "@barodoc/core": "workspace:*",
+    "astro": "^5.0.0"
+  },
+  "devDependencies": {
+    "@barodoc/core": "workspace:*",
+    "@types/node": "^22.0.0",
+    "astro": "^5.0.0",
+    "tsup": "^8.3.0",
+    "typescript": "^5.7.0"
+  },
+  "license": "MIT"
+}

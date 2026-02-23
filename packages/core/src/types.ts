@@ -60,6 +60,27 @@ export interface BarodocConfig {
 
   /** When true, code blocks render with line numbers. */
   lineNumbers?: boolean;
+
+  /** GitHub edit link base URL for "Edit this page" links. */
+  editLink?: {
+    baseUrl: string;
+  };
+
+  /** When true, shows git-based last updated timestamp on each page. */
+  lastUpdated?: boolean;
+
+  /** Top-of-page announcement banner. */
+  announcement?: {
+    text: string;
+    link?: string;
+    dismissible?: boolean;
+  };
+
+  /** Page feedback widget ("Was this helpful?"). */
+  feedback?: {
+    enabled: boolean;
+    endpoint?: string;
+  };
   
   plugins?: PluginConfig[];
   

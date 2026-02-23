@@ -5,12 +5,20 @@ import Sidebar from "../components/Sidebar.astro";
 import TableOfContents from "../components/TableOfContents.astro";
 import MobileNav from "../components/MobileNav.astro";
 import CodeCopy from "../components/CodeCopy.astro";
+import Breadcrumb from "../components/Breadcrumb.astro";
+import Banner from "../components/Banner.astro";
 import { defaultLocale } from "virtual:barodoc/i18n";
 import { getLocaleFromPath } from "@barodoc/core";
+import config from "virtual:barodoc/config";
 
 interface PageLink {
   title: string;
   href: string;
+}
+
+interface BreadcrumbItem {
+  label: string;
+  href?: string;
 }
 
 interface Props {
@@ -19,17 +27,24 @@ interface Props {
   headings?: { depth: number; slug: string; text: string }[];
   prevPage?: PageLink | null;
   nextPage?: PageLink | null;
+  editUrl?: string | null;
+  lastUpdated?: Date | null;
+  breadcrumbs?: BreadcrumbItem[];
 }
 
-const { title, description, headings = [], prevPage, nextPage } = Astro.props;
+const { title, description, headings = [], prevPage, nextPage, editUrl, lastUpdated, breadcrumbs = [] } = Astro.props;
 const currentPath = Astro.url.pathname;
 
 // Get locale from path
 const i18nConfig = { defaultLocale, locales: [defaultLocale] };
 const currentLocale = getLocaleFromPath(currentPath, i18nConfig);
+
+const hasFeedback = config.feedback?.enabled === true;
+const feedbackEndpoint = config.feedback?.endpoint;
 ---
 
 <BaseLayout title={title} description={description}>
+  <Banner />
   <Header currentLocale={currentLocale} currentPath={currentPath} />
   
   <!-- Centered container for docs layout -->
@@ -45,6 +60,7 @@ const currentLocale = getLocaleFromPath(currentPath, i18nConfig);
       <!-- Main Content: no min-width on mobile to avoid horizontal scroll -->
       <main class="flex-1 min-w-0 lg:min-w-[650px] max-w-[720px]">
         <div class="px-4 py-6 sm:px-6 sm:py-8 lg:px-8 lg:py-8">
+          {breadcrumbs.length > 0 && <Breadcrumb items={breadcrumbs} />}
           <article class="prose prose-gray dark:prose-invert max-w-none min-w-0 overflow-x-auto">
             <slot />
           </article>
@@ -94,10 +110,41 @@ const currentLocale = getLocaleFromPath(currentPath, i18nConfig);
           )}
 
           <!-- Page footer -->
-          <footer class="mt-6 pt-4 border-t border-[var(--color-border-light)]">
-            <p class="text-sm text-[var(--color-text-muted)]">
-              Was this page helpful? <a href="#" class="text-primary-600 dark:text-primary-400 hover:underline">Give us feedback</a>
-            </p>
+          <footer class="mt-6 pt-4 border-t border-[var(--color-border-light)] flex flex-col gap-3">
+            <div class="flex flex-wrap items-center justify-between gap-2 text-sm text-[var(--color-text-muted)]">
+              {lastUpdated && (
+                <span>
+                  Last updated: <time datetime={lastUpdated.toISOString()}>
+                    {lastUpdated.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" })}
+                  </time>
+                </span>
+              )}
+              {editUrl && (
+                <a
+                  href={editUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="inline-flex items-center gap-1 text-primary-600 dark:text-primary-400 hover:underline"
+                >
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                  </svg>
+                  Edit this page
+                </a>
+              )}
+            </div>
+            {hasFeedback && (
+              <div class="doc-feedback flex items-center gap-3 text-sm text-[var(--color-text-muted)]" data-endpoint={feedbackEndpoint}>
+                <span>Was this page helpful?</span>
+                <button type="button" class="feedback-btn inline-flex items-center gap-1 px-2 py-1 rounded border border-[var(--color-border)] hover:bg-[var(--color-bg-secondary)] transition-colors" data-value="yes" aria-label="Yes">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 9V5a3 3 0 00-3-3l-4 9v11h11.28a2 2 0 002-1.7l1.38-9a2 2 0 00-2-2.3H14z" /></svg>
+                </button>
+                <button type="button" class="feedback-btn inline-flex items-center gap-1 px-2 py-1 rounded border border-[var(--color-border)] hover:bg-[var(--color-bg-secondary)] transition-colors" data-value="no" aria-label="No">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 15v3.586a1 1 0 01-.293.707l-2 2A1 1 0 016 20.586V15m4 0h5.17a2 2 0 001.98-1.742l1.08-7.56A1 1 0 0017.242 4.5H10m0 10.5V4.5m0 0H7.5A2.5 2.5 0 005 7v3" /></svg>
+                </button>
+                <span class="feedback-thanks hidden text-green-600 dark:text-green-400">Thanks for your feedback!</span>
+              </div>
+            )}
           </footer>
         </div>
       </main>
@@ -118,4 +165,30 @@ const currentLocale = getLocaleFromPath(currentPath, i18nConfig);
   
   <!-- Code copy functionality -->
   <CodeCopy />
+
+  {hasFeedback && (
+    <script>
+      function initFeedback() {
+        document.querySelectorAll('.doc-feedback').forEach((el) => {
+          if (el.hasAttribute('data-init')) return;
+          el.setAttribute('data-init', 'true');
+          const endpoint = el.getAttribute('data-endpoint');
+          const thanks = el.querySelector('.feedback-thanks');
+          el.querySelectorAll('.feedback-btn').forEach((btn) => {
+            btn.addEventListener('click', async () => {
+              const value = btn.getAttribute('data-value');
+              const page = window.location.pathname;
+              el.querySelectorAll('.feedback-btn').forEach((b: any) => b.disabled = true);
+              if (thanks) thanks.classList.remove('hidden');
+              if (endpoint) {
+                try { await fetch(endpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ page, value }) }); } catch {}
+              }
+            });
+          });
+        });
+      }
+      initFeedback();
+      document.addEventListener('astro:page-load', initFeedback);
+    </script>
+  )}
 </BaseLayout>

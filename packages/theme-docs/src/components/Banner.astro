@@ -1,0 +1,56 @@
+---
+import config from "virtual:barodoc/config";
+
+const announcement = config.announcement;
+const show = !!announcement?.text;
+const dismissible = announcement?.dismissible !== false;
+---
+
+{show && (
+  <div
+    id="site-banner"
+    class="banner-bar bg-primary-600 text-white text-sm text-center py-2 px-4 flex items-center justify-center gap-2 relative"
+  >
+    {announcement.link ? (
+      <a href={announcement.link} class="hover:underline font-medium">
+        {announcement.text}
+        <svg class="inline w-3.5 h-3.5 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+        </svg>
+      </a>
+    ) : (
+      <span class="font-medium">{announcement.text}</span>
+    )}
+    {dismissible && (
+      <button
+        id="banner-dismiss"
+        class="absolute right-3 top-1/2 -translate-y-1/2 p-1 rounded hover:bg-white/20 transition-colors"
+        aria-label="Dismiss banner"
+      >
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+    )}
+  </div>
+  <script>
+    function initBanner() {
+      const banner = document.getElementById('site-banner');
+      const dismiss = document.getElementById('banner-dismiss');
+      if (!banner) return;
+      const key = 'barodoc-banner-dismissed';
+      if (localStorage.getItem(key) === banner.textContent?.trim()) {
+        banner.style.display = 'none';
+        return;
+      }
+      if (dismiss) {
+        dismiss.addEventListener('click', () => {
+          banner.style.display = 'none';
+          localStorage.setItem(key, banner.textContent?.trim() || '');
+        });
+      }
+    }
+    initBanner();
+    document.addEventListener('astro:page-load', initBanner);
+  </script>
+)}

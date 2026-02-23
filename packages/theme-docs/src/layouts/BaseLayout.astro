@@ -1,14 +1,21 @@
 ---
 import ThemeScript from "../components/ThemeScript.astro";
 import { SearchDialog } from "../components/SearchDialog";
+import config from "virtual:barodoc/config";
 import "@barodoc/theme-docs/styles/global.css";
 
 interface Props {
   title: string;
   description?: string;
+  ogImage?: string;
 }
 
-const { title, description = "Documentation" } = Astro.props;
+const { title, description = "Documentation", ogImage } = Astro.props;
+const siteName = config.name;
+const canonicalUrl = config.site ? new URL(Astro.url.pathname, config.site).href : Astro.url.href;
+const ogImageUrl = ogImage
+  ? (config.site ? new URL(ogImage, config.site).href : ogImage)
+  : undefined;
 ---
 
 <!doctype html>
@@ -18,6 +25,22 @@ const { title, description = "Documentation" } = Astro.props;
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content={description} />
     <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="canonical" href={canonicalUrl} />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:site_name" content={siteName} />
+    <meta property="og:url" content={canonicalUrl} />
+    {ogImageUrl && <meta property="og:image" content={ogImageUrl} />}
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content={ogImageUrl ? "summary_large_image" : "summary"} />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    {ogImageUrl && <meta name="twitter:image" content={ogImageUrl} />}
+
     <title>{title}</title>
     <ThemeScript />
   </head>
