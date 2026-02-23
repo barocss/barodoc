@@ -15,10 +15,36 @@ interface CheckResult {
 }
 
 /**
+ * Recursively collect markdown/mdx slugs relative to baseDir.
+ */
+async function collectSlugs(baseDir: string, prefix: string = ""): Promise<string[]> {
+  const slugs: string[] = [];
+  if (!(await fs.pathExists(baseDir))) return slugs;
+  const entries = await fs.readdir(baseDir, { withFileTypes: true });
+  for (const entry of entries) {
+    if (entry.isDirectory()) {
+      slugs.push(...await collectSlugs(path.join(baseDir, entry.name), prefix ? `${prefix}/${entry.name}` : entry.name));
+    } else if (entry.name.endsWith(".md") || entry.name.endsWith(".mdx")) {
+      const slug = entry.name.replace(/\.(mdx?)$/, "");
+      slugs.push(prefix ? `${prefix}/${slug}` : slug);
+    }
+  }
+  return slugs;
+}
+
+/**
+ * Resolve docs directory — supports both quick mode (docs/) and custom mode (src/content/docs/).
+ */
+function resolveDocsDir(root: string): string {
+  const customMode = path.join(root, "src", "content", "docs");
+  if (fs.existsSync(customMode)) return customMode;
+  return path.join(root, "docs");
+}
+
+/**
  * Get all markdown files under docs/
  */
 async function scanDocsFiles(docsDir: string): Promise<Map<string, string[]>> {
-  // locale -> slugs
   const result = new Map<string, string[]>();
 
   if (!(await fs.pathExists(docsDir))) {
@@ -31,13 +57,7 @@ async function scanDocsFiles(docsDir: string): Promise<Map<string, string[]>> {
     const stat = await fs.stat(localeDir);
     if (!stat.isDirectory()) continue;
 
-    const slugs: string[] = [];
-    const files = await fs.readdir(localeDir);
-    for (const file of files) {
-      if (file.endsWith(".md") || file.endsWith(".mdx")) {
-        slugs.push(file.replace(/\.(mdx?)$/, ""));
-      }
-    }
+    const slugs = await collectSlugs(localeDir);
     result.set(locale, slugs);
   }
 
@@ -67,6 +87,33 @@ function getNavSlugs(config: any): Map<string, Set<string>> {
 }
 
 /**
+ * Parse YAML frontmatter from a markdown file (simple line-based parser).
+ */
+function parseFrontmatter(content: string): Record<string, unknown> | null {
+  if (!content.startsWith("---")) return null;
+  const end = content.indexOf("---", 3);
+  if (end === -1) return null;
+  const block = content.slice(3, end).trim();
+  const result: Record<string, unknown> = {};
+  for (const line of block.split("\n")) {
+    const match = line.match(/^(\w[\w_]*):\s*(.*)/);
+    if (!match) continue;
+    const [, key, raw] = match;
+    const value = raw.trim();
+    if (value.startsWith("[") && value.endsWith("]")) {
+      result[key] = value.slice(1, -1).split(",").map((s) => s.trim().replace(/^['"]|['"]$/g, ""));
+    } else if (value === "true") {
+      result[key] = true;
+    } else if (value === "false") {
+      result[key] = false;
+    } else {
+      result[key] = value;
+    }
+  }
+  return result;
+}
+
+/**
  * Check frontmatter of a markdown file
  */
 async function checkFrontmatter(
@@ -75,23 +122,49 @@ async function checkFrontmatter(
   const content = await fs.readFile(filePath, "utf-8");
   const missing: string[] = [];
 
-  // Check if frontmatter exists at all
   if (!content.startsWith("---")) {
-    // No frontmatter - but not required for barodoc (title can come from # heading)
     return missing;
   }
 
-  const end = content.indexOf("---", 3);
-  if (end === -1) return missing;
+  const fm = parseFrontmatter(content);
+  if (!fm) return missing;
 
-  const frontmatter = content.slice(3, end);
-
-  // Check for description (recommended but not required)
-  if (!frontmatter.includes("description:")) {
-    missing.push("description");
-  }
+  if (!fm.description) missing.push("description");
 
   return missing;
+}
+
+/**
+ * Validate `related` links in frontmatter point to existing pages.
+ */
+async function checkRelatedLinks(
+  docsDir: string,
+  locales: string[],
+  defaultLocale: string,
+  navSlugs: Map<string, Set<string>>
+): Promise<Array<{ filePath: string; slug: string; invalidRelated: string[] }>> {
+  const issues: Array<{ filePath: string; slug: string; invalidRelated: string[] }> = [];
+  const allSlugs = navSlugs.get(defaultLocale) ?? new Set();
+
+  const defaultDir = path.join(docsDir, defaultLocale);
+  if (!(await fs.pathExists(defaultDir))) return issues;
+
+  const files = await fs.readdir(defaultDir);
+  for (const file of files) {
+    if (!file.endsWith(".md") && !file.endsWith(".mdx")) continue;
+    const slug = file.replace(/\.(mdx?)$/, "");
+    const filePath = path.join(defaultDir, file);
+    const content = await fs.readFile(filePath, "utf-8");
+    const fm = parseFrontmatter(content);
+    if (!fm || !Array.isArray(fm.related)) continue;
+
+    const invalid = (fm.related as string[]).filter((r) => !allSlugs.has(r));
+    if (invalid.length > 0) {
+      issues.push({ filePath: path.relative(path.dirname(docsDir), filePath), slug, invalidRelated: invalid });
+    }
+  }
+
+  return issues;
 }
 
 export async function check(dir: string, options: CheckOptions): Promise<void> {
@@ -102,7 +175,7 @@ export async function check(dir: string, options: CheckOptions): Promise<void> {
   console.log(pc.bold(pc.cyan("  barodoc check")));
   console.log();
 
-  const docsDir = path.join(root, "docs");
+  const docsDir = resolveDocsDir(root);
   const locales: string[] = (config as any).i18n?.locales ?? ["en"];
   const defaultLocale: string = (config as any).i18n?.defaultLocale ?? "en";
 
@@ -177,6 +250,9 @@ export async function check(dir: string, options: CheckOptions): Promise<void> {
     }
   }
 
+  // Check: related links point to valid slugs
+  const relatedIssues = await checkRelatedLinks(docsDir, locales, defaultLocale, navSlugs);
+
   // ── Report ────────────────────────────────────────────────────────────────
 
   let hasIssues = false;
@@ -220,6 +296,21 @@ export async function check(dir: string, options: CheckOptions): Promise<void> {
     for (const item of result.missingFrontmatter) {
       console.log(
         `  ${pc.dim("○")} ${item.filePath} ${pc.dim(`— missing: ${item.fields.join(", ")}`)}`
+      );
+    }
+    console.log();
+  }
+
+  // Invalid related links
+  if (relatedIssues.length > 0) {
+    hasIssues = true;
+    console.log(pc.bold(pc.yellow(`  Invalid related links (${relatedIssues.length})`)));
+    console.log(pc.dim("  Frontmatter 'related' references slugs not in navigation."));
+    console.log();
+
+    for (const item of relatedIssues) {
+      console.log(
+        `  ${pc.yellow("⚠")} ${pc.bold(item.slug)} ${pc.dim(`→ invalid: ${item.invalidRelated.join(", ")}`)}`
       );
     }
     console.log();

@@ -10,6 +10,8 @@ import { preview } from "./commands/preview.js";
 import { init } from "./commands/init.js";
 import { eject } from "./commands/eject.js";
 import { check } from "./commands/check.js";
+import { manifest } from "./commands/manifest.js";
+import { schema } from "./commands/schema.js";
 
 const cli = cac("barodoc");
 
@@ -60,6 +62,23 @@ cli
   .option("-c, --config <file>", "Config file path")
   .action(async (dir: string = ".", options) => {
     await check(dir, options);
+  });
+
+cli
+  .command("manifest [dir]", "Generate docs-manifest.json for AI consumption")
+  .option("-o, --output <file>", "Output file path", { default: "docs-manifest.json" })
+  .option("--lite", "Metadata only (no sections/content)")
+  .option("--chunks", "Also generate JSONL chunks for RAG")
+  .option("-c, --config <file>", "Config file path")
+  .action(async (dir: string = ".", options) => {
+    await manifest(dir, options);
+  });
+
+cli
+  .command("schema [dir]", "Export JSON Schema for config and frontmatter")
+  .option("-o, --output <dir>", "Output directory")
+  .action(async (dir: string = ".", options) => {
+    await schema(dir, options);
   });
 
 cli

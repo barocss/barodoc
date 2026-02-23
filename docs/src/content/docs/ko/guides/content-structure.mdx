@@ -1,6 +1,9 @@
 ---
 title: Content Structure
 description: 콘텐츠 위치와 URL 구조
+tags: [content, structure, frontmatter]
+related: [guides/configuration, guides/i18n]
+difficulty: beginner
 ---
 
 Barodoc 콘텐츠는 locale별로 정리되며, 폴더 구조가 URL 경로가 됩니다. **CLI(제로 설정)** 모드에서는 **`docs/`** 아래에 두고(예: `docs/en/`, `docs/ko/`), **수동 Astro** 모드에서는 **`src/content/docs/`** 아래에 둡니다(예: `src/content/docs/en/`). 아래 규칙은 두 방식 모두에 적용됩니다.
@@ -52,20 +55,33 @@ src/content/docs/
 
 ## Frontmatter
 
-각 문서 상단에 `title`(필수)과 필요 시 `description`을 둡니다:
+각 문서 상단에 `title`을 둡니다. 분류, 연관 문서 링크, AI 소비를 위한 추가 필드를 사용할 수 있습니다:
 
 ```mdx
 ---
 title: Installation
 description: Barodoc 설치 방법
+tags: [setup, cli]
+related: [quickstart, guides/configuration]
+category: guides
+difficulty: beginner
+api_reference: false
 ---
 
 # Installation
 ...
 ```
 
-- **title** – 브라우저 탭, 사이드바, 메타에 사용됩니다.
-- **description** – 메타 설명과 미리보기에 사용됩니다.
+| 필드 | 타입 | 설명 |
+|------|------|------|
+| `title` | `string` | 페이지 제목. 브라우저 탭, 사이드바, 메타에 사용. |
+| `description` | `string` | 메타 설명과 미리보기에 사용. |
+| `tags` | `string[]` | 검색 및 AI 에이전트 필터링용 분류 태그. |
+| `related` | `string[]` | 관련 페이지의 slug. `barodoc check`가 유효성을 검증. |
+| `category` | `string` | 카테고리 직접 지정. 생략 시 navigation 그룹에서 자동 감지. |
+| `difficulty` | `"beginner" \| "intermediate" \| "advanced"` | 콘텐츠 난이도. |
+| `api_reference` | `boolean` | API 레퍼런스 문서 표시. |
+| `lastUpdated` | `date` | 최종 수정일 수동 지정. |
 
 ## MDX와 컴포넌트
 

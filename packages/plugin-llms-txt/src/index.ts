@@ -65,20 +65,33 @@ function extractTitle(content: string): string {
 }
 
 /**
- * Convert markdown to plain text (minimal conversion for llms.txt)
+ * Clean markdown for AI consumption.
+ * Preserves code blocks (critical for AI agents). Strips MDX component tags.
  */
-function markdownToPlainText(md: string): string {
-  return md
-    .replace(/^#{1,6}\s+/gm, "")       // Remove heading markers
-    .replace(/\*\*(.+?)\*\*/g, "$1")    // Bold
-    .replace(/\*(.+?)\*/g, "$1")        // Italic
-    .replace(/`{3}[\s\S]*?`{3}/g, "")  // Code blocks
-    .replace(/`(.+?)`/g, "$1")          // Inline code
-    .replace(/\[(.+?)\]\(.+?\)/g, "$1") // Links
-    .replace(/^[-*+]\s+/gm, "- ")       // List items
-    .replace(/^\s*>\s+/gm, "")          // Blockquotes
-    .replace(/\n{3,}/g, "\n\n")         // Excess newlines
-    .trim();
+function cleanMarkdownForAI(md: string): string {
+  const codeBlocks: string[] = [];
+  let cleaned = md.replace(/```[\s\S]*?```/g, (match) => {
+    codeBlocks.push(match);
+    return `__CODE_BLOCK_${codeBlocks.length - 1}__`;
+  });
+
+  cleaned = cleaned
+    .replace(/<\/?(?:Callout|Steps|Step|Card|CardGroup|CodeGroup|CodeItem|ParamField|ParamFieldGroup|Tabs|Tab|Accordion|AccordionItem|Badge|Columns|Column|Expandable|Frame|FileTree|Tooltip|ResponseField|ApiReference|ApiEndpoint|ApiParams|ApiParam|ApiResponse|SimpleAccordion)[^>]*>/g, "")
+    .replace(/import\s+.*?from\s+["'].*?["'];?\s*\n?/g, "")
+    .replace(/^#{1,6}\s+/gm, "")
+    .replace(/\*\*(.+?)\*\*/g, "$1")
+    .replace(/\*(.+?)\*/g, "$1")
+    .replace(/`(.+?)`/g, "$1")
+    .replace(/\[(.+?)\]\(.+?\)/g, "$1")
+    .replace(/^[-*+]\s+/gm, "- ")
+    .replace(/^\s*>\s+/gm, "")
+    .replace(/\n{3,}/g, "\n\n");
+
+  for (let i = 0; i < codeBlocks.length; i++) {
+    cleaned = cleaned.replace(`__CODE_BLOCK_${i}__`, codeBlocks[i]);
+  }
+
+  return cleaned.trim();
 }
 
 /**
@@ -218,7 +231,7 @@ function buildLlmsFullTxt(
       lines.push(`_${page.description}_`);
     }
     lines.push("");
-    lines.push(markdownToPlainText(page.content));
+    lines.push(cleanMarkdownForAI(page.content));
     lines.push("");
     lines.push("---");
     lines.push("");
@@ -245,7 +258,8 @@ export default definePlugin<LlmsTxtPluginOptions>((options = {}) => {
         const locales: string[] = (config as any).i18n?.locales ?? ["en"];
         const navigation = (config as any).navigation ?? [];
 
-        const docsDir = path.join(root, "docs");
+        const customModeDir = path.join(root, "src", "content", "docs");
+        const docsDir = fs.existsSync(customModeDir) ? customModeDir : path.join(root, "docs");
         const pages = scanDocs(docsDir, locales, defaultLocale, navigation);
 
         if (pages.length === 0) {

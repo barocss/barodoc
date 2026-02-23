@@ -1,6 +1,7 @@
 export { default } from "./integration.js";
 export * from "./types.js";
-export { loadConfig, barodocConfigSchema } from "./config/index.js";
+export { loadConfig, barodocConfigSchema, docsFrontmatterSchema } from "./config/index.js";
+export type { DocsFrontmatter } from "./config/index.js";
 export {
   getLocaleFromPath,
   removeLocaleFromPath,

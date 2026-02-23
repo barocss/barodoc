@@ -58,6 +58,20 @@ export const feedbackSchema = z.object({
   endpoint: z.string().optional(),
 }).optional();
 
+/** Frontmatter schema for MDX/MD content files. Reusable across custom and quick mode. */
+export const docsFrontmatterSchema = z.object({
+  title: z.string().optional(),
+  description: z.string().optional(),
+  tags: z.array(z.string()).optional(),
+  related: z.array(z.string()).optional(),
+  category: z.string().optional(),
+  api_reference: z.boolean().optional(),
+  difficulty: z.enum(["beginner", "intermediate", "advanced"]).optional(),
+  lastUpdated: z.date().optional(),
+});
+
+export type DocsFrontmatter = z.infer<typeof docsFrontmatterSchema>;
+
 export const pluginConfigSchema = z.union([
   z.string(),
   z.tuple([z.string(), z.record(z.unknown())]),

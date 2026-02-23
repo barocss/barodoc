@@ -1,0 +1,111 @@
+---
+title: CLI 명령어
+description: Barodoc CLI 레퍼런스 — serve, build, check, manifest 등
+tags: [cli, commands, tools]
+related: [guides/installation, guides/configuration]
+difficulty: beginner
+---
+
+Barodoc CLI(`barodoc`)로 문서 사이트를 개발, 빌드, 검증할 수 있습니다.
+
+## serve
+
+핫 리로드 포함 개발 서버를 시작합니다:
+
+```bash
+barodoc serve [dir]
+```
+
+| 플래그 | 설명 |
+|--------|------|
+| `-p, --port <port>` | 리슨 포트 (기본: `4321`) |
+| `-h, --host` | 네트워크에 노출 |
+| `--open` | 시작 시 브라우저 열기 |
+| `--clean` | 의존성 강제 재설치 |
+| `-c, --config <file>` | 설정 파일 경로 |
+
+## build
+
+프로덕션 빌드:
+
+```bash
+barodoc build [dir]
+```
+
+| 플래그 | 설명 |
+|--------|------|
+| `-o, --output <dir>` | 출력 디렉토리 (기본: `dist`) |
+| `--clean` | 의존성 강제 재설치 |
+| `-c, --config <file>` | 설정 파일 경로 |
+
+## preview
+
+프로덕션 빌드를 로컬에서 미리보기:
+
+```bash
+barodoc preview [dir]
+```
+
+| 플래그 | 설명 |
+|--------|------|
+| `-p, --port <port>` | 리슨 포트 (기본: `4321`) |
+| `-o, --output <dir>` | 빌드 출력 디렉토리 (기본: `dist`) |
+
+## check
+
+문서를 navigation 설정과 frontmatter 스키마에 대해 검증합니다:
+
+```bash
+barodoc check [dir]
+```
+
+| 플래그 | 설명 |
+|--------|------|
+| `--fix` | 누락 파일 및 미참조 nav 항목 자동 수정 |
+| `-c, --config <file>` | 설정 파일 경로 |
+
+**검증 항목:**
+
+- navigation에 등록되었지만 파일이 없는 항목
+- 파일은 있지만 navigation에 등록되지 않은 항목(orphan)
+- 권장 frontmatter 필드 누락 (`description`)
+- `related` frontmatter 값이 유효하지 않은 slug를 참조하는 경우
+
+## manifest
+
+`docs-manifest.json` 생성 — 전체 문서 메타데이터, 헤딩, 코드 블록, navigation을 구조화된 JSON으로 추출합니다. AI 에이전트 소비에 최적화:
+
+```bash
+barodoc manifest [dir]
+```
+
+| 플래그 | 설명 |
+|--------|------|
+| `-o, --output <file>` | 출력 파일 경로 (기본: `docs-manifest.json`) |
+| `-c, --config <file>` | 설정 파일 경로 |
+
+출력에는 페이지별 `slug`, `title`, `description`, `tags`, `related`, `difficulty`, `headings`, `codeBlocks`, `wordCount`와 전체 `navigation` 트리가 포함됩니다.
+
+## init
+
+기존 디렉토리에서 Barodoc 초기화:
+
+```bash
+barodoc init [dir]
+```
+
+## create
+
+새 Barodoc 프로젝트 스캐폴드:
+
+```bash
+barodoc create <name>
+```
+
+## eject
+
+quick mode에서 전체 Astro 프로젝트로 전환:
+
+```bash
+barodoc eject [dir]
+```

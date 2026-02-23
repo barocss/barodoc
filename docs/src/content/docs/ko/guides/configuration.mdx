@@ -1,6 +1,9 @@
 ---
 title: 설정
 description: Barodoc 설정 가이드
+tags: [config, setup, customization]
+related: [guides/installation, guides/content-structure]
+difficulty: intermediate
 ---
 
 `barodoc.config.json` 파일로 사이트를 설정합니다.
@@ -98,6 +101,73 @@ Pagefind 검색을 켜거나 끕니다:
 ## theme.radius
 
 UI 요소의 border radius (예: `"0.5rem"`, `"8px"`).
+
+## site
+
+배포된 사이트의 전체 URL (예: `"https://docs.example.com"`). 정규 URL 및 OG 메타 태그에 사용.
+
+## base
+
+사이트가 서브디렉토리에 배포될 경우의 기본 경로 (예: `"/docs"`).
+
+## lineNumbers
+
+`true`로 설정하면 코드 블록에 줄 번호를 표시합니다:
+
+```json
+{
+  "lineNumbers": true
+}
+```
+
+## editLink
+
+각 문서 페이지에 "Edit this page" 링크를 표시합니다. `baseUrl`은 GitHub(또는 다른 호스트) 편집 URL 접두사입니다:
+
+```json
+{
+  "editLink": {
+    "baseUrl": "https://github.com/user/repo/edit/main/docs/src/content/docs/"
+  }
+}
+```
+
+## lastUpdated
+
+`true`로 설정하면 페이지 하단에 git 기반 "최종 수정일" 타임스탬프를 표시합니다:
+
+```json
+{
+  "lastUpdated": true
+}
+```
+
+## announcement
+
+사이트 상단에 공지 배너를 표시합니다. 링크와 닫기 기능을 옵션으로 설정할 수 있습니다:
+
+```json
+{
+  "announcement": {
+    "text": "v2.0 출시!",
+    "link": "https://github.com/user/repo/releases",
+    "dismissible": true
+  }
+}
+```
+
+## feedback
+
+페이지 피드백 위젯("도움이 되었나요?"). `endpoint` 설정 시 해당 URL로 `{ page, helpful }` JSON을 POST합니다:
+
+```json
+{
+  "feedback": {
+    "enabled": true,
+    "endpoint": "https://api.example.com/feedback"
+  }
+}
+```
 
 ## 플러그인
 

@@ -162,6 +162,15 @@ export async function createProject(options: ProjectOptions): Promise<string> {
     await fs.ensureDir(publicLink);
   }
 
+  // Symlink overrides directory if exists (for component/layout overrides)
+  const overridesDir = path.join(root, "overrides");
+  const overridesLink = path.join(projectDir, "overrides");
+
+  if (fs.existsSync(overridesDir)) {
+    await fs.symlink(overridesDir, overridesLink, "dir");
+    console.log(pc.dim("  Linked overrides/ directory"));
+  }
+
   return projectDir;
 }
 
@@ -249,6 +258,12 @@ const docsCollection = defineCollection({
   schema: z.object({
     title: z.string().optional(),
     description: z.string().optional(),
+    tags: z.array(z.string()).optional(),
+    related: z.array(z.string()).optional(),
+    category: z.string().optional(),
+    api_reference: z.boolean().optional(),
+    difficulty: z.enum(["beginner", "intermediate", "advanced"]).optional(),
+    lastUpdated: z.date().optional(),
   }),
 });
 
