@@ -1,0 +1,94 @@
+---
+title: Analytics Plugin
+description: Add analytics tracking to your docs
+---
+import { ParamField, ParamFieldGroup } from "@barodoc/theme-docs/components/mdx/ParamField.tsx";
+
+The analytics plugin injects tracking scripts into your documentation site. It supports Google Analytics, Plausible, and Umami.
+
+## Installation
+
+```bash
+pnpm add @barodoc/plugin-analytics@latest
+```
+
+## Google Analytics
+
+```json
+{
+  "plugins": [
+    ["@barodoc/plugin-analytics", {
+      "provider": "google",
+      "id": "G-XXXXXXXXXX"
+    }]
+  ]
+}
+```
+
+## Plausible
+
+```json
+{
+  "plugins": [
+    ["@barodoc/plugin-analytics", {
+      "provider": "plausible",
+      "domain": "docs.example.com"
+    }]
+  ]
+}
+```
+
+## Umami
+
+```json
+{
+  "plugins": [
+    ["@barodoc/plugin-analytics", {
+      "provider": "umami",
+      "websiteId": "your-website-id",
+      "src": "https://analytics.example.com/umami.js"
+    }]
+  ]
+}
+```
+
+## Options
+
+### Google Analytics
+
+<ParamFieldGroup>
+  <ParamField name="provider" type="'google'" required>
+    Set to `"google"`
+  </ParamField>
+  <ParamField name="id" type="string" required>
+    Google Analytics measurement ID (e.g. `"G-XXXXXXXXXX"`)
+  </ParamField>
+</ParamFieldGroup>
+
+### Plausible
+
+<ParamFieldGroup>
+  <ParamField name="provider" type="'plausible'" required>
+    Set to `"plausible"`
+  </ParamField>
+  <ParamField name="domain" type="string" required>
+    Your site domain
+  </ParamField>
+  <ParamField name="src" type="string">
+    Custom Plausible script URL. Default: `"https://plausible.io/js/script.js"`
+  </ParamField>
+</ParamFieldGroup>
+
+### Umami
+
+<ParamFieldGroup>
+  <ParamField name="provider" type="'umami'" required>
+    Set to `"umami"`
+  </ParamField>
+  <ParamField name="websiteId" type="string" required>
+    Your Umami website ID
+  </ParamField>
+  <ParamField name="src" type="string" required>
+    Umami script URL
+  </ParamField>
+</ParamFieldGroup>

@@ -1,0 +1,60 @@
+---
+title: Image Zoom
+description: Click-to-zoom images with medium-zoom
+---
+import { ImageZoom } from "@barodoc/theme-docs/components/mdx/ImageZoom.tsx";
+import { ParamField, ParamFieldGroup } from "@barodoc/theme-docs/components/mdx/ParamField.tsx";
+
+Add click-to-zoom functionality to images. Powered by [medium-zoom](https://github.com/francoischalifour/medium-zoom).
+
+## Basic Usage
+
+<ImageZoom client:load src="/logo.svg" alt="Barodoc Logo" width={200} />
+
+Click the image above to zoom in. Click again or press `Esc` to close.
+
+```mdx
+<ImageZoom client:load src="/images/screenshot.png" alt="Screenshot" />
+```
+
+## With High-Resolution Zoom Source
+
+Use `zoomSrc` to load a higher-resolution image when zoomed:
+
+```mdx
+<ImageZoom
+  client:load
+  src="/images/thumbnail.png"
+  zoomSrc="/images/full-resolution.png"
+  alt="Architecture diagram"
+/>
+```
+
+## With Custom Dimensions
+
+```mdx
+<ImageZoom client:load src="/images/diagram.png" alt="Diagram" width={600} height={400} />
+```
+
+## Props
+
+<ParamFieldGroup>
+  <ParamField name="src" type="string" required>
+    Image source URL
+  </ParamField>
+  <ParamField name="alt" type="string">
+    Alt text for accessibility
+  </ParamField>
+  <ParamField name="zoomSrc" type="string">
+    Higher-resolution image URL loaded when zoomed
+  </ParamField>
+  <ParamField name="width" type="number">
+    Image width in pixels
+  </ParamField>
+  <ParamField name="height" type="number">
+    Image height in pixels
+  </ParamField>
+  <ParamField name="client:load" type="directive" required>
+    Required Astro directive for client-side interactivity
+  </ParamField>
+</ParamFieldGroup>

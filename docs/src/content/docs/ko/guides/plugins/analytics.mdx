@@ -1,0 +1,94 @@
+---
+title: 분석 플러그인
+description: 문서 사이트에 분석 추적 추가
+---
+import { ParamField, ParamFieldGroup } from "@barodoc/theme-docs/components/mdx/ParamField.tsx";
+
+분석 플러그인은 문서 사이트에 추적 스크립트를 삽입합니다. Google Analytics, Plausible, Umami를 지원합니다.
+
+## 설치
+
+```bash
+pnpm add @barodoc/plugin-analytics@latest
+```
+
+## Google Analytics
+
+```json
+{
+  "plugins": [
+    ["@barodoc/plugin-analytics", {
+      "provider": "google",
+      "id": "G-XXXXXXXXXX"
+    }]
+  ]
+}
+```
+
+## Plausible
+
+```json
+{
+  "plugins": [
+    ["@barodoc/plugin-analytics", {
+      "provider": "plausible",
+      "domain": "docs.example.com"
+    }]
+  ]
+}
+```
+
+## Umami
+
+```json
+{
+  "plugins": [
+    ["@barodoc/plugin-analytics", {
+      "provider": "umami",
+      "websiteId": "your-website-id",
+      "src": "https://analytics.example.com/umami.js"
+    }]
+  ]
+}
+```
+
+## 옵션
+
+### Google Analytics
+
+<ParamFieldGroup>
+  <ParamField name="provider" type="'google'" required>
+    `"google"`로 설정
+  </ParamField>
+  <ParamField name="id" type="string" required>
+    Google Analytics 측정 ID (예: `"G-XXXXXXXXXX"`)
+  </ParamField>
+</ParamFieldGroup>
+
+### Plausible
+
+<ParamFieldGroup>
+  <ParamField name="provider" type="'plausible'" required>
+    `"plausible"`로 설정
+  </ParamField>
+  <ParamField name="domain" type="string" required>
+    사이트 도메인
+  </ParamField>
+  <ParamField name="src" type="string">
+    Plausible 스크립트 URL. 기본값: `"https://plausible.io/js/script.js"`
+  </ParamField>
+</ParamFieldGroup>
+
+### Umami
+
+<ParamFieldGroup>
+  <ParamField name="provider" type="'umami'" required>
+    `"umami"`로 설정
+  </ParamField>
+  <ParamField name="websiteId" type="string" required>
+    Umami 웹사이트 ID
+  </ParamField>
+  <ParamField name="src" type="string" required>
+    Umami 스크립트 URL
+  </ParamField>
+</ParamFieldGroup>

@@ -1,0 +1,56 @@
+---
+title: PWA Plugin
+description: Add Progressive Web App support with offline access
+---
+import { ParamField, ParamFieldGroup } from "@barodoc/theme-docs/components/mdx/ParamField.tsx";
+
+The PWA plugin adds Progressive Web App capabilities to your documentation site, including offline access, installability, and a web app manifest.
+
+## Installation
+
+```bash
+pnpm add @barodoc/plugin-pwa@latest
+```
+
+## Configuration
+
+```json
+{
+  "plugins": [
+    ["@barodoc/plugin-pwa", {
+      "name": "My Docs",
+      "shortName": "Docs",
+      "themeColor": "#0070f3",
+      "backgroundColor": "#ffffff",
+      "display": "standalone"
+    }]
+  ]
+}
+```
+
+The plugin generates:
+- `manifest.json` — web app manifest with name, icons, and display mode
+- `sw.js` — service worker for offline caching
+
+## Options
+
+<ParamFieldGroup>
+  <ParamField name="name" type="string">
+    Full app name. Defaults to the site name from config
+  </ParamField>
+  <ParamField name="shortName" type="string">
+    Short app name for the home screen. Defaults to `name`
+  </ParamField>
+  <ParamField name="themeColor" type="string">
+    Theme color for the browser chrome. Default: `"#2563eb"`
+  </ParamField>
+  <ParamField name="backgroundColor" type="string">
+    Background color for the splash screen. Default: `"#ffffff"`
+  </ParamField>
+  <ParamField name="display" type="'standalone' | 'fullscreen' | 'minimal-ui' | 'browser'">
+    Display mode. Default: `"standalone"`
+  </ParamField>
+  <ParamField name="offlineFallback" type="string">
+    Page to show when offline and the requested page is not cached. Default: `"/404"`
+  </ParamField>
+</ParamFieldGroup>

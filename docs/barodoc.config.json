@@ -41,12 +41,29 @@
         "components/file-tree",
         "components/frame",
         "components/icon",
+        "components/image-zoom",
         "components/mermaid",
         "components/param-field",
         "components/response-field",
         "components/steps",
         "components/tabs",
-        "components/tooltip"
+        "components/tooltip",
+        "components/video"
+      ]
+    },
+    {
+      "group": "Plugins",
+      "group:ko": "플러그인",
+      "pages": [
+        "guides/plugins/openapi",
+        "guides/plugins/search",
+        "guides/plugins/analytics",
+        "guides/plugins/sitemap",
+        "guides/plugins/rss",
+        "guides/plugins/pwa",
+        "guides/plugins/og-image",
+        "guides/plugins/llms-txt",
+        "guides/plugins/docsearch"
       ]
     },
     {

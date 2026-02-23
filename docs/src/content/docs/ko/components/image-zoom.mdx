@@ -1,0 +1,60 @@
+---
+title: Image Zoom
+description: 클릭하면 확대되는 이미지
+---
+import { ImageZoom } from "@barodoc/theme-docs/components/mdx/ImageZoom.tsx";
+import { ParamField, ParamFieldGroup } from "@barodoc/theme-docs/components/mdx/ParamField.tsx";
+
+이미지를 클릭하면 확대되는 기능을 추가합니다. [medium-zoom](https://github.com/francoischalifour/medium-zoom) 기반입니다.
+
+## 기본 사용법
+
+<ImageZoom client:load src="/logo.svg" alt="Barodoc Logo" width={200} />
+
+위 이미지를 클릭하면 확대됩니다. 다시 클릭하거나 `Esc`를 누르면 닫힙니다.
+
+```mdx
+<ImageZoom client:load src="/images/screenshot.png" alt="스크린샷" />
+```
+
+## 고해상도 줌 소스
+
+`zoomSrc`를 사용하면 확대 시 더 높은 해상도의 이미지를 로드합니다:
+
+```mdx
+<ImageZoom
+  client:load
+  src="/images/thumbnail.png"
+  zoomSrc="/images/full-resolution.png"
+  alt="아키텍처 다이어그램"
+/>
+```
+
+## 크기 지정
+
+```mdx
+<ImageZoom client:load src="/images/diagram.png" alt="다이어그램" width={600} height={400} />
+```
+
+## Props
+
+<ParamFieldGroup>
+  <ParamField name="src" type="string" required>
+    이미지 소스 URL
+  </ParamField>
+  <ParamField name="alt" type="string">
+    접근성을 위한 대체 텍스트
+  </ParamField>
+  <ParamField name="zoomSrc" type="string">
+    확대 시 로드되는 고해상도 이미지 URL
+  </ParamField>
+  <ParamField name="width" type="number">
+    이미지 너비 (픽셀)
+  </ParamField>
+  <ParamField name="height" type="number">
+    이미지 높이 (픽셀)
+  </ParamField>
+  <ParamField name="client:load" type="directive" required>
+    클라이언트 사이드 인터랙티비티를 위한 Astro 디렉티브
+  </ParamField>
+</ParamFieldGroup>
