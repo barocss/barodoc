@@ -1,0 +1,57 @@
+---
+title: OG Image Plugin
+description: Auto-generate Open Graph images for social sharing
+---
+import { ParamField, ParamFieldGroup } from "@barodoc/theme-docs/components/mdx/ParamField.tsx";
+
+The OG Image plugin generates Open Graph images for each documentation page at build time. These images appear when your docs are shared on social media platforms like Twitter, Facebook, and Slack.
+
+## Installation
+
+```bash
+pnpm add @barodoc/plugin-og-image@latest
+```
+
+## Configuration
+
+```json
+{
+  "plugins": [
+    ["@barodoc/plugin-og-image", {
+      "background": "#ffffff",
+      "textColor": "#0f172a",
+      "accentColor": "#0070f3"
+    }]
+  ]
+}
+```
+
+Generated images are placed in `dist/og/` and automatically linked via `<meta property="og:image">` tags.
+
+Each image includes:
+- Site name (in accent color)
+- Page title
+- Page description
+
+## Options
+
+<ParamFieldGroup>
+  <ParamField name="fontPath" type="string">
+    Path to a TTF/OTF font file for text rendering. Falls back to a system default
+  </ParamField>
+  <ParamField name="background" type="string">
+    Background color. Default: `"#ffffff"`
+  </ParamField>
+  <ParamField name="textColor" type="string">
+    Text color for title and description. Default: `"#0f172a"`
+  </ParamField>
+  <ParamField name="accentColor" type="string">
+    Accent color for the site name. Default: `"#0070f3"`
+  </ParamField>
+  <ParamField name="width" type="number">
+    Image width in pixels. Default: `1200`
+  </ParamField>
+  <ParamField name="height" type="number">
+    Image height in pixels. Default: `630`
+  </ParamField>
+</ParamFieldGroup>

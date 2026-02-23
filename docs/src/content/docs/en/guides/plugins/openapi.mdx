@@ -1,0 +1,104 @@
+---
+title: OpenAPI Plugin
+description: Generate API documentation from OpenAPI/Swagger specs
+---
+import { ParamField, ParamFieldGroup } from "@barodoc/theme-docs/components/mdx/ParamField.tsx";
+
+The OpenAPI plugin automatically generates API documentation pages from an OpenAPI (Swagger) specification file. It includes an interactive API Playground for testing endpoints directly from the docs.
+
+## Installation
+
+```bash
+pnpm add @barodoc/plugin-openapi@latest
+```
+
+## Configuration
+
+Add the plugin to `barodoc.config.json`:
+
+```json
+{
+  "plugins": [
+    ["@barodoc/plugin-openapi", {
+      "specFile": "openapi.yaml",
+      "basePath": "api",
+      "groupBy": "tags",
+      "baseUrl": "https://api.example.com",
+      "playground": true
+    }]
+  ]
+}
+```
+
+## Spec File
+
+Place your OpenAPI spec file (YAML or JSON) in the docs root directory:
+
+```
+docs/
+├── openapi.yaml    ← spec file
+├── barodoc.config.json
+└── src/
+```
+
+The plugin supports OpenAPI 3.0+ specs. It reads paths, operations, parameters, request bodies, response schemas, and examples.
+
+## Generated Output
+
+The plugin generates MDX pages grouped by tags (or paths). Each page includes:
+
+- **Endpoint header** with method badge, path, and description
+- **Endpoint TOC** at the top for quick navigation
+- **Parameters table** with name, type, required status, and enum values
+- **Request body schema** with field descriptions
+- **Response examples** auto-generated from schemas
+- **cURL request examples**
+- **Interactive API Playground** (when `playground: true`)
+
+## API Playground Features
+
+The generated playground supports:
+
+- **Multiple auth types**: Bearer Token, API Key, and Basic Auth
+- **Enum dropdowns**: Parameters with enum values render as `<select>` dropdowns
+- **JSON body validation**: Request body is validated before sending
+- **Code snippets**: cURL, JavaScript, Python, and Node.js
+- **Response inspector**: Body with JSON syntax highlighting, headers, status, time, and size
+- **Request history**: Last 5 requests stored in IndexedDB
+
+## Navigation
+
+Add the generated pages to your navigation:
+
+```json
+{
+  "navigation": [
+    {
+      "group": "API Reference",
+      "pages": ["api/pet", "api/store", "api/user"]
+    }
+  ]
+}
+```
+
+Page slugs match the tag names from your spec, lowercased and hyphenated.
+
+## Options
+
+<ParamFieldGroup>
+  <ParamField name="specFile" type="string" required>
+    Path to the OpenAPI spec file (YAML or JSON), relative to the docs root
+  </ParamField>
+  <ParamField name="basePath" type="string">
+    Base path for generated API doc pages. Default: `"api"`
+  </ParamField>
+  <ParamField name="groupBy" type="'tags' | 'paths'">
+    Group endpoints by tags or paths. Default: `"tags"`
+  </ParamField>
+  <ParamField name="baseUrl" type="string">
+    Base URL for API requests in the playground. Default: `""`
+  </ParamField>
+  <ParamField name="playground" type="boolean">
+    Enable the interactive API Playground. Default: `true`
+  </ParamField>
+</ParamFieldGroup>

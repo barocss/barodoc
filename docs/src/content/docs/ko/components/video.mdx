@@ -1,0 +1,53 @@
+---
+title: Video
+description: YouTube, Vimeo, Loom 비디오 임베딩
+---
+import { Video } from "@barodoc/theme-docs/components/mdx/Video.tsx";
+import { ParamField, ParamFieldGroup } from "@barodoc/theme-docs/components/mdx/ParamField.tsx";
+
+YouTube, Vimeo, Loom 비디오를 반응형 플레이어와 캡션으로 임베딩합니다.
+
+## YouTube
+
+<Video client:load url="https://www.youtube.com/watch?v=dQw4w9WgXcQ" title="데모 비디오" caption="Video 컴포넌트로 임베딩한 YouTube 비디오" />
+
+```mdx
+<Video client:load url="https://www.youtube.com/watch?v=dQw4w9WgXcQ" title="데모 비디오" caption="YouTube 비디오" />
+```
+
+## Vimeo
+
+```mdx
+<Video client:load url="https://vimeo.com/123456789" title="Vimeo 비디오" />
+```
+
+## Loom
+
+```mdx
+<Video client:load url="https://www.loom.com/share/abc123def456" title="Loom 녹화" caption="화면 녹화" />
+```
+
+## 지원되는 URL 형식
+
+| 제공자 | 형식 |
+|--------|------|
+| YouTube | `youtube.com/watch?v=ID`, `youtu.be/ID`, `youtube.com/embed/ID` |
+| Vimeo | `vimeo.com/ID`, `player.vimeo.com/video/ID` |
+| Loom | `loom.com/share/ID`, `loom.com/embed/ID` |
+
+## Props
+
+<ParamFieldGroup>
+  <ParamField name="url" type="string" required>
+    YouTube, Vimeo 또는 Loom 비디오 URL
+  </ParamField>
+  <ParamField name="title" type="string">
+    iframe의 접근성 제목 (기본값: 제공자 이름)
+  </ParamField>
+  <ParamField name="caption" type="string">
+    비디오 아래에 표시되는 캡션 텍스트
+  </ParamField>
+  <ParamField name="client:load" type="directive" required>
+    클라이언트 사이드 인터랙티비티를 위한 Astro 디렉티브
+  </ParamField>
+</ParamFieldGroup>

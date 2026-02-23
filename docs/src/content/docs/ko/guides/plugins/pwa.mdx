@@ -1,0 +1,56 @@
+---
+title: PWA 플러그인
+description: 오프라인 접근이 가능한 Progressive Web App 지원 추가
+---
+import { ParamField, ParamFieldGroup } from "@barodoc/theme-docs/components/mdx/ParamField.tsx";
+
+PWA 플러그인은 문서 사이트에 오프라인 접근, 설치 가능성, 웹 앱 매니페스트 등 Progressive Web App 기능을 추가합니다.
+
+## 설치
+
+```bash
+pnpm add @barodoc/plugin-pwa@latest
+```
+
+## 설정
+
+```json
+{
+  "plugins": [
+    ["@barodoc/plugin-pwa", {
+      "name": "My Docs",
+      "shortName": "Docs",
+      "themeColor": "#0070f3",
+      "backgroundColor": "#ffffff",
+      "display": "standalone"
+    }]
+  ]
+}
+```
+
+플러그인이 생성하는 파일:
+- `manifest.json` — 이름, 아이콘, 디스플레이 모드가 포함된 웹 앱 매니페스트
+- `sw.js` — 오프라인 캐싱을 위한 서비스 워커
+
+## 옵션
+
+<ParamFieldGroup>
+  <ParamField name="name" type="string">
+    전체 앱 이름. 기본값: config의 사이트 이름
+  </ParamField>
+  <ParamField name="shortName" type="string">
+    홈 화면용 짧은 앱 이름. 기본값: `name`
+  </ParamField>
+  <ParamField name="themeColor" type="string">
+    브라우저 크롬 테마 색상. 기본값: `"#2563eb"`
+  </ParamField>
+  <ParamField name="backgroundColor" type="string">
+    스플래시 화면 배경색. 기본값: `"#ffffff"`
+  </ParamField>
+  <ParamField name="display" type="'standalone' | 'fullscreen' | 'minimal-ui' | 'browser'">
+    디스플레이 모드. 기본값: `"standalone"`
+  </ParamField>
+  <ParamField name="offlineFallback" type="string">
+    오프라인 상태에서 캐시되지 않은 페이지 요청 시 표시할 페이지. 기본값: `"/404"`
+  </ParamField>
+</ParamFieldGroup>

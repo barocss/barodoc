@@ -1,0 +1,53 @@
+---
+title: DocSearch Plugin
+description: Integrate Algolia DocSearch for advanced search
+---
+import { ParamField, ParamFieldGroup } from "@barodoc/theme-docs/components/mdx/ParamField.tsx";
+
+The DocSearch plugin integrates [Algolia DocSearch](https://docsearch.algolia.com) into your documentation site, replacing the default Pagefind search with Algolia's AI-powered search.
+
+## Installation
+
+```bash
+pnpm add @barodoc/plugin-docsearch@latest
+```
+
+## Prerequisites
+
+Apply for DocSearch at [docsearch.algolia.com](https://docsearch.algolia.com/apply). You will receive an `appId`, `apiKey`, and `indexName` after approval.
+
+## Configuration
+
+```json
+{
+  "plugins": [
+    ["@barodoc/plugin-docsearch", {
+      "appId": "YOUR_APP_ID",
+      "apiKey": "YOUR_SEARCH_API_KEY",
+      "indexName": "your_index_name"
+    }]
+  ]
+}
+```
+
+When enabled, the DocSearch plugin automatically disables the default Pagefind search and replaces it with the Algolia search modal.
+
+## Options
+
+<ParamFieldGroup>
+  <ParamField name="appId" type="string" required>
+    Algolia application ID
+  </ParamField>
+  <ParamField name="apiKey" type="string" required>
+    Algolia search-only API key (not the admin key)
+  </ParamField>
+  <ParamField name="indexName" type="string" required>
+    Algolia index name
+  </ParamField>
+  <ParamField name="container" type="string">
+    CSS selector for the search container element. Default: `"#docsearch"`
+  </ParamField>
+  <ParamField name="placeholder" type="string">
+    Placeholder text for the search input. Default: `"Search docs..."`
+  </ParamField>
+</ParamFieldGroup>

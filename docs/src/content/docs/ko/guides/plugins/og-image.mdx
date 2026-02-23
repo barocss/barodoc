@@ -1,0 +1,57 @@
+---
+title: OG 이미지 플러그인
+description: 소셜 공유용 Open Graph 이미지 자동 생성
+---
+import { ParamField, ParamFieldGroup } from "@barodoc/theme-docs/components/mdx/ParamField.tsx";
+
+OG 이미지 플러그인은 빌드 시 각 문서 페이지의 Open Graph 이미지를 생성합니다. 이 이미지는 Twitter, Facebook, Slack 등 소셜 미디어에서 문서를 공유할 때 표시됩니다.
+
+## 설치
+
+```bash
+pnpm add @barodoc/plugin-og-image@latest
+```
+
+## 설정
+
+```json
+{
+  "plugins": [
+    ["@barodoc/plugin-og-image", {
+      "background": "#ffffff",
+      "textColor": "#0f172a",
+      "accentColor": "#0070f3"
+    }]
+  ]
+}
+```
+
+생성된 이미지는 `dist/og/`에 배치되며 `<meta property="og:image">` 태그로 자동 연결됩니다.
+
+각 이미지에 포함되는 내용:
+- 사이트 이름 (액센트 색상)
+- 페이지 제목
+- 페이지 설명
+
+## 옵션
+
+<ParamFieldGroup>
+  <ParamField name="fontPath" type="string">
+    텍스트 렌더링용 TTF/OTF 폰트 파일 경로. 시스템 기본 폰트로 대체
+  </ParamField>
+  <ParamField name="background" type="string">
+    배경색. 기본값: `"#ffffff"`
+  </ParamField>
+  <ParamField name="textColor" type="string">
+    제목과 설명의 텍스트 색상. 기본값: `"#0f172a"`
+  </ParamField>
+  <ParamField name="accentColor" type="string">
+    사이트 이름의 액센트 색상. 기본값: `"#0070f3"`
+  </ParamField>
+  <ParamField name="width" type="number">
+    이미지 너비 (픽셀). 기본값: `1200`
+  </ParamField>
+  <ParamField name="height" type="number">
+    이미지 높이 (픽셀). 기본값: `630`
+  </ParamField>
+</ParamFieldGroup>

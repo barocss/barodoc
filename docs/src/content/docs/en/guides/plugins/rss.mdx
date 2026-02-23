@@ -1,0 +1,41 @@
+---
+title: RSS Plugin
+description: Generate RSS feeds for blog and changelog
+---
+import { ParamField, ParamFieldGroup } from "@barodoc/theme-docs/components/mdx/ParamField.tsx";
+
+The RSS plugin generates an RSS feed at `/rss.xml`, allowing users to subscribe to updates from your blog or changelog.
+
+## Installation
+
+```bash
+pnpm add @barodoc/plugin-rss@latest
+```
+
+## Configuration
+
+```json
+{
+  "plugins": [
+    ["@barodoc/plugin-rss", {
+      "title": "My Docs Updates",
+      "description": "Latest updates from our documentation",
+      "collections": ["blog", "changelog"]
+    }]
+  ]
+}
+```
+
+## Options
+
+<ParamFieldGroup>
+  <ParamField name="title" type="string">
+    Feed title. Defaults to the site name from config
+  </ParamField>
+  <ParamField name="description" type="string">
+    Feed description. Default: `"Latest updates"`
+  </ParamField>
+  <ParamField name="collections" type="('blog' | 'changelog')[]">
+    Content collections to include in the feed. Default: `["blog"]`
+  </ParamField>
+</ParamFieldGroup>

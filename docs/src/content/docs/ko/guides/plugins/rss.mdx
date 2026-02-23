@@ -1,0 +1,41 @@
+---
+title: RSS 플러그인
+description: 블로그 및 변경 로그용 RSS 피드 생성
+---
+import { ParamField, ParamFieldGroup } from "@barodoc/theme-docs/components/mdx/ParamField.tsx";
+
+RSS 플러그인은 `/rss.xml`에 RSS 피드를 생성하여 사용자가 블로그나 변경 로그의 업데이트를 구독할 수 있게 합니다.
+
+## 설치
+
+```bash
+pnpm add @barodoc/plugin-rss@latest
+```
+
+## 설정
+
+```json
+{
+  "plugins": [
+    ["@barodoc/plugin-rss", {
+      "title": "문서 업데이트",
+      "description": "문서의 최신 업데이트",
+      "collections": ["blog", "changelog"]
+    }]
+  ]
+}
+```
+
+## 옵션
+
+<ParamFieldGroup>
+  <ParamField name="title" type="string">
+    피드 제목. 기본값: config의 사이트 이름
+  </ParamField>
+  <ParamField name="description" type="string">
+    피드 설명. 기본값: `"Latest updates"`
+  </ParamField>
+  <ParamField name="collections" type="('blog' | 'changelog')[]">
+    피드에 포함할 콘텐츠 컬렉션. 기본값: `["blog"]`
+  </ParamField>
+</ParamFieldGroup>

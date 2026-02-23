@@ -1,0 +1,53 @@
+---
+title: DocSearch 플러그인
+description: Algolia DocSearch 고급 검색 연동
+---
+import { ParamField, ParamFieldGroup } from "@barodoc/theme-docs/components/mdx/ParamField.tsx";
+
+DocSearch 플러그인은 [Algolia DocSearch](https://docsearch.algolia.com)를 문서 사이트에 연동하여 기본 Pagefind 검색을 Algolia의 AI 기반 검색으로 교체합니다.
+
+## 설치
+
+```bash
+pnpm add @barodoc/plugin-docsearch@latest
+```
+
+## 사전 요구사항
+
+[docsearch.algolia.com](https://docsearch.algolia.com/apply)에서 DocSearch를 신청하세요. 승인 후 `appId`, `apiKey`, `indexName`을 받게 됩니다.
+
+## 설정
+
+```json
+{
+  "plugins": [
+    ["@barodoc/plugin-docsearch", {
+      "appId": "YOUR_APP_ID",
+      "apiKey": "YOUR_SEARCH_API_KEY",
+      "indexName": "your_index_name"
+    }]
+  ]
+}
+```
+
+활성화되면 DocSearch 플러그인이 기본 Pagefind 검색을 자동으로 비활성화하고 Algolia 검색 모달로 교체합니다.
+
+## 옵션
+
+<ParamFieldGroup>
+  <ParamField name="appId" type="string" required>
+    Algolia 애플리케이션 ID
+  </ParamField>
+  <ParamField name="apiKey" type="string" required>
+    Algolia 검색 전용 API 키 (관리자 키가 아님)
+  </ParamField>
+  <ParamField name="indexName" type="string" required>
+    Algolia 인덱스 이름
+  </ParamField>
+  <ParamField name="container" type="string">
+    검색 컨테이너 요소의 CSS 셀렉터. 기본값: `"#docsearch"`
+  </ParamField>
+  <ParamField name="placeholder" type="string">
+    검색 입력 플레이스홀더 텍스트. 기본값: `"Search docs..."`
+  </ParamField>
+</ParamFieldGroup>

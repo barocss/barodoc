@@ -1,0 +1,44 @@
+---
+title: Search Plugin
+description: Full-text search with Pagefind
+---
+import { ParamField, ParamFieldGroup } from "@barodoc/theme-docs/components/mdx/ParamField.tsx";
+
+The search plugin enables full-text search powered by [Pagefind](https://pagefind.app). It indexes your documentation at build time and provides a fast, client-side search experience.
+
+## Installation
+
+```bash
+pnpm add @barodoc/plugin-search@latest
+```
+
+## Configuration
+
+```json
+{
+  "plugins": [
+    ["@barodoc/plugin-search", {
+      "enabled": true,
+      "pagefind": {
+        "exclude": ["api/*"]
+      }
+    }]
+  ]
+}
+```
+
+Search is enabled by default. The search UI is built into the theme and accessible via the search bar in the header or the `Ctrl+K` / `Cmd+K` keyboard shortcut.
+
+## Options
+
+<ParamFieldGroup>
+  <ParamField name="enabled" type="boolean">
+    Enable or disable search. Default: `true`
+  </ParamField>
+  <ParamField name="pagefind.baseUrl" type="string">
+    Base URL for Pagefind index
+  </ParamField>
+  <ParamField name="pagefind.exclude" type="string[]">
+    Glob patterns for pages to exclude from the search index
+  </ParamField>
+</ParamFieldGroup>

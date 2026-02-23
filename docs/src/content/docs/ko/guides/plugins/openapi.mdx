@@ -1,0 +1,104 @@
+---
+title: OpenAPI 플러그인
+description: OpenAPI/Swagger 스펙에서 API 문서를 자동 생성
+---
+import { ParamField, ParamFieldGroup } from "@barodoc/theme-docs/components/mdx/ParamField.tsx";
+
+OpenAPI 플러그인은 OpenAPI (Swagger) 스펙 파일에서 API 문서 페이지를 자동으로 생성합니다. 문서에서 직접 엔드포인트를 테스트할 수 있는 인터랙티브 API Playground가 포함됩니다.
+
+## 설치
+
+```bash
+pnpm add @barodoc/plugin-openapi@latest
+```
+
+## 설정
+
+`barodoc.config.json`에 플러그인을 추가합니다:
+
+```json
+{
+  "plugins": [
+    ["@barodoc/plugin-openapi", {
+      "specFile": "openapi.yaml",
+      "basePath": "api",
+      "groupBy": "tags",
+      "baseUrl": "https://api.example.com",
+      "playground": true
+    }]
+  ]
+}
+```
+
+## 스펙 파일
+
+OpenAPI 스펙 파일 (YAML 또는 JSON)을 docs 루트 디렉토리에 배치합니다:
+
+```
+docs/
+├── openapi.yaml    ← 스펙 파일
+├── barodoc.config.json
+└── src/
+```
+
+OpenAPI 3.0+ 스펙을 지원합니다. 경로, 오퍼레이션, 파라미터, 요청 본문, 응답 스키마, 예제를 읽습니다.
+
+## 생성되는 결과물
+
+플러그인은 태그(또는 경로)별로 그룹화된 MDX 페이지를 생성합니다. 각 페이지에는 다음이 포함됩니다:
+
+- **엔드포인트 헤더**: 메서드 배지, 경로, 설명
+- **엔드포인트 목차**: 상단에서 빠른 네비게이션
+- **파라미터 테이블**: 이름, 타입, 필수 여부, enum 값
+- **요청 본문 스키마**: 필드 설명 포함
+- **응답 예제**: 스키마에서 자동 생성
+- **cURL 요청 예제**
+- **인터랙티브 API Playground** (`playground: true` 설정 시)
+
+## API Playground 기능
+
+생성된 Playground는 다음을 지원합니다:
+
+- **다중 인증 방식**: Bearer Token, API Key, Basic Auth
+- **Enum 드롭다운**: enum 값이 있는 파라미터는 `<select>` 드롭다운으로 렌더링
+- **JSON 본문 유효성 검증**: 전송 전 요청 본문 검증
+- **코드 스니펫**: cURL, JavaScript, Python, Node.js
+- **응답 인스펙터**: JSON 구문 강조, 헤더, 상태, 시간, 크기 표시
+- **요청 히스토리**: 최근 5건의 요청을 IndexedDB에 저장
+
+## 네비게이션
+
+생성된 페이지를 네비게이션에 추가합니다:
+
+```json
+{
+  "navigation": [
+    {
+      "group": "API Reference",
+      "pages": ["api/pet", "api/store", "api/user"]
+    }
+  ]
+}
+```
+
+페이지 슬러그는 스펙의 태그 이름을 소문자로 변환하고 하이픈으로 연결한 값입니다.
+
+## 옵션
+
+<ParamFieldGroup>
+  <ParamField name="specFile" type="string" required>
+    docs 루트 기준 OpenAPI 스펙 파일 경로 (YAML 또는 JSON)
+  </ParamField>
+  <ParamField name="basePath" type="string">
+    생성될 API 문서 페이지의 기본 경로. 기본값: `"api"`
+  </ParamField>
+  <ParamField name="groupBy" type="'tags' | 'paths'">
+    엔드포인트 그룹화 방식. 기본값: `"tags"`
+  </ParamField>
+  <ParamField name="baseUrl" type="string">
+    Playground에서 API 요청에 사용할 기본 URL. 기본값: `""`
+  </ParamField>
+  <ParamField name="playground" type="boolean">
+    인터랙티브 API Playground 활성화 여부. 기본값: `true`
+  </ParamField>
+</ParamFieldGroup>

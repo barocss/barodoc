@@ -1,0 +1,46 @@
+---
+title: Sitemap Plugin
+description: Auto-generate sitemap.xml for search engines
+---
+import { ParamField, ParamFieldGroup } from "@barodoc/theme-docs/components/mdx/ParamField.tsx";
+
+The sitemap plugin generates a `sitemap.xml` file at build time, helping search engines discover and index your documentation pages.
+
+## Installation
+
+```bash
+pnpm add @barodoc/plugin-sitemap@latest
+```
+
+## Configuration
+
+```json
+{
+  "plugins": [
+    ["@barodoc/plugin-sitemap", {
+      "exclude": ["/404", "/api/*"],
+      "customPages": ["https://docs.example.com/changelog"]
+    }]
+  ]
+}
+```
+
+The sitemap is generated at `sitemap-index.xml` and `sitemap-0.xml` in the build output. Make sure to set the `site` option in your config for absolute URLs:
+
+```json
+{
+  "site": "https://docs.example.com",
+  "plugins": ["@barodoc/plugin-sitemap"]
+}
+```
+
+## Options
+
+<ParamFieldGroup>
+  <ParamField name="exclude" type="string[]">
+    Glob patterns for pages to exclude from the sitemap
+  </ParamField>
+  <ParamField name="customPages" type="string[]">
+    Additional full URLs to include in the sitemap
+  </ParamField>
+</ParamFieldGroup>

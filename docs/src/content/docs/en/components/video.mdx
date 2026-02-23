@@ -1,0 +1,53 @@
+---
+title: Video
+description: Embed videos from YouTube, Vimeo, and Loom
+---
+import { Video } from "@barodoc/theme-docs/components/mdx/Video.tsx";
+import { ParamField, ParamFieldGroup } from "@barodoc/theme-docs/components/mdx/ParamField.tsx";
+
+Embed videos from YouTube, Vimeo, and Loom with a responsive player and optional caption.
+
+## YouTube
+
+<Video client:load url="https://www.youtube.com/watch?v=dQw4w9WgXcQ" title="Demo video" caption="A YouTube video embedded with the Video component" />
+
+```mdx
+<Video client:load url="https://www.youtube.com/watch?v=dQw4w9WgXcQ" title="Demo video" caption="A YouTube video" />
+```
+
+## Vimeo
+
+```mdx
+<Video client:load url="https://vimeo.com/123456789" title="Vimeo video" />
+```
+
+## Loom
+
+```mdx
+<Video client:load url="https://www.loom.com/share/abc123def456" title="Loom recording" caption="Screen recording" />
+```
+
+## Supported URL Formats
+
+| Provider | Formats |
+|----------|---------|
+| YouTube | `youtube.com/watch?v=ID`, `youtu.be/ID`, `youtube.com/embed/ID` |
+| Vimeo | `vimeo.com/ID`, `player.vimeo.com/video/ID` |
+| Loom | `loom.com/share/ID`, `loom.com/embed/ID` |
+
+## Props
+
+<ParamFieldGroup>
+  <ParamField name="url" type="string" required>
+    Video URL from YouTube, Vimeo, or Loom
+  </ParamField>
+  <ParamField name="title" type="string">
+    Accessible title for the iframe (defaults to provider name)
+  </ParamField>
+  <ParamField name="caption" type="string">
+    Caption text displayed below the video
+  </ParamField>
+  <ParamField name="client:load" type="directive" required>
+    Required Astro directive for client-side interactivity
+  </ParamField>
+</ParamFieldGroup>

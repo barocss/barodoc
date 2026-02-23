@@ -1,0 +1,49 @@
+---
+title: LLMs.txt Plugin
+description: Generate llms.txt for AI-friendly documentation
+---
+import { ParamField, ParamFieldGroup } from "@barodoc/theme-docs/components/mdx/ParamField.tsx";
+
+The LLMs.txt plugin generates `llms.txt` and `llms-full.txt` files following the [llms.txt specification](https://llmstxt.org). These files make your documentation easily consumable by AI assistants and large language models.
+
+## Installation
+
+```bash
+pnpm add @barodoc/plugin-llms-txt@latest
+```
+
+## Configuration
+
+```json
+{
+  "plugins": [
+    ["@barodoc/plugin-llms-txt", {
+      "description": "Documentation for My Project",
+      "full": true,
+      "links": [
+        { "title": "GitHub", "url": "https://github.com/user/repo" },
+        { "title": "API Reference", "url": "https://docs.example.com/api" }
+      ]
+    }]
+  ]
+}
+```
+
+## Generated Files
+
+- **`llms.txt`** — Summary with page titles, descriptions, and links
+- **`llms-full.txt`** — Full content of all documentation pages (when `full: true`)
+
+## Options
+
+<ParamFieldGroup>
+  <ParamField name="description" type="string">
+    Site description for the llms.txt header. Defaults to the site name
+  </ParamField>
+  <ParamField name="full" type="boolean">
+    Generate `llms-full.txt` with complete page content. Default: `true`
+  </ParamField>
+  <ParamField name="links" type="Array<{ title, url, description? }>">
+    Additional links to include (e.g. GitHub repo, API docs)
+  </ParamField>
+</ParamFieldGroup>
