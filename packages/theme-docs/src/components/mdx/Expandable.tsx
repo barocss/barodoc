@@ -20,27 +20,27 @@ export function Expandable({
   return (
     <div
       className={cn(
-        "not-prose border border-[var(--color-border)] rounded-lg overflow-hidden my-4",
+        "not-prose border border-[var(--bd-border)] rounded-lg overflow-hidden my-4",
         className
       )}
     >
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className="flex w-full items-center justify-between px-4 py-3 bg-[var(--color-bg-secondary)] hover:bg-[var(--color-bg-tertiary)] transition-colors text-left"
+        className="flex w-full items-center justify-between px-4 py-3 bg-[var(--bd-bg-subtle)] hover:bg-[var(--bd-bg-muted)] transition-colors text-left"
       >
-        <span className="text-sm font-medium text-[var(--color-text)]">
+        <span className="text-sm font-medium text-[var(--bd-text)]">
           {title}
         </span>
         <ChevronDown
           className={cn(
-            "h-4 w-4 text-[var(--color-text-muted)] transition-transform",
+            "h-4 w-4 text-[var(--bd-text-muted)] transition-transform",
             isOpen && "rotate-180"
           )}
         />
       </button>
       {isOpen && (
-        <div className="px-4 py-3 bg-[var(--color-bg)] border-t border-[var(--color-border)] text-sm text-[var(--color-text-secondary)]">
+        <div className="px-4 py-3 bg-[var(--bd-bg)] border-t border-[var(--bd-border)] text-sm text-[var(--bd-text-secondary)]">
           {children}
         </div>
       )}
@@ -77,28 +77,28 @@ export function ExpandableItem({
   const [isOpen, setIsOpen] = React.useState(defaultOpen);
 
   return (
-    <div className="not-prose border-l-2 border-[var(--color-border)] pl-4">
+    <div className="not-prose border-l-2 border-[var(--bd-border)] pl-4">
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
         className="flex items-center gap-2 text-left group"
       >
         {isOpen ? (
-          <Minus className="h-3 w-3 text-[var(--color-text-muted)]" />
+          <Minus className="h-3 w-3 text-[var(--bd-text-muted)]" />
         ) : (
-          <Plus className="h-3 w-3 text-[var(--color-text-muted)]" />
+          <Plus className="h-3 w-3 text-[var(--bd-text-muted)]" />
         )}
-        <code className="font-mono text-sm text-[var(--color-text)] group-hover:text-primary-600 dark:group-hover:text-primary-400">
+        <code className="font-mono text-sm text-[var(--bd-text)] group-hover:text-primary-600 dark:group-hover:text-primary-400">
           {title}
         </code>
         {type && (
-          <span className="font-mono text-xs text-[var(--color-text-muted)]">
+          <span className="font-mono text-xs text-[var(--bd-text-muted)]">
             {type}
           </span>
         )}
       </button>
       {isOpen && (
-        <div className="mt-2 ml-5 text-sm text-[var(--color-text-secondary)]">
+        <div className="mt-2 ml-5 text-sm text-[var(--bd-text-secondary)]">
           {children}
         </div>
       )}

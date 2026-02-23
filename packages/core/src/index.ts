@@ -10,6 +10,11 @@ export {
   getLocaleLabel,
 } from "./i18n/index.js";
 
+// Theme utilities
+export { generateThemeCSS, generateAccentScale, getGrayScale } from "./theme/colors.js";
+export { grayPresets } from "./config/schema.js";
+export type { GrayPreset } from "./config/schema.js";
+
 // Plugin system
 export {
   definePlugin,

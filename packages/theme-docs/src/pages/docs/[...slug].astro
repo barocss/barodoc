@@ -124,13 +124,13 @@ breadcrumbs.push({ label: doc.data.title });
   breadcrumbs={breadcrumbs}
 >
   {category && (
-    <p class="text-xs font-medium uppercase tracking-wider text-primary-600 dark:text-primary-400 mb-2">
+    <p class="text-xs font-semibold uppercase tracking-widest text-primary-600 dark:text-primary-400 mb-3">
       {category}
     </p>
   )}
   <h1>{doc.data.title}</h1>
   {doc.data.description && (
-    <p class="lead text-sm text-[var(--color-text-secondary)] mt-1 mb-4">
+    <p class="lead text-base text-[var(--bd-text-secondary)] mt-2 mb-6 leading-relaxed">
       {doc.data.description}
     </p>
   )}

@@ -9,9 +9,9 @@ interface Props {
 const { titles = [] } = Astro.props;
 ---
 
-<div class="code-group not-prose my-4 rounded-lg border border-[var(--color-border)] overflow-hidden" data-titles={JSON.stringify(titles)}>
-  <div class="code-group-tabs flex flex-wrap gap-0 border-b border-[var(--color-border)] bg-[var(--color-bg-tertiary)]"></div>
-  <div class="code-group-content bg-[var(--color-bg-secondary)]">
+<div class="code-group not-prose my-4 rounded-lg border border-[var(--bd-border)] overflow-hidden" data-titles={JSON.stringify(titles)}>
+  <div class="code-group-tabs flex flex-wrap gap-0 border-b border-[var(--bd-border)] bg-[var(--bd-bg-muted)]"></div>
+  <div class="code-group-content bg-[var(--bd-bg-subtle)]">
     <slot />
   </div>
 </div>
@@ -21,37 +21,40 @@ const { titles = [] } = Astro.props;
     document.querySelectorAll('.code-group').forEach((group) => {
       const tabsContainer = group.querySelector('.code-group-tabs');
       const contentContainer = group.querySelector('.code-group-content');
+      if (!tabsContainer || !contentContainer) return;
+
+      tabsContainer.innerHTML = '';
+
       const fallbackTitles = JSON.parse(group.getAttribute('data-titles') || '[]');
 
-      const codeItems = contentContainer?.querySelectorAll(':scope > .code-item');
-      const directPres = contentContainer?.querySelectorAll(':scope > pre');
+      const codeItems = contentContainer.querySelectorAll(':scope > .code-item');
+      const directPres = contentContainer.querySelectorAll(':scope > pre');
 
-      // When CodeItem children exist: use them for tabs (titles from data-title), one tab per .code-item
-      const useCodeItems = (codeItems?.length ?? 0) > 0;
+      const useCodeItems = codeItems.length > 0;
       const tabPanels = useCodeItems
-        ? Array.from(codeItems!)
-        : Array.from(directPres || []);
-      const titles = useCodeItems && codeItems?.length
-        ? Array.from(codeItems!).map((el) => (el as HTMLElement).getAttribute('data-title') ?? '')
+        ? Array.from(codeItems)
+        : Array.from(directPres);
+      const titles = useCodeItems
+        ? Array.from(codeItems).map((el) => (el as HTMLElement).getAttribute('data-title') ?? '')
         : fallbackTitles;
       const numTabs = tabPanels.length;
 
-      if (!tabsContainer || !contentContainer || numTabs === 0) return;
+      if (numTabs === 0) return;
 
       // Create tabs from titles; show/hide tabPanels
       tabPanels.forEach((_panel, index) => {
         const tab = document.createElement('button');
-        tab.className = 'shrink-0 px-4 py-2 text-sm font-medium transition-colors whitespace-nowrap text-[var(--color-text-muted)] hover:text-[var(--color-text)]';
+        tab.className = 'shrink-0 px-4 py-2 text-sm font-medium transition-colors whitespace-nowrap text-[var(--bd-text-muted)] hover:text-[var(--bd-text)]';
         tab.textContent = titles[index]?.trim() || `Tab ${index + 1}`;
         const panel = tabPanels[index] as HTMLElement;
         tab.addEventListener('click', () => {
           tabsContainer.querySelectorAll('button').forEach((t, i) => {
             if (i === index) {
-              t.classList.add('border-b-2', 'border-primary-500', 'text-[var(--color-text)]', '-mb-px');
-              t.classList.remove('text-[var(--color-text-muted)]');
+              t.classList.add('border-b-2', 'border-primary-500', 'text-[var(--bd-text)]', '-mb-px');
+              t.classList.remove('text-[var(--bd-text-muted)]');
             } else {
-              t.classList.remove('border-b-2', 'border-primary-500', 'text-[var(--color-text)]', '-mb-px');
-              t.classList.add('text-[var(--color-text-muted)]');
+              t.classList.remove('border-b-2', 'border-primary-500', 'text-[var(--bd-text)]', '-mb-px');
+              t.classList.add('text-[var(--bd-text-muted)]');
             }
           });
           tabPanels.forEach((p, i) => {
@@ -61,8 +64,8 @@ const { titles = [] } = Astro.props;
         tabsContainer.appendChild(tab);
 
         if (index === 0) {
-          tab.classList.add('border-b-2', 'border-primary-500', 'text-[var(--color-text)]', '-mb-px');
-          tab.classList.remove('text-[var(--color-text-muted)]');
+          tab.classList.add('border-b-2', 'border-primary-500', 'text-[var(--bd-text)]', '-mb-px');
+          tab.classList.remove('text-[var(--bd-text-muted)]');
         } else {
           panel.style.display = 'none';
         }
@@ -70,6 +73,6 @@ const { titles = [] } = Astro.props;
     });
   }
 
-  initCodeGroups();
   document.addEventListener('astro:page-load', initCodeGroups);
+  if (document.readyState === 'complete') initCodeGroups();
 </script>

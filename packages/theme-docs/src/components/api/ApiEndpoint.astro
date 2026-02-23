@@ -16,17 +16,17 @@ const methodColors = {
 };
 ---
 
-<div class="not-prose my-6 rounded-lg border border-[var(--color-border)] overflow-hidden">
-  <div class="flex items-center gap-3 px-4 py-3 bg-[var(--color-bg-secondary)] border-b border-[var(--color-border)]">
+<div class="not-prose my-6 rounded-lg border border-[var(--bd-border)] overflow-hidden">
+  <div class="flex items-center gap-3 px-4 py-3 bg-[var(--bd-bg-subtle)] border-b border-[var(--bd-border)]">
     <span class:list={["px-2 py-1 text-xs font-bold rounded uppercase", methodColors[method]]}>
       {method}
     </span>
-    <code class="text-sm font-mono text-[var(--color-text)]">{path}</code>
+    <code class="text-sm font-mono text-[var(--bd-text)]">{path}</code>
   </div>
   
   {description && (
-    <div class="px-4 py-3 border-b border-[var(--color-border)]">
-      <p class="text-sm text-[var(--color-text-secondary)]">{description}</p>
+    <div class="px-4 py-3 border-b border-[var(--bd-border)]">
+      <p class="text-sm text-[var(--bd-text-secondary)]">{description}</p>
     </div>
   )}
   

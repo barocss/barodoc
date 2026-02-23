@@ -11,21 +11,21 @@ export function Accordion({ title, icon, defaultOpen = false, children }: Accord
   const [isOpen, setIsOpen] = useState(defaultOpen);
 
   return (
-    <div className="accordion-item border border-[var(--color-border)] rounded-xl overflow-hidden bg-[var(--color-bg)] my-3">
+    <div className="accordion-item border border-[var(--bd-border)] rounded-xl overflow-hidden bg-[var(--bd-bg)] my-3">
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full flex items-center gap-3 px-5 py-4 text-left hover:bg-[var(--color-bg-secondary)] transition-colors"
+        className="w-full flex items-center gap-3 px-5 py-4 text-left hover:bg-[var(--bd-bg-subtle)] transition-colors"
         aria-expanded={isOpen}
       >
         {icon && (
-          <span className="flex items-center justify-center w-8 h-8 rounded-lg bg-[var(--color-bg-secondary)] text-lg shrink-0">
+          <span className="flex items-center justify-center w-8 h-8 rounded-lg bg-[var(--bd-bg-subtle)] text-lg shrink-0">
             {icon}
           </span>
         )}
-        <span className="flex-1 font-medium text-[var(--color-text)]">{title}</span>
+        <span className="flex-1 font-medium text-[var(--bd-text)]">{title}</span>
         <svg
-          className={`w-5 h-5 text-[var(--color-text-secondary)] transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}
+          className={`w-5 h-5 text-[var(--bd-text-secondary)] transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -38,7 +38,7 @@ export function Accordion({ title, icon, defaultOpen = false, children }: Accord
           isOpen ? "max-h-[1000px] opacity-100" : "max-h-0 opacity-0"
         }`}
       >
-        <div className="px-5 pb-5 pt-1 text-sm text-[var(--color-text-secondary)] leading-relaxed">
+        <div className="px-5 pb-5 pt-1 text-sm text-[var(--bd-text-secondary)] leading-relaxed">
           {children}
         </div>
       </div>

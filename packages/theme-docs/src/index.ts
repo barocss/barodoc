@@ -84,6 +84,12 @@ function createThemeIntegration(
           integrations: [mdx(), react()],
           vite: {
             plugins: [tailwindcss()],
+            optimizeDeps: {
+              include: ["mermaid"],
+            },
+            ssr: {
+              noExternal: [],
+            },
             resolve: {
               dedupe: ["react", "react-dom"],
             },

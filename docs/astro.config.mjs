@@ -20,7 +20,7 @@ export default defineConfig({
   ],
   vite: {
     optimizeDeps: {
-      // Exclude native modules and workspace packages from dependency optimization
+      include: ["mermaid"],
       exclude: [
         "fsevents",
         "lightningcss",

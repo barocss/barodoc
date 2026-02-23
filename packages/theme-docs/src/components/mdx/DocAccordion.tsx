@@ -36,11 +36,11 @@ export function DocAccordion({
         <AccordionItem 
           key={value} 
           value={value}
-          className="border-b border-[var(--color-border)] last:border-b-0"
+          className="border-b border-[var(--bd-border)] last:border-b-0"
         >
           <div className="flex items-start gap-3 px-4">
             {item.icon && (
-              <span className="flex items-center justify-center w-8 h-8 rounded-lg bg-[var(--color-bg-secondary)] text-lg shrink-0 mt-3">
+              <span className="flex items-center justify-center w-8 h-8 rounded-lg bg-[var(--bd-bg-subtle)] text-lg shrink-0 mt-3">
                 {item.icon}
               </span>
             )}
@@ -48,7 +48,7 @@ export function DocAccordion({
               <AccordionTrigger className="text-left">
                 {item.title}
               </AccordionTrigger>
-              <AccordionContent className="text-[var(--color-text-secondary)]">
+              <AccordionContent className="text-[var(--bd-text-secondary)]">
                 {item.content}
               </AccordionContent>
             </div>
@@ -63,7 +63,7 @@ export function DocAccordion({
         type="single" 
         collapsible={collapsible}
         defaultValue={defaultValue as string}
-        className={cn("not-prose my-6 rounded-xl border border-[var(--color-border)] overflow-hidden", className)}
+        className={cn("not-prose my-6 rounded-xl border border-[var(--bd-border)] overflow-hidden", className)}
       >
         {renderItems()}
       </Accordion>
@@ -74,7 +74,7 @@ export function DocAccordion({
     <Accordion 
       type="multiple" 
       defaultValue={defaultValue as string[]}
-      className={cn("not-prose my-6 rounded-xl border border-[var(--color-border)] overflow-hidden", className)}
+      className={cn("not-prose my-6 rounded-xl border border-[var(--bd-border)] overflow-hidden", className)}
     >
       {renderItems()}
     </Accordion>

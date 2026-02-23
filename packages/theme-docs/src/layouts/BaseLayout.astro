@@ -1,7 +1,9 @@
 ---
 import ThemeScript from "../components/ThemeScript.astro";
 import { SearchDialog } from "../components/SearchDialog";
+import { ClientRouter } from "astro:transitions";
 import config from "virtual:barodoc/config";
+import { generateThemeCSS } from "@barodoc/core";
 import "@barodoc/theme-docs/styles/global.css";
 
 interface Props {
@@ -16,6 +18,8 @@ const canonicalUrl = config.site ? new URL(Astro.url.pathname, config.site).href
 const ogImageUrl = ogImage
   ? (config.site ? new URL(ogImage, config.site).href : ogImage)
   : undefined;
+
+const themeCSS = config.theme?.colors ? generateThemeCSS(config.theme.colors) : "";
 ---
 
 <!doctype html>
@@ -43,8 +47,10 @@ const ogImageUrl = ogImage
 
     <title>{title}</title>
     <ThemeScript />
+    <ClientRouter />
+    {themeCSS && <style set:html={themeCSS} />}
   </head>
-  <body class="min-h-screen bg-[var(--color-bg)] text-[var(--color-text)] antialiased">
+  <body class="min-h-screen bg-[var(--bd-bg)] text-[var(--bd-text)] antialiased">
     <slot />
     <SearchDialog client:load />
   </body>

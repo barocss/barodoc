@@ -32,7 +32,7 @@ function getLocalizedUrl(locale: string): string {
 <div class="relative">
   <button
     id="lang-switcher-btn"
-    class="flex items-center gap-1 px-2 py-1.5 text-sm text-[var(--color-text-secondary)] hover:text-[var(--color-text)] rounded-lg hover:bg-[var(--color-bg-secondary)] transition-colors"
+    class="flex items-center gap-1 px-2 py-1.5 text-sm text-[var(--bd-text-secondary)] hover:text-[var(--bd-text)] rounded-lg hover:bg-[var(--bd-bg-subtle)] transition-colors"
     aria-label="Select language"
   >
     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -46,7 +46,7 @@ function getLocalizedUrl(locale: string): string {
   
   <div
     id="lang-switcher-menu"
-    class="hidden absolute right-0 mt-1 py-1 w-32 bg-[var(--color-bg)] border border-[var(--color-border)] rounded-lg shadow-lg z-50"
+    class="hidden absolute right-0 mt-1 py-1 w-32 bg-[var(--bd-bg)] border border-[var(--bd-border)] rounded-lg shadow-lg z-50"
   >
     {locales.map((locale) => (
       <a
@@ -55,7 +55,7 @@ function getLocalizedUrl(locale: string): string {
           "block px-3 py-1.5 text-sm transition-colors",
           locale === currentLocale
             ? "bg-primary-50 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300"
-            : "text-[var(--color-text-secondary)] hover:text-[var(--color-text)] hover:bg-[var(--color-bg-secondary)]"
+            : "text-[var(--bd-text-secondary)] hover:text-[var(--bd-text)] hover:bg-[var(--bd-bg-subtle)]"
         ]}
       >
         {getLocaleLabel(locale, i18n?.labels)}

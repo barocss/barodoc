@@ -59,7 +59,8 @@ export function getConfigDefaults(): Partial<BarodocConfig> {
     },
     theme: {
       colors: {
-        primary: "#0070f3",
+        accent: "#2563eb",
+        gray: "zinc",
       },
     },
   };

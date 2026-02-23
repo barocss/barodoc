@@ -16,13 +16,14 @@ export interface BarodocI18nConfig {
 }
 
 export interface BarodocThemeColors {
-  primary?: string;
-  background?: string;
-  backgroundDark?: string;
-  text?: string;
-  textDark?: string;
-  border?: string;
-  borderDark?: string;
+  accent?: string;
+  gray?: string;
+  light?: {
+    accent?: string;
+  };
+  dark?: {
+    accent?: string;
+  };
 }
 
 export interface BarodocThemeConfig {

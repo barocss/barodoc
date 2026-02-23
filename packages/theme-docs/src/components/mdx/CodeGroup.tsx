@@ -72,16 +72,16 @@ export function CodeGroup({ children, titles = [] }: CodeGroupProps) {
 
   if (codeBlocks.length === 0) {
     return (
-      <div className="code-group not-prose my-4 rounded-lg border border-[var(--color-border)] overflow-hidden p-4 text-[var(--color-text-muted)] text-sm">
+      <div className="code-group not-prose my-4 rounded-lg border border-[var(--bd-border)] overflow-hidden p-4 text-[var(--bd-text-muted)] text-sm">
         No code blocks found inside CodeGroup.
       </div>
     );
   }
 
   return (
-    <div className="code-group not-prose my-4 rounded-lg border border-[var(--color-border)] overflow-hidden">
+    <div className="code-group not-prose my-4 rounded-lg border border-[var(--bd-border)] overflow-hidden">
       {/* Tabs */}
-      <div className="flex flex-wrap gap-0 bg-[var(--color-bg-tertiary)] border-b border-[var(--color-border)]">
+      <div className="flex flex-wrap gap-0 bg-[var(--bd-bg-muted)] border-b border-[var(--bd-border)]">
         {tabTitles.map((title, index) => {
           const isActive = activeIndex === index;
           return (
@@ -91,8 +91,8 @@ export function CodeGroup({ children, titles = [] }: CodeGroupProps) {
               onClick={() => setActiveIndex(index)}
               className={`shrink-0 px-4 py-2 text-sm font-medium transition-colors whitespace-nowrap ${
                 isActive
-                  ? "bg-[var(--color-bg-secondary)] text-[var(--color-text)] border-b-2 border-primary-500 -mb-px"
-                  : "text-[var(--color-text-muted)] hover:text-[var(--color-text)]"
+                  ? "bg-[var(--bd-bg-subtle)] text-[var(--bd-text)] border-b-2 border-primary-500 -mb-px"
+                  : "text-[var(--bd-text-muted)] hover:text-[var(--bd-text)]"
               }`}
             >
               {title}
@@ -102,7 +102,7 @@ export function CodeGroup({ children, titles = [] }: CodeGroupProps) {
       </div>
 
       {/* Content */}
-      <div className="bg-[var(--color-bg-secondary)]">
+      <div className="bg-[var(--bd-bg-subtle)]">
         {codeBlocks.map((block, index) => (
           <div
             key={index}

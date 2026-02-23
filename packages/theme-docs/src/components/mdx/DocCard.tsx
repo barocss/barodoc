@@ -24,7 +24,7 @@ export function DocCard({ title, icon, href, children }: DocCardProps) {
         <div className="absolute inset-0 bg-gradient-to-br from-primary-50/50 to-transparent dark:from-primary-950/30 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
         <CardHeader className="relative">
           {icon && (
-            <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-[var(--color-bg-secondary)] group-hover:bg-primary-50 dark:group-hover:bg-primary-950/50 mb-3 transition-colors">
+            <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-[var(--bd-bg-subtle)] group-hover:bg-primary-50 dark:group-hover:bg-primary-950/50 mb-3 transition-colors">
               <span className="text-xl">{icon}</span>
             </div>
           )}
@@ -33,7 +33,7 @@ export function DocCard({ title, icon, href, children }: DocCardProps) {
               {title}
             </CardTitle>
             {href && (
-              <ChevronRight className="h-4 w-4 text-[var(--color-text-muted)] opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-200" />
+              <ChevronRight className="h-4 w-4 text-[var(--bd-text-muted)] opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-200" />
             )}
           </div>
           {children && (

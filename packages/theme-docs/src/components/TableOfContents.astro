@@ -17,19 +17,19 @@ const filteredHeadings = headings.filter(h => h.depth >= 2 && h.depth <= 3);
 
 {filteredHeadings.length > 0 && (
   <div class="toc-container">
-    <h4 class="text-xs font-semibold uppercase tracking-wider text-[var(--color-text-muted)] mb-4">
+    <h4 class="text-[11px] font-semibold uppercase tracking-widest text-[var(--bd-text-muted)] mb-3">
       On this page
     </h4>
     <nav class="relative">
-      <div class="absolute left-0 top-0 bottom-0 w-px bg-[var(--color-border)]"></div>
-      <ul class="space-y-1">
+      <div class="absolute left-0 top-0 bottom-0 w-px bg-[var(--bd-border)]"></div>
+      <ul class="space-y-0.5">
         {filteredHeadings.map((heading) => (
           <li class="relative">
             <a
               href={`#${heading.slug}`}
               class:list={[
-                "toc-link block text-sm text-[var(--color-text-secondary)] hover:text-[var(--color-text)] transition-all duration-150",
-                heading.depth === 2 ? "py-1.5 pl-4" : "py-1 pl-6 text-xs"
+                "toc-link block text-[var(--bd-text-muted)] hover:text-[var(--bd-text)] transition-all duration-150",
+                heading.depth === 2 ? "py-1 pl-3.5 text-[13px]" : "py-0.5 pl-6 text-xs"
               ]}
               data-heading={heading.slug}
             >

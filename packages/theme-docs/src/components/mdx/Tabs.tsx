@@ -16,22 +16,19 @@ export function Tabs({ items, defaultValue }: TabsProps) {
 
   return (
     <div className="not-prose my-4">
-      <div className="flex border-b border-[var(--color-border)]">
+      <div className="flex border-b border-[var(--bd-border)]">
         {items.map((item) => {
           const isActive = activeTab === item.value;
           return (
             <button
               key={item.value}
               type="button"
-              onClick={() => {
-                console.log('Tab clicked:', item.value);
-                setActiveTab(item.value);
-              }}
+              onClick={() => setActiveTab(item.value)}
               style={{ cursor: 'pointer' }}
               className={`px-4 py-2 text-sm font-medium transition-colors ${
                 isActive
-                  ? "border-b-2 border-blue-600 text-blue-600 -mb-px"
-                  : "text-gray-500 hover:text-gray-900"
+                  ? "border-b-2 border-primary-500 text-primary-600 dark:text-primary-400 -mb-px"
+                  : "text-[var(--bd-text-muted)] hover:text-[var(--bd-text)]"
               }`}
             >
               {item.label}
@@ -45,7 +42,7 @@ export function Tabs({ items, defaultValue }: TabsProps) {
           if (!isActive) return null;
           return (
             <div key={item.value}>
-              <pre className="bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-md p-3 text-sm overflow-x-auto">
+              <pre className="bg-[var(--bd-bg-code)] border border-[var(--bd-border)] rounded-md p-3 text-sm overflow-x-auto">
                 <code>{item.children}</code>
               </pre>
             </div>

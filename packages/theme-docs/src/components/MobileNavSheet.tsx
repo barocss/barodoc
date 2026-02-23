@@ -54,7 +54,7 @@ export function MobileNavSheet({ groups, siteName, logo }: MobileNavSheetProps) 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetContent side="left" className="w-80 p-0">
-        <SheetHeader className="px-6 py-4 border-b border-[var(--color-border)]">
+        <SheetHeader className="px-6 py-4 border-b border-[var(--bd-border)]">
           <SheetTitle className="flex items-center gap-2">
             {logo && <img src={logo} alt={siteName} className="h-6 w-6" />}
             <span>{siteName}</span>
