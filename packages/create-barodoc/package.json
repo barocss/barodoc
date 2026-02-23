@@ -1,6 +1,6 @@
 {
   "name": "create-barodoc",
-  "version": "0.0.1",
+  "version": "4.0.0",
   "description": "Create a new Barodoc documentation site",
   "type": "module",
   "bin": {
