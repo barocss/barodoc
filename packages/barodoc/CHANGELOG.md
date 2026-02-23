@@ -1,5 +1,11 @@
 # barodoc
 
+## 6.1.1
+
+### Patch Changes
+
+- 88a8b12: Redesign default logo with modern gradient blue document icon
+
 ## 6.1.0
 
 ### Patch Changes
