@@ -39,6 +39,8 @@ export interface BarodocConfig {
   name: string;
   logo?: string;
   favicon?: string;
+  site?: string;
+  base?: string;
   
   theme?: BarodocThemeConfig;
   
