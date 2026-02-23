@@ -133,10 +133,10 @@ export function Search() {
     >
       <div className="fixed inset-0 bg-black/50" aria-hidden="true" />
       <div className="fixed inset-x-4 top-[15%] md:inset-x-auto md:left-1/2 md:-translate-x-1/2 md:w-full md:max-w-lg">
-        <div className="bg-[var(--color-bg)] rounded-xl shadow-2xl border border-[var(--color-border)] overflow-hidden">
-          <div className="flex items-center px-4 border-b border-[var(--color-border)]">
+        <div className="bg-[var(--bd-bg)] rounded-xl shadow-2xl border border-[var(--bd-border)] overflow-hidden">
+          <div className="flex items-center px-4 border-b border-[var(--bd-border)]">
             <svg
-              className="w-5 h-5 text-[var(--color-text-secondary)]"
+              className="w-5 h-5 text-[var(--bd-text-secondary)]"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -155,11 +155,11 @@ export function Search() {
               onChange={(e) => setQuery(e.target.value)}
               onKeyDown={handleKeyDown}
               placeholder="Search documentation..."
-              className="flex-1 px-4 py-4 bg-transparent text-[var(--color-text)] placeholder-[var(--color-text-secondary)] focus:outline-none"
+              className="flex-1 px-4 py-4 bg-transparent text-[var(--bd-text)] placeholder-[var(--bd-text-secondary)] focus:outline-none"
             />
             <button
               onClick={() => setIsOpen(false)}
-              className="px-2 py-1 text-xs text-[var(--color-text-secondary)] bg-[var(--color-bg-secondary)] border border-[var(--color-border)] rounded"
+              className="px-2 py-1 text-xs text-[var(--bd-text-secondary)] bg-[var(--bd-bg-subtle)] border border-[var(--bd-border)] rounded"
             >
               ESC
             </button>
@@ -168,7 +168,7 @@ export function Search() {
           {query.trim() && (
             <div className="max-h-[60vh] overflow-y-auto">
               {results.length === 0 ? (
-                <div className="px-4 py-8 text-center text-[var(--color-text-secondary)]">
+                <div className="px-4 py-8 text-center text-[var(--bd-text-secondary)]">
                   {pagefind ? "No results found" : "Search index not available"}
                 </div>
               ) : (
@@ -180,14 +180,14 @@ export function Search() {
                         className={`block px-4 py-3 transition-colors ${
                           index === selectedIndex
                             ? "bg-primary-50 dark:bg-primary-900/30"
-                            : "hover:bg-[var(--color-bg-secondary)]"
+                            : "hover:bg-[var(--bd-bg-subtle)]"
                         }`}
                       >
-                        <div className="font-medium text-[var(--color-text)]">
+                        <div className="font-medium text-[var(--bd-text)]">
                           {result.meta.title}
                         </div>
                         <div
-                          className="text-sm text-[var(--color-text-secondary)] line-clamp-2 mt-0.5"
+                          className="text-sm text-[var(--bd-text-secondary)] line-clamp-2 mt-0.5"
                           dangerouslySetInnerHTML={{ __html: result.excerpt }}
                         />
                       </a>
@@ -199,7 +199,7 @@ export function Search() {
           )}
 
           {!query.trim() && (
-            <div className="px-4 py-6 text-center text-[var(--color-text-secondary)] text-sm">
+            <div className="px-4 py-6 text-center text-[var(--bd-text-secondary)] text-sm">
               Start typing to search...
             </div>
           )}

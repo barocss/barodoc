@@ -17,7 +17,8 @@ Barodoc is configured through `barodoc.config.json`.
   "favicon": "/favicon.ico",
   "theme": {
     "colors": {
-      "primary": "#0070f3"
+      "accent": "#2563eb",
+      "gray": "zinc"
     }
   },
   "i18n": {
@@ -58,13 +59,34 @@ Path to the favicon in the `public/` directory.
 
 ### theme.colors
 
-Customize the primary color theme:
+Customize the accent (primary) color and gray scale. Barodoc generates a full OKLCH-based 50–950 color palette from a single hex value.
 
 ```json
 {
   "theme": {
     "colors": {
-      "primary": "#0070f3"
+      "accent": "#2563eb",
+      "gray": "zinc"
+    }
+  }
+}
+```
+
+**accent** — A hex color used to generate the primary/accent palette (links, buttons, active states). Defaults to `#2563eb` (blue).
+
+**gray** — The neutral gray scale used for backgrounds, text, and borders. Accepts a preset name (`zinc`, `slate`, `neutral`, `stone`, `gray`) or a custom hex. Defaults to `zinc`.
+
+You can also specify separate accent colors for light and dark modes:
+
+```json
+{
+  "theme": {
+    "colors": {
+      "accent": "#2563eb",
+      "gray": "slate",
+      "dark": {
+        "accent": "#60a5fa"
+      }
     }
   }
 }

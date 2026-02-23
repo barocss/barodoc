@@ -43,19 +43,19 @@ export function SearchDialog({ className }: SearchDialogProps) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent className={cn("sm:max-w-2xl p-0 gap-0", className)}>
-        <DialogHeader className="px-4 py-3 border-b border-[var(--color-border)]">
+        <DialogHeader className="px-4 py-3 border-b border-[var(--bd-border)]">
           <DialogTitle className="sr-only">Search documentation</DialogTitle>
           <div className="flex items-center gap-3">
-            <SearchIcon className="h-5 w-5 text-[var(--color-text-muted)]" />
+            <SearchIcon className="h-5 w-5 text-[var(--bd-text-muted)]" />
             <input
               type="text"
               placeholder="Search documentation..."
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              className="flex-1 bg-transparent text-base outline-none placeholder:text-[var(--color-text-muted)]"
+              className="flex-1 bg-transparent text-base outline-none placeholder:text-[var(--bd-text-muted)]"
               autoFocus
             />
-            <kbd className="hidden sm:inline-flex items-center gap-1 px-2 py-1 text-xs font-medium bg-[var(--color-bg-secondary)] border border-[var(--color-border)] rounded text-[var(--color-text-muted)]">
+            <kbd className="hidden sm:inline-flex items-center gap-1 px-2 py-1 text-xs font-medium bg-[var(--bd-bg-subtle)] border border-[var(--bd-border)] rounded text-[var(--bd-text-muted)]">
               Esc
             </kbd>
           </div>
@@ -65,12 +65,12 @@ export function SearchDialog({ className }: SearchDialogProps) {
             <div id="pagefind-results" className="pagefind-ui" />
           ) : (
             <div className="flex flex-col items-center justify-center h-full py-12 text-center">
-              <SearchIcon className="h-12 w-12 text-[var(--color-text-muted)] mb-4" />
-              <p className="text-sm text-[var(--color-text-secondary)]">
+              <SearchIcon className="h-12 w-12 text-[var(--bd-text-muted)] mb-4" />
+              <p className="text-sm text-[var(--bd-text-secondary)]">
                 Start typing to search the documentation
               </p>
-              <p className="text-xs text-[var(--color-text-muted)] mt-2">
-                Press <kbd className="px-1.5 py-0.5 bg-[var(--color-bg-secondary)] border border-[var(--color-border)] rounded text-xs">⌘K</kbd> to open search
+              <p className="text-xs text-[var(--bd-text-muted)] mt-2">
+                Press <kbd className="px-1.5 py-0.5 bg-[var(--bd-bg-subtle)] border border-[var(--bd-border)] rounded text-xs">⌘K</kbd> to open search
               </p>
             </div>
           )}

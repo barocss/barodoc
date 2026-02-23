@@ -1,11 +1,17 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
 
-/* Scan theme package files */
 @source "../**/*.{astro,tsx}";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ==========================================================================
+   Accent (primary) palette — generates Tailwind utilities:
+   bg-primary-600, text-primary-400, border-primary-500, etc.
+   Override via barodoc.config.json theme.colors.accent
+   ========================================================================== */
+
 @theme {
-  /* Primary color palette - Blue */
   --color-primary-50: oklch(0.97 0.02 250);
   --color-primary-100: oklch(0.94 0.04 250);
   --color-primary-200: oklch(0.88 0.08 250);
@@ -19,40 +25,92 @@
   --color-primary-950: oklch(0.20 0.04 250);
 }
 
+/* ==========================================================================
+   Gray scale — single source of truth, defined once.
+   Override via barodoc.config.json theme.colors.gray
+   Default: Zinc
+   ========================================================================== */
+
 @layer base {
   :root {
-    /* Mintlify-style soft colors */
-    --color-bg: #ffffff;
-    --color-bg-secondary: #f8fafc;
-    --color-bg-tertiary: #f1f5f9;
-    --color-bg-hover: #f1f5f9;
-    --color-text: #0f172a;
-    --color-text-secondary: #64748b;
-    --color-text-muted: #94a3b8;
-    --color-border: #e2e8f0;
-    --color-border-light: #f1f5f9;
-    
-    /* Shadows */
-    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+    --bd-gray-50:  #fafafa;
+    --bd-gray-100: #f4f4f5;
+    --bd-gray-200: #e4e4e7;
+    --bd-gray-300: #d4d4d8;
+    --bd-gray-400: #a1a1aa;
+    --bd-gray-500: #71717a;
+    --bd-gray-600: #52525b;
+    --bd-gray-700: #3f3f46;
+    --bd-gray-800: #27272a;
+    --bd-gray-900: #18181b;
+    --bd-gray-950: #09090b;
+  }
+
+/* ==========================================================================
+   Semantic tokens — map scale indices to roles.
+   Light/dark only swap which end of the scale each role points to.
+   ========================================================================== */
+
+  :root {
+    --bd-bg:          #ffffff;
+    --bd-bg-subtle:   var(--bd-gray-50);
+    --bd-bg-muted:    var(--bd-gray-100);
+    --bd-bg-hover:    var(--bd-gray-100);
+    --bd-bg-code:     var(--bd-gray-50);
+
+    --bd-text:          var(--bd-gray-900);
+    --bd-text-heading:  var(--bd-gray-950);
+    --bd-text-secondary: var(--bd-gray-600);
+    --bd-text-muted:    var(--bd-gray-400);
+
+    --bd-border:        var(--bd-gray-200);
+    --bd-border-subtle: var(--bd-gray-100);
+
+    --bd-shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --bd-shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.07), 0 2px 4px -2px rgb(0 0 0 / 0.05);
+    --bd-shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.08), 0 4px 6px -4px rgb(0 0 0 / 0.04);
+
+    --bd-sidebar-active-bg:     var(--color-primary-50);
+    --bd-sidebar-active-border: var(--color-primary-500);
+    --bd-sidebar-active-text:   var(--color-primary-600);
+
+    /* Backward compat aliases */
+    --color-bg: var(--bd-bg);
+    --color-bg-secondary: var(--bd-bg-subtle);
+    --color-bg-tertiary: var(--bd-bg-muted);
+    --color-bg-hover: var(--bd-bg-hover);
+    --color-text: var(--bd-text);
+    --color-text-secondary: var(--bd-text-secondary);
+    --color-text-muted: var(--bd-text-muted);
+    --color-border: var(--bd-border);
+    --color-border-light: var(--bd-border-subtle);
+    --shadow-sm: var(--bd-shadow-sm);
+    --shadow-md: var(--bd-shadow-md);
+    --shadow-lg: var(--bd-shadow-lg);
   }
 
   .dark {
-    --color-bg: #0c0c0c;
-    --color-bg-secondary: #141414;
-    --color-bg-tertiary: #1c1c1c;
-    --color-bg-hover: #1c1c1c;
-    --color-text: #fafafa;
-    --color-text-secondary: #a1a1aa;
-    --color-text-muted: #71717a;
-    --color-border: #27272a;
-    --color-border-light: #1c1c1c;
-    
-    /* Dark shadows */
-    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
-    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.4), 0 2px 4px -2px rgb(0 0 0 / 0.3);
-    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.4), 0 4px 6px -4px rgb(0 0 0 / 0.3);
+    --bd-bg:          var(--bd-gray-950);
+    --bd-bg-subtle:   var(--bd-gray-900);
+    --bd-bg-muted:    var(--bd-gray-800);
+    --bd-bg-hover:    var(--bd-gray-800);
+    --bd-bg-code:     var(--bd-gray-900);
+
+    --bd-text:          var(--bd-gray-200);
+    --bd-text-heading:  var(--bd-gray-50);
+    --bd-text-secondary: var(--bd-gray-400);
+    --bd-text-muted:    var(--bd-gray-500);
+
+    --bd-border:        var(--bd-gray-800);
+    --bd-border-subtle: var(--bd-gray-900);
+
+    --bd-shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.4);
+    --bd-shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.5), 0 2px 4px -2px rgb(0 0 0 / 0.4);
+    --bd-shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.5), 0 4px 6px -4px rgb(0 0 0 / 0.4);
+
+    --bd-sidebar-active-bg:     var(--color-primary-950);
+    --bd-sidebar-active-border: var(--color-primary-400);
+    --bd-sidebar-active-text:   var(--color-primary-400);
   }
 
   html {
@@ -60,199 +118,249 @@
   }
 
   body {
-    background-color: var(--color-bg);
-    color: var(--color-text);
+    background-color: var(--bd-bg);
+    color: var(--bd-text);
     font-feature-settings: "rlig" 1, "calt" 1;
     overflow-x: hidden;
   }
 
-  /* Smooth transitions for all interactive elements */
   a, button, input, [role="button"] {
     transition: all 150ms ease-out;
   }
-  
-  /* Ensure cursor pointer for interactive elements */
+
   a[href], button, [role="button"] {
     cursor: pointer;
   }
 }
 
-/* Prose styling for MDX content -  */
+/* ==========================================================================
+   Prose / Typography overrides
+   Placed outside @layer so they override @tailwindcss/typography defaults
+   without needing !important.
+   ========================================================================== */
+
 .prose {
-  --tw-prose-body: var(--color-text);
-  --tw-prose-headings: var(--color-text);
+  --tw-prose-body: var(--bd-text);
+  --tw-prose-headings: var(--bd-text-heading);
+  --tw-prose-bold: var(--bd-text-heading);
   --tw-prose-links: var(--color-primary-600);
-  --tw-prose-code: var(--color-text);
-  --tw-prose-pre-bg: var(--color-bg-secondary);
-  /* font-size: 0.875rem !important; */
-  /* line-height: 1.6 !important; */
+  --tw-prose-code: var(--bd-text);
+  --tw-prose-pre-bg: var(--bd-bg-code);
+  --tw-prose-counters: var(--bd-text-muted);
+  --tw-prose-bullets: var(--bd-text-muted);
+  --tw-prose-quotes: var(--bd-text);
+  --tw-prose-quote-borders: var(--color-primary-500);
+  --tw-prose-captions: var(--bd-text-secondary);
+  --tw-prose-th-borders: var(--bd-border);
+  --tw-prose-td-borders: var(--bd-border);
 }
 
 .dark .prose {
   --tw-prose-links: var(--color-primary-400);
 }
 
-/* Headings -  */
 .prose :where(h1):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
-  font-size: 1.75rem !important;
-  font-weight: 700 !important;
-  letter-spacing: -0.025em !important;
-  margin-top: 0 !important;
-  margin-bottom: 0.375rem !important;
-  /* line-height: 1.25 !important; */
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.2;
+  margin-top: 0;
+  margin-bottom: 0.25rem;
 }
 
 .prose :where(h2):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
-  font-size: 1.1875rem !important;
-  font-weight: 600 !important;
-  letter-spacing: -0.02em !important;
-  margin-top: 1.25rem !important;
-  margin-bottom: 0.375rem !important;
-  padding-bottom: 0.25rem !important;
-  border-bottom: 1px solid var(--color-border) !important;
+  font-size: 1.25rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.3;
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
 }
 
 .prose :where(h3):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
-  font-size: 1rem !important;
-  font-weight: 600 !important;
-  margin-top: 1rem !important;
-  margin-bottom: 0.25rem !important;
+  font-size: 1.0625rem;
+  font-weight: 600;
+  line-height: 1.4;
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
 }
 
 .prose :where(h4):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
-  font-size: 0.9375rem !important;
-  font-weight: 600 !important;
-  margin-top: 0.875rem !important;
-  margin-bottom: 0.25rem !important;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  line-height: 1.4;
+  margin-top: 1.25rem;
+  margin-bottom: 0.375rem;
 }
 
-/* Paragraphs - tighter spacing */
 .prose :where(p):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
-  margin-top: 0.5rem !important;
-  margin-bottom: 0.5rem !important;
+  margin-top: 0.625rem;
+  margin-bottom: 0.625rem;
+  line-height: 1.7;
 }
 
-/* Links with underline on hover */
 .prose :where(a):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
-  font-weight: 500 !important;
-  text-decoration: none !important;
+  font-weight: 500;
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--tw-prose-links) 35%, transparent);
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+  transition: text-decoration-color 200ms ease;
 }
 
 .prose :where(a):not(:where([class~="not-prose"],[class~="not-prose"] *)):hover {
-  text-decoration: underline !important;
-  text-underline-offset: 2px !important;
+  text-decoration-color: var(--tw-prose-links);
 }
 
-/* Code block styling -  */
 .prose :where(pre):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
-  background-color: var(--color-bg) !important;
-  border: 1px solid var(--color-border) !important;
-  border-radius: 0.5rem !important;
-  padding: 0.75rem 1rem !important;
-  font-size: 0.8125rem !important;
-  line-height: 1.45 !important;
-  overflow-x: auto !important;
-  margin: 0.75rem 0 !important;
+  background-color: var(--bd-bg-code);
+  border: 1px solid var(--bd-border);
+  border-radius: 0.5rem;
+  padding: 0.875rem 1rem;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  overflow-x: auto;
+  margin: 1rem 0;
 }
 
 .prose :where(code):not(:where(pre code, [class~="not-prose"],[class~="not-prose"] *)) {
-  background-color: var(--color-bg-tertiary) !important;
-  padding: 0.125rem 0.375rem !important;
-  border-radius: 0.25rem !important;
-  font-size: 0.85em !important;
-  font-weight: 500 !important;
-  border: 1px solid var(--color-border) !important;
+  background-color: var(--bd-bg-muted);
+  padding: 0.125rem 0.375rem;
+  border-radius: 0.25rem;
+  font-size: 0.85em;
+  font-weight: 500;
+  border: 1px solid var(--bd-border);
 }
 
 .prose :where(code):not(:where([class~="not-prose"],[class~="not-prose"] *))::before,
 .prose :where(code):not(:where([class~="not-prose"],[class~="not-prose"] *))::after {
-  content: none !important;
+  content: none;
 }
 
-/* Lists - tighter spacing */
 .prose :where(ul, ol):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
-  margin-top: 0.375rem !important;
-  margin-bottom: 0.375rem !important;
-  padding-left: 1.25rem !important;
+  margin-top: 0.375rem;
+  margin-bottom: 0.375rem;
+  padding-left: 1.25rem;
 }
 
 .prose :where(li):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
-  margin-top: 0.125rem !important;
-  margin-bottom: 0.125rem !important;
+  margin-top: 0.125rem;
+  margin-bottom: 0.125rem;
 }
 
 .prose :where(li):not(:where([class~="not-prose"],[class~="not-prose"] *))::marker {
-  color: var(--color-text-muted) !important;
+  color: var(--bd-text-muted);
 }
 
-/* Blockquotes -  */
 .prose :where(blockquote):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
-  border-left: 3px solid var(--color-primary-500) !important;
-  background-color: var(--color-bg-secondary) !important;
-  padding: 0.5rem 0.75rem !important;
-  margin: 0.625rem 0 !important;
-  border-radius: 0 0.5rem 0.5rem 0 !important;
-  font-style: normal !important;
+  border-left: 3px solid var(--color-primary-500);
+  background-color: var(--bd-bg-subtle);
+  padding: 0.5rem 0.75rem;
+  margin: 0.625rem 0;
+  border-radius: 0 0.5rem 0.5rem 0;
+  font-style: normal;
 }
 
 .prose :where(blockquote p):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
-  margin: 0 !important;
+  margin: 0;
 }
 
-/* Tables - cleaner look */
 .prose :where(table):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
-  width: 100% !important;
-  border-collapse: collapse !important;
-  margin: 0.625rem 0 !important;
-  font-size: 0.8125rem !important;
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+  font-size: 0.8125rem;
+  border: 1px solid var(--bd-border);
 }
 
 .prose :where(th):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
-  background-color: var(--color-bg-secondary) !important;
-  font-weight: 600 !important;
-  text-align: left !important;
-  padding: 0.5rem 0.75rem !important;
-  border-bottom: 2px solid var(--color-border) !important;
+  background-color: var(--bd-bg-subtle);
+  font-weight: 600;
+  text-align: left;
+  padding: 0.625rem 1rem;
+  border-bottom: 1px solid var(--bd-border);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--bd-text-secondary);
 }
 
 .prose :where(td):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
-  padding: 0.5rem 0.75rem !important;
-  border-bottom: 1px solid var(--color-border) !important;
+  padding: 0.625rem 1rem;
+  border-bottom: 1px solid var(--bd-border-subtle);
 }
 
 .prose :where(tr:last-child td):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
-  border-bottom: none !important;
+  border-bottom: none;
 }
 
-/* Horizontal rule */
+.prose :where(tbody tr):not(:where([class~="not-prose"],[class~="not-prose"] *)):hover {
+  background-color: var(--bd-bg-subtle);
+}
+
 .prose :where(hr):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
-  border: none !important;
-  border-top: 1px solid var(--color-border) !important;
-  margin: 1.5rem 0 !important;
+  border: none;
+  border-top: 1px solid var(--bd-border);
+  margin: 1.5rem 0;
 }
 
-/* Images */
 .prose :where(img):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
-  border-radius: 0.5rem !important;
-  border: 1px solid var(--color-border) !important;
+  border-radius: 0.5rem;
+  border: 1px solid var(--bd-border);
 }
 
-/* Shiki dual theme support */
+/* ==========================================================================
+   Heading anchors
+   ========================================================================== */
+
+.prose :where(h2, h3, h4)[id] {
+  scroll-margin-top: 5rem;
+}
+
+.prose :where(h2, h3, h4)[id] > a.heading-anchor {
+  color: var(--color-primary-400);
+  opacity: 0;
+  margin-left: 0.25em;
+  font-weight: 400;
+  text-decoration: none !important;
+  transition: opacity 150ms ease;
+}
+
+.prose :where(h2, h3, h4)[id]:hover > a.heading-anchor {
+  opacity: 0.7;
+}
+
+.prose :where(h2, h3, h4)[id] > a.heading-anchor:hover {
+  opacity: 1;
+}
+
+/* ==========================================================================
+   List bullet accent
+   ========================================================================== */
+
+.prose :where(ul > li):not(:where([class~="not-prose"],[class~="not-prose"] *))::marker {
+  color: var(--color-primary-400);
+}
+
+/* ==========================================================================
+   Shiki code highlighting
+   ========================================================================== */
+
 .astro-code {
-  background-color: var(--color-bg) !important;
+  background-color: var(--bd-bg-code) !important;
   border-radius: 0.5rem;
-  line-height: 1.45;
+  line-height: 1.5;
 }
 
 .astro-code code {
   display: flex;
   flex-direction: column;
+  font-size: 0.8125rem;
 }
 
-/* Tighter line spacing: Shiki outputs each line as span.line */
 .astro-code span.line {
   display: block;
-  line-height: 1.45;
+  line-height: 1.6;
   margin: 0;
   padding: 0;
 }
@@ -263,7 +371,6 @@
   background-color: var(--shiki-dark-bg) !important;
 }
 
-/* Line numbers: applied when barodoc.config.json has "lineNumbers": true */
 .astro-code.line-numbers {
   counter-reset: line;
 }
@@ -280,22 +387,28 @@
   margin-right: 1rem;
   padding-right: 0.5rem;
   text-align: right;
-  color: var(--color-text-muted);
+  color: var(--bd-text-muted);
   user-select: none;
-  border-right: 1px solid var(--color-border);
+  border-right: 1px solid var(--bd-border);
 }
 
-/* Pagefind search styling */
+/* ==========================================================================
+   Pagefind search
+   ========================================================================== */
+
 .pagefind-ui {
   --pagefind-ui-scale: 1;
   --pagefind-ui-primary: var(--color-primary-600);
-  --pagefind-ui-text: var(--color-text);
-  --pagefind-ui-background: var(--color-bg);
-  --pagefind-ui-border: var(--color-border);
-  --pagefind-ui-tag: var(--color-bg-secondary);
+  --pagefind-ui-text: var(--bd-text);
+  --pagefind-ui-background: var(--bd-bg);
+  --pagefind-ui-border: var(--bd-border);
+  --pagefind-ui-tag: var(--bd-bg-subtle);
 }
 
-/* Scrollbar styling */
+/* ==========================================================================
+   Scrollbar
+   ========================================================================== */
+
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
@@ -306,15 +419,40 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--color-border);
+  background: var(--bd-border);
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--color-text-muted);
+  background: var(--bd-text-muted);
 }
 
-/* Selection styling */
+.sidebar-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+}
+
+.sidebar-scroll:hover {
+  scrollbar-color: var(--bd-border) transparent;
+}
+
+.sidebar-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+
+.sidebar-scroll::-webkit-scrollbar-thumb {
+  background: transparent;
+  border-radius: 3px;
+}
+
+.sidebar-scroll:hover::-webkit-scrollbar-thumb {
+  background: var(--bd-border);
+}
+
+/* ==========================================================================
+   Selection
+   ========================================================================== */
+
 ::selection {
   background-color: var(--color-primary-200);
   color: var(--color-primary-900);
@@ -325,41 +463,28 @@
   color: var(--color-primary-100);
 }
 
-/* Animations for shadcn/ui components */
+/* ==========================================================================
+   Animations (Radix UI)
+   ========================================================================== */
+
 @keyframes accordion-down {
-  from {
-    height: 0;
-  }
-  to {
-    height: var(--radix-accordion-content-height);
-  }
+  from { height: 0; }
+  to { height: var(--radix-accordion-content-height); }
 }
 
 @keyframes accordion-up {
-  from {
-    height: var(--radix-accordion-content-height);
-  }
-  to {
-    height: 0;
-  }
+  from { height: var(--radix-accordion-content-height); }
+  to { height: 0; }
 }
 
 @keyframes collapsible-down {
-  from {
-    height: 0;
-  }
-  to {
-    height: var(--radix-collapsible-content-height);
-  }
+  from { height: 0; }
+  to { height: var(--radix-collapsible-content-height); }
 }
 
 @keyframes collapsible-up {
-  from {
-    height: var(--radix-collapsible-content-height);
-  }
-  to {
-    height: 0;
-  }
+  from { height: var(--radix-collapsible-content-height); }
+  to { height: 0; }
 }
 
 .animate-accordion-down {
@@ -376,4 +501,186 @@
 
 .animate-collapsible-up {
   animation: collapsible-up 0.2s ease-out;
+}
+
+/* ==========================================================================
+   Steps component
+   ========================================================================== */
+
+.bd-steps {
+  counter-reset: bd-step;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin: 1.5rem 0;
+}
+
+.bd-step {
+  display: grid;
+  grid-template-columns: 2rem 1fr;
+  gap: 0 0.875rem;
+  counter-increment: bd-step;
+  min-height: 0;
+}
+
+.bd-step-indicator {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  grid-row: 1 / -1;
+}
+
+.bd-step-number {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 9999px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  background-color: var(--color-primary-500);
+  color: #fff;
+}
+
+.bd-step-number::before {
+  content: counter(bd-step);
+}
+
+.dark .bd-step-number {
+  background-color: var(--color-primary-400);
+  color: var(--color-primary-950);
+}
+
+.bd-step-connector {
+  flex: 1;
+  width: 2px;
+  background-color: var(--bd-border);
+  margin: 0.375rem 0 0;
+  min-height: 0.75rem;
+}
+
+.bd-step:last-child .bd-step-connector {
+  display: none;
+}
+
+.bd-step-content {
+  padding-bottom: 1.75rem;
+}
+
+.bd-step:last-child .bd-step-content {
+  padding-bottom: 0;
+}
+
+.bd-step-title {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--bd-text);
+  line-height: 2rem;
+  margin: 0;
+}
+
+.bd-step-body {
+  margin-top: 0.375rem;
+  font-size: 0.875rem;
+  color: var(--bd-text-secondary);
+}
+
+.bd-step-body > p {
+  margin: 0;
+}
+
+.bd-step-body > p + p {
+  margin-top: 0.5rem;
+}
+
+.bd-step-body .code-block-wrapper {
+  margin-top: 0.5rem;
+}
+
+/* ==========================================================================
+   Tooltip component
+   ========================================================================== */
+
+.bd-tooltip-trigger {
+  cursor: help;
+  text-decoration: underline;
+  text-decoration-style: dotted;
+  text-decoration-color: var(--color-primary-400);
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1.5px;
+  color: var(--bd-text);
+  border-radius: 2px;
+  transition: background-color 150ms ease, text-decoration-color 150ms ease;
+}
+
+.bd-tooltip-trigger:hover {
+  background-color: color-mix(in srgb, var(--color-primary-400) 12%, transparent);
+  text-decoration-color: var(--color-primary-500);
+}
+
+.dark .bd-tooltip-trigger:hover {
+  background-color: color-mix(in srgb, var(--color-primary-400) 15%, transparent);
+}
+
+.bd-tooltip-content {
+  z-index: 9999;
+  max-width: 20rem;
+  overflow: hidden;
+  border-radius: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  font-weight: 450;
+  letter-spacing: -0.01em;
+  background-color: var(--bd-gray-900);
+  color: var(--bd-gray-100);
+  box-shadow:
+    0 4px 16px -2px rgba(0, 0, 0, 0.2),
+    0 0 0 1px rgba(0, 0, 0, 0.06);
+  animation: tooltip-in 150ms cubic-bezier(0.16, 1, 0.3, 1);
+  transform-origin: var(--radix-tooltip-content-transform-origin);
+}
+
+.dark .bd-tooltip-content {
+  background-color: var(--bd-gray-100);
+  color: var(--bd-gray-900);
+  box-shadow:
+    0 4px 20px -2px rgba(0, 0, 0, 0.4),
+    0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+
+.bd-tooltip-content[data-state="closed"] {
+  animation: tooltip-out 100ms ease-in;
+}
+
+.bd-tooltip-arrow {
+  fill: var(--bd-gray-900);
+}
+
+.dark .bd-tooltip-arrow {
+  fill: var(--bd-gray-100);
+}
+
+@keyframes tooltip-in {
+  from {
+    opacity: 0;
+    transform: scale(0.96) translateY(2px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes tooltip-out {
+  from {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.96) translateY(2px);
+  }
 }

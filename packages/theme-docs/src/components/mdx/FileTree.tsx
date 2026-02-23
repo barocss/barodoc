@@ -9,7 +9,7 @@ interface FileTreeProps {
 
 export function FileTree({ children, className }: FileTreeProps) {
   return (
-    <div className={cn("not-prose my-4 rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-secondary)] p-4 font-mono text-sm", className)}>
+    <div className={cn("not-prose my-4 rounded-lg border border-[var(--bd-border)] bg-[var(--bd-bg-subtle)] p-4 font-mono text-sm", className)}>
       <ul className="space-y-1">{children}</ul>
     </div>
   );
@@ -22,8 +22,8 @@ interface FileProps {
 
 export function TreeFile({ name, icon }: FileProps) {
   return (
-    <li className="flex items-center gap-2 py-0.5 text-[var(--color-text-secondary)]">
-      {icon || <File className="h-4 w-4 text-[var(--color-text-muted)]" />}
+    <li className="flex items-center gap-2 py-0.5 text-[var(--bd-text-secondary)]">
+      {icon || <File className="h-4 w-4 text-[var(--bd-text-muted)]" />}
       <span>{name}</span>
     </li>
   );
@@ -44,12 +44,12 @@ export function TreeFolder({ name, children, defaultOpen = false }: FolderProps)
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className="flex w-full items-center gap-1 py-0.5 text-[var(--color-text)] hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
+        className="flex w-full items-center gap-1 py-0.5 text-[var(--bd-text)] hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
       >
         {hasChildren && (
           <ChevronRight
             className={cn(
-              "h-3 w-3 text-[var(--color-text-muted)] transition-transform",
+              "h-3 w-3 text-[var(--bd-text-muted)] transition-transform",
               isOpen && "rotate-90"
             )}
           />
@@ -63,7 +63,7 @@ export function TreeFolder({ name, children, defaultOpen = false }: FolderProps)
         <span className="font-medium">{name}</span>
       </button>
       {isOpen && hasChildren && (
-        <ul className="ml-4 border-l border-[var(--color-border)] pl-3 mt-1 space-y-1">
+        <ul className="ml-4 border-l border-[var(--bd-border)] pl-3 mt-1 space-y-1">
           {children}
         </ul>
       )}

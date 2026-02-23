@@ -11,14 +11,24 @@ export const i18nConfigSchema = z.object({
   labels: z.record(z.string()).optional(),
 }).optional();
 
+export const grayPresets = [
+  "zinc", "slate", "neutral", "stone", "gray",
+] as const;
+
+export type GrayPreset = (typeof grayPresets)[number];
+
 export const themeColorsSchema = z.object({
-  primary: z.string().optional(),
-  background: z.string().optional(),
-  backgroundDark: z.string().optional(),
-  text: z.string().optional(),
-  textDark: z.string().optional(),
-  border: z.string().optional(),
-  borderDark: z.string().optional(),
+  accent: z.string().optional(),
+  gray: z.union([
+    z.enum(grayPresets),
+    z.string(),
+  ]).optional(),
+  light: z.object({
+    accent: z.string().optional(),
+  }).optional(),
+  dark: z.object({
+    accent: z.string().optional(),
+  }).optional(),
 }).optional();
 
 export const themeConfigSchema = z.object({

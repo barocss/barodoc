@@ -26,17 +26,48 @@ difficulty: intermediate
 
 ## 테마 설정
 
-색상과 폰트를 커스터마이징할 수 있습니다:
+강조색(accent)과 회색(gray) 스케일을 설정합니다. 하나의 hex 값으로 OKLCH 기반 50~950 팔레트가 자동 생성됩니다.
 
 ```json
 {
   "theme": {
     "colors": {
-      "primary": "#0070f3"
-    },
+      "accent": "#2563eb",
+      "gray": "zinc"
+    }
+  }
+}
+```
+
+**accent** — 링크, 버튼, 활성 상태에 사용되는 강조색 hex 값. 기본값: `#2563eb` (파란색).
+
+**gray** — 배경, 텍스트, 보더에 사용되는 회색 스케일. 프리셋명(`zinc`, `slate`, `neutral`, `stone`, `gray`) 또는 커스텀 hex. 기본값: `zinc`.
+
+라이트/다크 모드별 다른 강조색을 지정할 수 있습니다:
+
+```json
+{
+  "theme": {
+    "colors": {
+      "accent": "#2563eb",
+      "gray": "slate",
+      "dark": {
+        "accent": "#60a5fa"
+      }
+    }
+  }
+}
+```
+
+폰트도 커스터마이징할 수 있습니다:
+
+```json
+{
+  "theme": {
     "fonts": {
       "heading": "Pretendard, sans-serif",
-      "body": "Pretendard, sans-serif"
+      "body": "Pretendard, sans-serif",
+      "code": "JetBrains Mono, monospace"
     }
   }
 }

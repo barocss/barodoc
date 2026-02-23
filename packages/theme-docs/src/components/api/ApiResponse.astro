@@ -26,10 +26,10 @@ const statusColor = statusColors[status] || "bg-gray-100 dark:bg-gray-900/30 tex
       {status}
     </span>
     {description && (
-      <span class="text-sm text-[var(--color-text-secondary)]">{description}</span>
+      <span class="text-sm text-[var(--bd-text-secondary)]">{description}</span>
     )}
   </div>
-  <div class="border border-[var(--color-border)] rounded-lg overflow-hidden px-2">
+  <div class="border border-[var(--bd-border)] rounded-lg overflow-hidden px-2">
     <slot />
   </div>
 </div>

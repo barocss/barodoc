@@ -90,32 +90,32 @@ export function DocHeader({
 
   return (
     <TooltipProvider>
-      <header className="sticky top-0 z-50 w-full min-w-0 border-b border-[var(--color-border)] bg-[var(--color-bg)]/95 backdrop-blur-md supports-[backdrop-filter]:bg-[var(--color-bg)]/80">
-        <div className="flex h-14 items-center justify-between gap-2 px-3 sm:px-4 max-w-[1120px] mx-auto min-w-0">
+      <header className="sticky top-0 z-50 w-full min-w-0 border-b border-[var(--bd-border)] bg-[var(--bd-bg)]/95 backdrop-blur-md supports-[backdrop-filter]:bg-[var(--bd-bg)]/80">
+        <div className="flex h-14 items-center justify-between gap-2 px-4 sm:px-6 max-w-[1280px] mx-auto min-w-0">
           {/* Logo */}
           <div className="flex items-center gap-6 min-w-0 shrink">
             <a
               href="/"
-              className="flex items-center gap-2 min-w-0 shrink overflow-hidden font-semibold text-[var(--color-text)] hover:opacity-80 transition-opacity"
+              className="flex items-center gap-2.5 min-w-0 shrink overflow-hidden font-semibold text-[var(--bd-text-heading)] hover:opacity-80 transition-opacity"
             >
               {logo && <img src={logo} alt={siteName} className="h-7 w-7 shrink-0" />}
-              <span className="text-lg truncate">{siteName}</span>
+              <span className="text-[15px] tracking-tight truncate">{siteName}</span>
             </a>
           </div>
 
           {/* Right side actions */}
-          <div className="flex items-center gap-1 shrink-0">
+          <div className="flex items-center gap-1.5 shrink-0">
             {/* Search button */}
             <Button
               variant="outline"
-              className="hidden md:flex items-center gap-3 px-4 py-2 h-10 min-w-[200px] justify-start rounded-xl"
+              className="hidden md:flex items-center gap-3 px-3 py-1.5 h-9 min-w-[220px] justify-start rounded-lg border-[var(--bd-border)]"
               onClick={openSearch}
             >
-              <Search className="h-4 w-4 shrink-0 text-[var(--color-text-muted)]" />
-              <span className="flex-1 text-left text-[var(--color-text-muted)]">
+              <Search className="h-4 w-4 shrink-0 text-[var(--bd-text-muted)]" />
+              <span className="flex-1 text-left text-sm text-[var(--bd-text-muted)]">
                 Search...
               </span>
-              <kbd className="hidden lg:inline-flex items-center gap-0.5 px-2 py-1 text-xs font-medium bg-[var(--color-bg)] border border-[var(--color-border)] rounded-md text-[var(--color-text-muted)]">
+              <kbd className="hidden lg:inline-flex items-center gap-0.5 px-1.5 py-0.5 text-[10px] font-medium bg-[var(--bd-bg-subtle)] border border-[var(--bd-border)] rounded text-[var(--bd-text-muted)]">
                 <span>⌘</span>K
               </kbd>
             </Button>
@@ -126,7 +126,7 @@ export function DocHeader({
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="md:hidden rounded-xl"
+                  className="md:hidden"
                   onClick={openSearch}
                 >
                   <Search className="h-5 w-5" />
@@ -137,7 +137,7 @@ export function DocHeader({
             </Tooltip>
 
             {/* Divider */}
-            <Separator orientation="vertical" className="hidden md:block h-6 mx-2" />
+            <Separator orientation="vertical" className="hidden md:block h-5 mx-1.5" />
 
             {/* GitHub link */}
             {githubUrl && (
@@ -146,7 +146,7 @@ export function DocHeader({
                   <Button
                     variant="ghost"
                     size="icon"
-                    className="rounded-xl"
+                    className="h-8 w-8 text-[var(--bd-text-secondary)] hover:text-[var(--bd-text)]"
                     asChild
                   >
                     <a
@@ -154,7 +154,7 @@ export function DocHeader({
                       target="_blank"
                       rel="noopener noreferrer"
                     >
-                      <Github className="h-5 w-5" />
+                      <Github className="h-[18px] w-[18px]" />
                       <span className="sr-only">GitHub</span>
                     </a>
                   </Button>
@@ -166,20 +166,20 @@ export function DocHeader({
             {/* Language switcher */}
             {hasMultipleLocales && locales.length > 0 && (
               <>
-                <Separator orientation="vertical" className="hidden md:block h-6 mx-2" />
+                <Separator orientation="vertical" className="hidden md:block h-5 mx-1" />
                 <div className="relative" ref={langRef}>
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <Button
                         variant="ghost"
-                        className="rounded-xl gap-1 px-2"
+                        className="h-8 gap-1 px-2 text-[var(--bd-text-secondary)] hover:text-[var(--bd-text)]"
                         onClick={(e) => {
                           e.stopPropagation();
                           setLangOpen((o) => !o);
                         }}
                       >
                         <Globe className="h-4 w-4" />
-                        <span className="text-sm hidden sm:inline">
+                        <span className="text-[13px] hidden sm:inline">
                           {localeLabels[currentLocale] ?? currentLocale}
                         </span>
                         <ChevronDown className="h-3 w-3" />
@@ -190,7 +190,7 @@ export function DocHeader({
                   </Tooltip>
                   {langOpen && (
                     <div
-                      className="absolute right-0 mt-1 py-1 min-w-[8rem] rounded-lg border border-[var(--color-border)] bg-[var(--color-bg)] shadow-lg z-50"
+                      className="absolute right-0 mt-1 py-1 min-w-[8rem] rounded-lg border border-[var(--bd-border)] bg-[var(--bd-bg)] shadow-[var(--bd-shadow-lg)] z-50"
                       role="menu"
                     >
                       {locales.map((locale) => (
@@ -198,10 +198,10 @@ export function DocHeader({
                           key={locale}
                           href={getLocalizedUrl(currentPath, locale, defaultLocale)}
                           className={cn(
-                            "block px-3 py-2 text-sm transition-colors",
+                            "block px-3 py-1.5 text-[13px] transition-colors",
                             locale === currentLocale
-                              ? "bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300"
-                              : "text-[var(--color-text)] hover:bg-[var(--color-bg-secondary)]"
+                              ? "bg-primary-50 dark:bg-primary-950/50 text-primary-600 dark:text-primary-400 font-medium"
+                              : "text-[var(--bd-text)] hover:bg-[var(--bd-bg-subtle)]"
                           )}
                           role="menuitem"
                         >
@@ -220,13 +220,13 @@ export function DocHeader({
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="rounded-xl"
+                  className="h-8 w-8 text-[var(--bd-text-secondary)] hover:text-[var(--bd-text)]"
                   onClick={toggleTheme}
                 >
                   {theme === "light" ? (
-                    <Moon className="h-5 w-5" />
+                    <Moon className="h-[18px] w-[18px]" />
                   ) : (
-                    <Sun className="h-5 w-5" />
+                    <Sun className="h-[18px] w-[18px]" />
                   )}
                   <span className="sr-only">Toggle theme</span>
                 </Button>
@@ -240,7 +240,7 @@ export function DocHeader({
             <Button
               variant="ghost"
               size="icon"
-              className="lg:hidden rounded-xl"
+              className="lg:hidden h-8 w-8 text-[var(--bd-text-secondary)] hover:text-[var(--bd-text)]"
               onClick={openMobileNav}
             >
               <Menu className="h-5 w-5" />

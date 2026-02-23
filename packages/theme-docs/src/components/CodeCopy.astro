@@ -25,12 +25,13 @@
       const wrapper = document.createElement('div');
       wrapper.className = 'code-block-wrapper';
       
-      // Create header if filename exists
-      if (filename) {
+      // Create header for filename or language label
+      const displayLabel = filename || lang;
+      if (displayLabel) {
         const header = document.createElement('div');
         header.className = 'code-block-header';
         header.innerHTML = `
-          <span class="code-block-filename">${filename}</span>
+          <span class="code-block-filename">${displayLabel}</span>
         `;
         wrapper.appendChild(header);
       }
@@ -89,8 +90,8 @@
     margin: 1rem 0;
     border-radius: 0.5rem;
     overflow: hidden;
-    background: var(--color-bg-secondary);
-    border: 1px solid var(--color-border);
+    background: var(--bd-bg-subtle);
+    border: 1px solid var(--bd-border);
   }
   
   .code-block-wrapper pre {
@@ -145,14 +146,14 @@
     align-items: center;
     justify-content: space-between;
     padding: 0.5rem 1rem;
-    background: var(--color-bg-tertiary);
-    border-bottom: 1px solid var(--color-border);
+    background: var(--bd-bg-muted);
+    border-bottom: 1px solid var(--bd-border);
   }
   
   .code-block-filename {
     font-size: 0.8125rem;
     font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-    color: var(--color-text-secondary);
+    color: var(--bd-text-secondary);
   }
   
   .copy-button {
@@ -165,13 +166,13 @@
     padding: 0.375rem 0.625rem;
     font-size: 0.75rem;
     font-weight: 500;
-    background: var(--color-bg);
-    border: 1px solid var(--color-border);
+    background: var(--bd-bg);
+    border: 1px solid var(--bd-border);
     border-radius: 0.375rem;
     cursor: pointer;
     opacity: 0;
     transition: opacity 150ms ease, background 150ms ease;
-    color: var(--color-text-muted);
+    color: var(--bd-text-muted);
     z-index: 10;
   }
   
@@ -180,8 +181,8 @@
   }
   
   .copy-button:hover {
-    background: var(--color-bg-secondary);
-    color: var(--color-text);
+    background: var(--bd-bg-subtle);
+    color: var(--bd-text);
   }
   
   .copy-button .copy-icon,

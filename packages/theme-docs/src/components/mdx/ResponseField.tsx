@@ -17,22 +17,22 @@ export function ResponseField({
   return (
     <div
       className={cn(
-        "not-prose border-b border-[var(--color-border)] py-4 first:pt-0 last:border-b-0",
+        "not-prose border-b border-[var(--bd-border)] py-4 first:pt-0 last:border-b-0",
         className
       )}
     >
       <div className="flex flex-wrap items-baseline gap-2">
-        <code className="font-mono text-sm font-semibold text-[var(--color-text)]">
+        <code className="font-mono text-sm font-semibold text-[var(--bd-text)]">
           {name}
         </code>
         {type && (
-          <span className="font-mono text-xs text-[var(--color-text-muted)]">
+          <span className="font-mono text-xs text-[var(--bd-text-muted)]">
             {type}
           </span>
         )}
       </div>
       {children && (
-        <div className="mt-2 text-sm text-[var(--color-text-secondary)] prose prose-sm dark:prose-invert max-w-none">
+        <div className="mt-2 text-sm text-[var(--bd-text-secondary)] prose prose-sm dark:prose-invert max-w-none">
           {children}
         </div>
       )}
@@ -50,11 +50,11 @@ export function ResponseFieldGroup({ children, title, className }: ResponseField
   return (
     <div className={cn("my-6", className)}>
       {title && (
-        <h4 className="text-sm font-semibold text-[var(--color-text)] mb-4 uppercase tracking-wide">
+        <h4 className="text-sm font-semibold text-[var(--bd-text)] mb-4 uppercase tracking-wide">
           {title}
         </h4>
       )}
-      <div className="rounded-lg border border-[var(--color-border)] bg-[var(--color-bg)] px-4">
+      <div className="rounded-lg border border-[var(--bd-border)] bg-[var(--bd-bg)] px-4">
         {children}
       </div>
     </div>

@@ -40,10 +40,10 @@ const features = [
 <BaseLayout title={config.name}>
   <div class="min-h-screen flex flex-col">
     <!-- Header -->
-    <header class="sticky top-0 z-50 border-b border-[var(--color-border)] bg-[var(--color-bg)]/95 backdrop-blur-md">
+    <header class="sticky top-0 z-50 border-b border-[var(--bd-border)] bg-[var(--bd-bg)]/95 backdrop-blur-md">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex h-16 items-center justify-between">
-          <a href="/" class="flex items-center gap-2.5 font-semibold text-[var(--color-text)]">
+          <a href="/" class="flex items-center gap-2.5 font-semibold text-[var(--bd-text)]">
             {config.logo && <img src={config.logo} alt={config.name} class="h-7 w-7" />}
             <span class="text-lg">{config.name}</span>
           </a>
@@ -53,7 +53,7 @@ const features = [
                 href={config.topbar.github}
                 target="_blank"
                 rel="noopener noreferrer"
-                class="p-2.5 rounded-xl text-[var(--color-text-secondary)] hover:text-[var(--color-text)] hover:bg-[var(--color-bg-secondary)] transition-all"
+                class="p-2.5 rounded-xl text-[var(--bd-text-secondary)] hover:text-[var(--bd-text)] hover:bg-[var(--bd-bg-subtle)] transition-all"
                 aria-label="GitHub"
               >
                 <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -91,12 +91,12 @@ const features = [
               <span class="text-sm font-medium text-primary-700 dark:text-primary-300">Powered by Astro</span>
             </div>
             
-            <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-[var(--color-text)] mb-6 leading-tight">
+            <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-[var(--bd-text)] mb-6 leading-tight">
               Build beautiful
               <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary-600 to-primary-400"> documentation</span>
             </h1>
             
-            <p class="text-lg sm:text-xl text-[var(--color-text-secondary)] mb-10 max-w-2xl mx-auto leading-relaxed">
+            <p class="text-lg sm:text-xl text-[var(--bd-text-secondary)] mb-10 max-w-2xl mx-auto leading-relaxed">
               Create stunning documentation sites with MDX, Astro, and Tailwind CSS. 
               Deploy anywhere with static site generation.
             </p>
@@ -110,19 +110,19 @@ const features = [
               </a>
               <a
                 href="/docs/quickstart"
-                class="w-full sm:w-auto px-8 py-3.5 border border-[var(--color-border)] text-[var(--color-text)] rounded-xl hover:bg-[var(--color-bg-secondary)] hover:border-[var(--color-text-muted)] transition-all font-medium"
+                class="w-full sm:w-auto px-8 py-3.5 border border-[var(--bd-border)] text-[var(--bd-text)] rounded-xl hover:bg-[var(--bd-bg-subtle)] hover:border-[var(--bd-text-muted)] transition-all font-medium"
               >
                 Quick Start
               </a>
             </div>
             
             <!-- Install command -->
-            <div class="mt-12 inline-flex items-center gap-3 px-5 py-3 bg-[var(--color-bg-secondary)] border border-[var(--color-border)] rounded-xl">
-              <code class="text-sm text-[var(--color-text-secondary)] font-mono">
+            <div class="mt-12 inline-flex items-center gap-3 px-5 py-3 bg-[var(--bd-bg-subtle)] border border-[var(--bd-border)] rounded-xl">
+              <code class="text-sm text-[var(--bd-text-secondary)] font-mono">
                 npx create-barodoc my-docs
               </code>
               <button 
-                class="p-1.5 rounded-lg hover:bg-[var(--color-bg-tertiary)] text-[var(--color-text-muted)] hover:text-[var(--color-text)] transition-colors"
+                class="p-1.5 rounded-lg hover:bg-[var(--bd-bg-muted)] text-[var(--bd-text-muted)] hover:text-[var(--bd-text)] transition-colors"
                 onclick="navigator.clipboard.writeText('npx create-barodoc my-docs')"
                 aria-label="Copy command"
               >
@@ -136,27 +136,27 @@ const features = [
       </div>
 
       <!-- Features Section -->
-      <div class="py-20 bg-[var(--color-bg-secondary)] border-y border-[var(--color-border)]">
+      <div class="py-20 bg-[var(--bd-bg-subtle)] border-y border-[var(--bd-border)]">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div class="text-center mb-16">
-            <h2 class="text-3xl font-bold text-[var(--color-text)] mb-4">
+            <h2 class="text-3xl font-bold text-[var(--bd-text)] mb-4">
               Everything you need
             </h2>
-            <p class="text-lg text-[var(--color-text-secondary)] max-w-2xl mx-auto">
+            <p class="text-lg text-[var(--bd-text-secondary)] max-w-2xl mx-auto">
               Barodoc comes with all the features you need to create beautiful documentation.
             </p>
           </div>
           
           <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {features.map((feature) => (
-              <div class="group p-6 bg-[var(--color-bg)] rounded-2xl border border-[var(--color-border)] hover:border-primary-300 dark:hover:border-primary-700 hover:shadow-lg transition-all duration-200">
+              <div class="group p-6 bg-[var(--bd-bg)] rounded-2xl border border-[var(--bd-border)] hover:border-primary-300 dark:hover:border-primary-700 hover:shadow-lg transition-all duration-200">
                 <div class="flex items-center justify-center w-12 h-12 rounded-xl bg-primary-50 dark:bg-primary-950/50 mb-4 group-hover:scale-110 transition-transform">
                   <span class="text-2xl">{feature.icon}</span>
                 </div>
-                <h3 class="text-lg font-semibold text-[var(--color-text)] mb-2">
+                <h3 class="text-lg font-semibold text-[var(--bd-text)] mb-2">
                   {feature.title}
                 </h3>
-                <p class="text-sm text-[var(--color-text-secondary)] leading-relaxed">
+                <p class="text-sm text-[var(--bd-text-secondary)] leading-relaxed">
                   {feature.description}
                 </p>
               </div>
@@ -168,10 +168,10 @@ const features = [
       <!-- CTA Section -->
       <div class="py-20">
         <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 class="text-3xl font-bold text-[var(--color-text)] mb-4">
+          <h2 class="text-3xl font-bold text-[var(--bd-text)] mb-4">
             Ready to get started?
           </h2>
-          <p class="text-lg text-[var(--color-text-secondary)] mb-8">
+          <p class="text-lg text-[var(--bd-text-secondary)] mb-8">
             Create your documentation site in minutes.
           </p>
           <a
@@ -185,10 +185,10 @@ const features = [
     </main>
 
     <!-- Footer -->
-    <footer class="border-t border-[var(--color-border)] bg-[var(--color-bg-secondary)]">
+    <footer class="border-t border-[var(--bd-border)] bg-[var(--bd-bg-subtle)]">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div class="flex items-center gap-2 text-[var(--color-text-secondary)]">
+          <div class="flex items-center gap-2 text-[var(--bd-text-secondary)]">
             {config.logo && <img src={config.logo} alt={config.name} class="h-5 w-5 opacity-60" />}
             <span class="text-sm">Built with Barodoc</span>
           </div>
@@ -198,14 +198,14 @@ const features = [
                 href={config.topbar.github}
                 target="_blank"
                 rel="noopener noreferrer"
-                class="text-sm text-[var(--color-text-secondary)] hover:text-[var(--color-text)] transition-colors"
+                class="text-sm text-[var(--bd-text-secondary)] hover:text-[var(--bd-text)] transition-colors"
               >
                 GitHub
               </a>
             )}
             <a
               href="/docs/introduction"
-              class="text-sm text-[var(--color-text-secondary)] hover:text-[var(--color-text)] transition-colors"
+              class="text-sm text-[var(--bd-text-secondary)] hover:text-[var(--bd-text)] transition-colors"
             >
               Documentation
             </a>

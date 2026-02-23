@@ -78,8 +78,8 @@ export function Mermaid({ chart, className }: MermaidProps) {
 
   if (!svg) {
     return (
-      <div className={cn("not-prose my-4 flex items-center justify-center p-8 bg-[var(--color-bg-secondary)] rounded-lg", className)}>
-        <div className="text-sm text-[var(--color-text-muted)]">Loading diagram...</div>
+      <div className={cn("not-prose my-4 flex items-center justify-center p-8 bg-[var(--bd-bg-subtle)] rounded-lg", className)}>
+        <div className="text-sm text-[var(--bd-text-muted)]">Loading diagram...</div>
       </div>
     );
   }
@@ -87,7 +87,7 @@ export function Mermaid({ chart, className }: MermaidProps) {
   return (
     <div
       ref={containerRef}
-      className={cn("not-prose my-4 flex justify-center overflow-x-auto rounded-lg bg-[var(--color-bg)] p-4", className)}
+      className={cn("not-prose my-4 flex justify-center overflow-x-auto rounded-lg bg-[var(--bd-bg)] p-4", className)}
       dangerouslySetInnerHTML={{ __html: svg }}
     />
   );
