@@ -1,0 +1,108 @@
+---
+// Keyboard shortcuts: Cmd/Ctrl+K → search, ←/→ → prev/next, ? → help modal
+---
+
+<script>
+  function initKeyboardShortcuts() {
+    if (window.__bdShortcutsInit) return;
+    window.__bdShortcutsInit = true;
+
+    const isMac = navigator.platform.toUpperCase().includes('MAC');
+    const modLabel = isMac ? '⌘' : 'Ctrl';
+
+    function isInputFocused(): boolean {
+      const el = document.activeElement;
+      if (!el) return false;
+      const tag = el.tagName;
+      return tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || (el as HTMLElement).isContentEditable;
+    }
+
+    function showShortcutsModal() {
+      if (document.querySelector('.bd-shortcuts-overlay')) return;
+
+      const overlay = document.createElement('div');
+      overlay.className = 'bd-shortcuts-overlay';
+      overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) overlay.remove();
+      });
+
+      overlay.innerHTML = `
+        <div class="bd-shortcuts-modal">
+          <h3>Keyboard Shortcuts</h3>
+          <div class="bd-shortcut-row">
+            <span class="bd-shortcut-desc">Search</span>
+            <span class="bd-shortcut-keys"><kbd class="bd-kbd">${modLabel}</kbd><kbd class="bd-kbd">K</kbd></span>
+          </div>
+          <div class="bd-shortcut-row">
+            <span class="bd-shortcut-desc">Previous page</span>
+            <span class="bd-shortcut-keys"><kbd class="bd-kbd">←</kbd></span>
+          </div>
+          <div class="bd-shortcut-row">
+            <span class="bd-shortcut-desc">Next page</span>
+            <span class="bd-shortcut-keys"><kbd class="bd-kbd">→</kbd></span>
+          </div>
+          <div class="bd-shortcut-row">
+            <span class="bd-shortcut-desc">Show shortcuts</span>
+            <span class="bd-shortcut-keys"><kbd class="bd-kbd">?</kbd></span>
+          </div>
+        </div>
+      `;
+
+      document.body.appendChild(overlay);
+    }
+
+    document.addEventListener('keydown', (e: KeyboardEvent) => {
+      // Close modal on Escape
+      if (e.key === 'Escape') {
+        const modal = document.querySelector('.bd-shortcuts-overlay');
+        if (modal) { modal.remove(); return; }
+      }
+
+      // Cmd/Ctrl+K → open search
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        const searchBtn = document.querySelector('[data-search-trigger]') as HTMLButtonElement;
+        if (searchBtn) searchBtn.click();
+        return;
+      }
+
+      if (isInputFocused()) return;
+
+      // ? → show shortcuts
+      if (e.key === '?' || (e.shiftKey && e.key === '/')) {
+        e.preventDefault();
+        showShortcutsModal();
+        return;
+      }
+
+      // ← → prev page
+      if (e.key === 'ArrowLeft' && !e.metaKey && !e.ctrlKey && !e.altKey) {
+        const prev = document.querySelector('nav[aria-label="Page navigation"] a:first-of-type') as HTMLAnchorElement;
+        if (prev) { prev.click(); return; }
+      }
+
+      // → → next page
+      if (e.key === 'ArrowRight' && !e.metaKey && !e.ctrlKey && !e.altKey) {
+        const links = document.querySelectorAll('nav[aria-label="Page navigation"] a');
+        const next = links[links.length - 1] as HTMLAnchorElement;
+        if (next && links.length > 1) { next.click(); return; }
+        if (next && links.length === 1) {
+          const parent = next.closest('.col-span-1');
+          if (parent && parent === parent.parentElement?.lastElementChild) { next.click(); }
+        }
+      }
+    });
+  }
+
+  initKeyboardShortcuts();
+  document.addEventListener('astro:page-load', () => {
+    window.__bdShortcutsInit = false;
+    initKeyboardShortcuts();
+  });
+
+  declare global {
+    interface Window {
+      __bdShortcutsInit?: boolean;
+    }
+  }
+</script>

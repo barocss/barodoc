@@ -83,6 +83,15 @@ export interface BarodocConfig {
     endpoint?: string;
   };
   
+  blog?: {
+    enabled?: boolean;
+  };
+
+  versions?: {
+    label: string;
+    path: string;
+  }[];
+  
   plugins?: PluginConfig[];
   
   customCss?: string[];

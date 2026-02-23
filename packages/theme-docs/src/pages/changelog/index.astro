@@ -1,0 +1,72 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Header from "../../components/Header.astro";
+import Banner from "../../components/Banner.astro";
+import { defaultLocale } from "virtual:barodoc/i18n";
+import { getLocaleFromPath } from "@barodoc/core";
+import config from "virtual:barodoc/config";
+
+const currentPath = Astro.url.pathname;
+const i18nConfig = { defaultLocale, locales: [defaultLocale] };
+const currentLocale = getLocaleFromPath(currentPath, i18nConfig);
+
+let entries: Awaited<ReturnType<typeof getCollection<"changelog">>> = [];
+try {
+  entries = await getCollection("changelog");
+} catch {
+  // changelog collection may not exist
+}
+
+const sorted = entries.sort((a, b) => {
+  return new Date(b.data.date).getTime() - new Date(a.data.date).getTime();
+});
+---
+
+<BaseLayout title={`Changelog - ${config.name}`} description="Release history and changelog">
+  <Banner />
+  <Header currentLocale={currentLocale} currentPath={currentPath} />
+
+  <div class="w-full min-w-0 min-h-[calc(100vh-3.5rem)] flex justify-center">
+    <div class="w-full max-w-[720px] px-4 py-10 sm:px-6 lg:px-8">
+      <header class="mb-10">
+        <h1 class="text-3xl font-bold tracking-tight text-[var(--bd-text-heading)]">Changelog</h1>
+        <p class="mt-2 text-[var(--bd-text-secondary)]">Release history and notable changes</p>
+      </header>
+
+      {sorted.length === 0 ? (
+        <p class="text-[var(--bd-text-muted)]">No changelog entries yet.</p>
+      ) : (
+        <div class="bd-changelog-timeline">
+          {sorted.map(async (entry) => {
+            const { Content } = await entry.render();
+            return (
+              <article class="bd-changelog-entry">
+                <div class="bd-changelog-marker">
+                  <div class="bd-changelog-dot" />
+                  <div class="bd-changelog-line" />
+                </div>
+                <div class="bd-changelog-content">
+                  <div class="bd-changelog-header">
+                    <span class="bd-changelog-version">{entry.data.version}</span>
+                    <time class="bd-changelog-date" datetime={new Date(entry.data.date).toISOString()}>
+                      {new Date(entry.data.date).toLocaleDateString("en-US", {
+                        year: "numeric", month: "long", day: "numeric",
+                      })}
+                    </time>
+                  </div>
+                  {entry.data.title && (
+                    <h2 class="bd-changelog-title">{entry.data.title}</h2>
+                  )}
+                  <div class="prose prose-sm prose-gray dark:prose-invert max-w-none bd-changelog-body">
+                    <Content />
+                  </div>
+                </div>
+              </article>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  </div>
+</BaseLayout>

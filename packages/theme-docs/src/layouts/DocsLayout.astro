@@ -7,6 +7,8 @@ import MobileNav from "../components/MobileNav.astro";
 import CodeCopy from "../components/CodeCopy.astro";
 import Breadcrumb from "../components/Breadcrumb.astro";
 import Banner from "../components/Banner.astro";
+import KeyboardShortcuts from "../components/KeyboardShortcuts.astro";
+import Contributors from "../components/Contributors.astro";
 import { defaultLocale } from "virtual:barodoc/i18n";
 import { getLocaleFromPath } from "@barodoc/core";
 import config from "virtual:barodoc/config";
@@ -30,9 +32,11 @@ interface Props {
   editUrl?: string | null;
   lastUpdated?: Date | null;
   breadcrumbs?: BreadcrumbItem[];
+  readingTime?: string;
+  filePath?: string;
 }
 
-const { title, description, headings = [], prevPage, nextPage, editUrl, lastUpdated, breadcrumbs = [] } = Astro.props;
+const { title, description, headings = [], prevPage, nextPage, editUrl, lastUpdated, breadcrumbs = [], readingTime, filePath } = Astro.props;
 const currentPath = Astro.url.pathname;
 
 // Get locale from path
@@ -61,6 +65,14 @@ const feedbackEndpoint = config.feedback?.endpoint;
       <main class="flex-1 min-w-0 max-w-[768px]">
         <div class="px-4 py-8 sm:px-6 sm:py-10 lg:px-10 lg:py-10">
           {breadcrumbs.length > 0 && <Breadcrumb items={breadcrumbs} />}
+          {readingTime && (
+            <div class="bd-reading-time mb-4">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" />
+              </svg>
+              <span>{readingTime}</span>
+            </div>
+          )}
           <article class="prose prose-gray dark:prose-invert max-w-none min-w-0 overflow-x-auto">
             <slot />
           </article>
@@ -111,6 +123,7 @@ const feedbackEndpoint = config.feedback?.endpoint;
 
           <!-- Page footer -->
           <footer class="mt-8 pt-6 border-t border-[var(--bd-border-subtle)] flex flex-col gap-3">
+            {filePath && <Contributors filePath={filePath} />}
             <div class="flex flex-wrap items-center justify-between gap-2 text-[13px] text-[var(--bd-text-muted)]">
               {lastUpdated && (
                 <span>
@@ -165,6 +178,25 @@ const feedbackEndpoint = config.feedback?.endpoint;
   
   <!-- Code copy functionality -->
   <CodeCopy />
+
+  <!-- Keyboard shortcuts -->
+  <KeyboardShortcuts />
+
+  <!-- Image zoom for all prose images -->
+  <script>
+    async function initImageZoom() {
+      const images = document.querySelectorAll('.prose img:not(.bd-no-zoom):not(.medium-zoom-image)');
+      if (images.length === 0) return;
+      const { default: mediumZoom } = await import('medium-zoom');
+      mediumZoom(images as any, {
+        margin: 24,
+        background: 'var(--bd-bg)',
+        scrollOffset: 0,
+      });
+    }
+    initImageZoom();
+    document.addEventListener('astro:page-load', initImageZoom);
+  </script>
 
   <!-- Heading anchor links -->
   <script>

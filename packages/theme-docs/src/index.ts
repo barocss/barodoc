@@ -3,6 +3,8 @@ import type { ThemeExport, ResolvedBarodocConfig } from "@barodoc/core";
 import mdx from "@astrojs/mdx";
 import react from "@astrojs/react";
 import tailwindcss from "@tailwindcss/vite";
+import remarkMath from "remark-math";
+import rehypeKatex from "rehype-katex";
 
 export interface DocsThemeOptions {
   customCss?: string[];
@@ -79,9 +81,33 @@ function createThemeIntegration(
           entrypoint: "@barodoc/theme-docs/pages/docs/[...slug].astro",
         });
 
+        // Blog routes
+        if (config?.blog?.enabled !== false) {
+          injectRoute({
+            pattern: "/blog",
+            entrypoint: "@barodoc/theme-docs/pages/blog/index.astro",
+          });
+          injectRoute({
+            pattern: "/blog/[...slug]",
+            entrypoint: "@barodoc/theme-docs/pages/blog/[...slug].astro",
+          });
+        }
+
+        // Changelog route
+        injectRoute({
+          pattern: "/changelog",
+          entrypoint: "@barodoc/theme-docs/pages/changelog/index.astro",
+        });
+
         // Update Astro config with integrations and Vite plugins
         updateConfig({
-          integrations: [mdx(), react()],
+          integrations: [
+            mdx({
+              remarkPlugins: [remarkMath],
+              rehypePlugins: [rehypeKatex],
+            }),
+            react(),
+          ],
           vite: {
             plugins: [tailwindcss()],
             optimizeDeps: {
