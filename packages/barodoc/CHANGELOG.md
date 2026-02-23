@@ -1,5 +1,24 @@
 # barodoc
 
+## 3.0.0
+
+### Minor Changes
+
+- Content-site separation and AI agent data pipeline
+
+  - Standardize frontmatter schema (tags, related, category, difficulty) exported from @barodoc/core
+  - Add overrides/ directory support with Vite alias registration
+  - New CLI commands: barodoc manifest (--lite, --chunks), barodoc schema
+  - Extend barodoc check with related link validation and recursive scanning
+  - Fix llms-full.txt to preserve code blocks
+  - Update CLAUDE.md agent rules
+
+### Patch Changes
+
+- Updated dependencies
+  - @barodoc/core@3.0.0
+  - @barodoc/theme-docs@3.0.0
+
 ## 2.0.0
 
 ### Patch Changes
