@@ -1,5 +1,12 @@
 # @barodoc/plugin-sitemap
 
+## 2.0.0
+
+### Patch Changes
+
+- Updated dependencies [1a4db6e]
+  - @barodoc/core@2.0.0
+
 ## 1.0.1
 
 ### Patch Changes

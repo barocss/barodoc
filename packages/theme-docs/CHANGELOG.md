@@ -1,5 +1,16 @@
 # @barodoc/theme-docs
 
+## 2.0.0
+
+### Minor Changes
+
+- 1a4db6e: Add Edit on GitHub link, breadcrumb navigation, last updated timestamp, announcement banner, feedback widget, OG/Twitter meta tags, and plugin-og-image scaffold. New config options: editLink, lastUpdated, announcement, feedback.
+
+### Patch Changes
+
+- Updated dependencies [1a4db6e]
+  - @barodoc/core@2.0.0
+
 ## 1.0.1
 
 ### Patch Changes

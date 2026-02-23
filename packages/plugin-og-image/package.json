@@ -1,6 +1,6 @@
 {
   "name": "@barodoc/plugin-og-image",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Open Graph image generation plugin for Barodoc",
   "type": "module",
   "main": "./dist/index.js",
