@@ -27,6 +27,7 @@ export { Mermaid } from "./mdx/Mermaid.tsx";
 export { ImageZoom } from "./mdx/ImageZoom.tsx";
 export { Video } from "./mdx/Video.tsx";
 export { ApiPlayground } from "./mdx/ApiPlayground.tsx";
+export { ApiEndpoint } from "./mdx/ApiEndpoint.tsx";
 
 export { VersionSwitcher } from "./VersionSwitcher.tsx";
 

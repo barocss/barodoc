@@ -1,0 +1,341 @@
+---
+title: "Store"
+description: "API endpoints for Store"
+api_reference: true
+---
+import { ApiEndpoint } from "@barodoc/theme-docs/components";
+import { ApiPlayground } from "@barodoc/theme-docs/components";
+
+<div className="bd-api-overview">
+  <div className="bd-api-overview-item">
+    <span className="bd-api-overview-label">Base URL</span>
+    <code className="bd-api-overview-value">https://petstore.swagger.io/v2</code>
+  </div>
+  <div className="bd-api-overview-item">
+    <span className="bd-api-overview-label">Content-Type</span>
+    <code className="bd-api-overview-value">application/json</code>
+  </div>
+  <div className="bd-api-overview-item">
+    <span className="bd-api-overview-label">Version</span>
+    <code className="bd-api-overview-value">1.0.0</code>
+  </div>
+</div>
+
+<nav className="bd-api-toc">
+  <div className="bd-api-toc-title">Endpoints</div>
+  <div className="bd-api-toc-list">
+    <a className="bd-api-toc-item" href={"#get-store-inventory"}>
+      <span className="bd-api-toc-method bd-method-get">GET</span>
+      <span className="bd-api-toc-path">/store/inventory</span>
+      <span className="bd-api-toc-summary">Returns pet inventories by status</span>
+    </a>
+    <a className="bd-api-toc-item" href={"#post-store-order"}>
+      <span className="bd-api-toc-method bd-method-post">POST</span>
+      <span className="bd-api-toc-path">/store/order</span>
+      <span className="bd-api-toc-summary">Place an order for a pet</span>
+    </a>
+    <a className="bd-api-toc-item" href={"#get-store-order-orderId"}>
+      <span className="bd-api-toc-method bd-method-get">GET</span>
+      <span className="bd-api-toc-path">{`/store/order/{orderId}`}</span>
+      <span className="bd-api-toc-summary">Find purchase order by ID</span>
+    </a>
+    <a className="bd-api-toc-item" href={"#delete-store-order-orderId"}>
+      <span className="bd-api-toc-method bd-method-delete">DELETE</span>
+      <span className="bd-api-toc-path">{`/store/order/{orderId}`}</span>
+      <span className="bd-api-toc-summary">Delete purchase order by ID</span>
+    </a>
+  </div>
+</nav>
+
+<ApiEndpoint method="GET" path={`/store/inventory`} summary="Returns pet inventories by status"  />
+
+Returns a map of status codes to quantities.
+
+<div className="bd-api-section">
+
+#### Responses
+
+<div className="bd-api-responses">
+
+<div className="bd-api-response-item">
+  <span className="bd-api-status-badge bd-status-2xx">200</span>
+  <span className="bd-api-response-desc">Successful operation</span>
+</div>
+
+<details className="bd-api-example-details">
+<summary>Example Response</summary>
+
+```json
+{}
+```
+
+</details>
+
+</div>
+
+</div>
+
+<details className="bd-api-example-details">
+<summary>Request Example</summary>
+
+```bash
+curl -X GET 'https://petstore.swagger.io/v2/store/inventory'
+```
+
+</details>
+
+<ApiPlayground client:load method="GET" url="https://petstore.swagger.io/v2/store/inventory" params={[]} />
+
+<hr className="bd-api-divider" />
+
+<ApiEndpoint method="POST" path={`/store/order`} summary="Place an order for a pet"  />
+
+Creates a new order in the store.
+
+<div className="bd-api-section">
+
+#### Request Body
+
+<span className="bd-api-content-type">`application/json`</span>
+
+<div className="bd-api-param-list">
+
+<div className="bd-api-param-item">
+  <div className="bd-api-param-name">
+    <code>id</code> <span className="bd-param-optional">optional</span>
+    <span className="bd-api-param-type">integer</span>
+  </div>
+  <div className="bd-api-param-desc">Order ID</div>
+</div>
+
+<div className="bd-api-param-item">
+  <div className="bd-api-param-name">
+    <code>petId</code> <span className="bd-param-optional">optional</span>
+    <span className="bd-api-param-type">integer</span>
+  </div>
+  <div className="bd-api-param-desc">ID of the pet being ordered</div>
+</div>
+
+<div className="bd-api-param-item">
+  <div className="bd-api-param-name">
+    <code>quantity</code> <span className="bd-param-optional">optional</span>
+    <span className="bd-api-param-type">integer</span>
+  </div>
+  <div className="bd-api-param-desc">Number of pets ordered</div>
+</div>
+
+<div className="bd-api-param-item">
+  <div className="bd-api-param-name">
+    <code>shipDate</code> <span className="bd-param-optional">optional</span>
+    <span className="bd-api-param-type">string</span>
+  </div>
+  <div className="bd-api-param-desc">Estimated ship date (ISO 8601)</div>
+</div>
+
+<div className="bd-api-param-item">
+  <div className="bd-api-param-name">
+    <code>status</code> <span className="bd-param-optional">optional</span>
+    <span className="bd-api-param-type">"placed" \| "approved" \| "delivered"</span>
+  </div>
+  <div className="bd-api-param-desc">Order status</div>
+  <div className="bd-api-param-enum">Values: `placed` `approved` `delivered`</div>
+</div>
+
+<div className="bd-api-param-item">
+  <div className="bd-api-param-name">
+    <code>complete</code> <span className="bd-param-optional">optional</span>
+    <span className="bd-api-param-type">boolean</span>
+  </div>
+  <div className="bd-api-param-desc">Whether the order is complete</div>
+</div>
+
+</div>
+
+</div>
+
+<div className="bd-api-section">
+
+#### Responses
+
+<div className="bd-api-responses">
+
+<div className="bd-api-response-item">
+  <span className="bd-api-status-badge bd-status-2xx">200</span>
+  <span className="bd-api-response-desc">Successful operation</span>
+</div>
+
+<details className="bd-api-example-details">
+<summary>Example Response</summary>
+
+```json
+{
+  "id": 10,
+  "petId": 10,
+  "quantity": 0,
+  "shipDate": "2024-01-15T09:30:00.000Z",
+  "status": "placed",
+  "complete": true
+}
+```
+
+</details>
+
+<div className="bd-api-response-item">
+  <span className="bd-api-status-badge bd-status-4xx">400</span>
+  <span className="bd-api-response-desc">Invalid order</span>
+</div>
+
+</div>
+
+</div>
+
+<details className="bd-api-example-details">
+<summary>Request Example</summary>
+
+```bash
+curl -X POST 'https://petstore.swagger.io/v2/store/order' \
+  -H 'Content-Type: application/json' \
+  -d '{"id":10,"petId":10,"quantity":0,"shipDate":"2024-01-15T09:30:00.000Z","status":"placed","complete":true}'
+```
+
+</details>
+
+<ApiPlayground client:load method="POST" url="https://petstore.swagger.io/v2/store/order" params={[]} body={"{\n  \"id\": 10,\n  \"petId\": 10,\n  \"quantity\": 0,\n  \"shipDate\": \"2024-01-15T09:30:00.000Z\",\n  \"status\": \"placed\",\n  \"complete\": true\n}"} />
+
+<hr className="bd-api-divider" />
+
+<ApiEndpoint method="GET" path={`/store/order/{orderId}`} summary="Find purchase order by ID"  />
+
+Returns an order by its ID. Valid IDs are 1 to 10.
+
+<div className="bd-api-section">
+
+#### Parameters
+
+<div className="bd-api-param-list">
+
+<div className="bd-api-param-item">
+  <div className="bd-api-param-name">
+    <code>orderId</code> <span className="bd-param-required">required</span>
+    <span className="bd-api-param-type">integer</span>
+  </div>
+  <div className="bd-api-param-desc">ID of order to fetch (1-10)</div>
+</div>
+
+</div>
+
+</div>
+
+<div className="bd-api-section">
+
+#### Responses
+
+<div className="bd-api-responses">
+
+<div className="bd-api-response-item">
+  <span className="bd-api-status-badge bd-status-2xx">200</span>
+  <span className="bd-api-response-desc">Successful operation</span>
+</div>
+
+<details className="bd-api-example-details">
+<summary>Example Response</summary>
+
+```json
+{
+  "id": 10,
+  "petId": 10,
+  "quantity": 0,
+  "shipDate": "2024-01-15T09:30:00.000Z",
+  "status": "placed",
+  "complete": true
+}
+```
+
+</details>
+
+<div className="bd-api-response-item">
+  <span className="bd-api-status-badge bd-status-4xx">400</span>
+  <span className="bd-api-response-desc">Invalid ID supplied</span>
+</div>
+
+<div className="bd-api-response-item">
+  <span className="bd-api-status-badge bd-status-4xx">404</span>
+  <span className="bd-api-response-desc">Order not found</span>
+</div>
+
+</div>
+
+</div>
+
+<details className="bd-api-example-details">
+<summary>Request Example</summary>
+
+```bash
+curl -X GET 'https://petstore.swagger.io/v2/store/order/{orderId}'
+```
+
+</details>
+
+<ApiPlayground client:load method="GET" url="https://petstore.swagger.io/v2/store/order/{orderId}" params={[{ name: "orderId", in: "path", type: "integer", required: true, description: "ID of order to fetch (1-10)" }]} />
+
+<hr className="bd-api-divider" />
+
+<ApiEndpoint method="DELETE" path={`/store/order/{orderId}`} summary="Delete purchase order by ID"  />
+
+Deletes an order by its ID.
+
+<div className="bd-api-section">
+
+#### Parameters
+
+<div className="bd-api-param-list">
+
+<div className="bd-api-param-item">
+  <div className="bd-api-param-name">
+    <code>orderId</code> <span className="bd-param-required">required</span>
+    <span className="bd-api-param-type">integer</span>
+  </div>
+  <div className="bd-api-param-desc">ID of the order to delete</div>
+</div>
+
+</div>
+
+</div>
+
+<div className="bd-api-section">
+
+#### Responses
+
+<div className="bd-api-responses">
+
+<div className="bd-api-response-item">
+  <span className="bd-api-status-badge bd-status-2xx">200</span>
+  <span className="bd-api-response-desc">Order deleted</span>
+</div>
+
+<div className="bd-api-response-item">
+  <span className="bd-api-status-badge bd-status-4xx">400</span>
+  <span className="bd-api-response-desc">Invalid ID supplied</span>
+</div>
+
+<div className="bd-api-response-item">
+  <span className="bd-api-status-badge bd-status-4xx">404</span>
+  <span className="bd-api-response-desc">Order not found</span>
+</div>
+
+</div>
+
+</div>
+
+<details className="bd-api-example-details">
+<summary>Request Example</summary>
+
+```bash
+curl -X DELETE 'https://petstore.swagger.io/v2/store/order/{orderId}'
+```
+
+</details>
+
+<ApiPlayground client:load method="DELETE" url="https://petstore.swagger.io/v2/store/order/{orderId}" params={[{ name: "orderId", in: "path", type: "integer", required: true, description: "ID of the order to delete" }]} />
+
+<hr className="bd-api-divider" />

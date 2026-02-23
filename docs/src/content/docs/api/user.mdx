@@ -1,0 +1,539 @@
+---
+title: "User"
+description: "API endpoints for User"
+api_reference: true
+---
+import { ApiEndpoint } from "@barodoc/theme-docs/components";
+import { ApiPlayground } from "@barodoc/theme-docs/components";
+
+<div className="bd-api-overview">
+  <div className="bd-api-overview-item">
+    <span className="bd-api-overview-label">Base URL</span>
+    <code className="bd-api-overview-value">https://petstore.swagger.io/v2</code>
+  </div>
+  <div className="bd-api-overview-item">
+    <span className="bd-api-overview-label">Content-Type</span>
+    <code className="bd-api-overview-value">application/json</code>
+  </div>
+  <div className="bd-api-overview-item">
+    <span className="bd-api-overview-label">Version</span>
+    <code className="bd-api-overview-value">1.0.0</code>
+  </div>
+</div>
+
+<nav className="bd-api-toc">
+  <div className="bd-api-toc-title">Endpoints</div>
+  <div className="bd-api-toc-list">
+    <a className="bd-api-toc-item" href={"#post-user"}>
+      <span className="bd-api-toc-method bd-method-post">POST</span>
+      <span className="bd-api-toc-path">/user</span>
+      <span className="bd-api-toc-summary">Create user</span>
+    </a>
+    <a className="bd-api-toc-item" href={"#get-user-login"}>
+      <span className="bd-api-toc-method bd-method-get">GET</span>
+      <span className="bd-api-toc-path">/user/login</span>
+      <span className="bd-api-toc-summary">Logs user into the system</span>
+    </a>
+    <a className="bd-api-toc-item" href={"#get-user-logout"}>
+      <span className="bd-api-toc-method bd-method-get">GET</span>
+      <span className="bd-api-toc-path">/user/logout</span>
+      <span className="bd-api-toc-summary">Logs out current logged in user session</span>
+    </a>
+    <a className="bd-api-toc-item" href={"#get-user-username"}>
+      <span className="bd-api-toc-method bd-method-get">GET</span>
+      <span className="bd-api-toc-path">{`/user/{username}`}</span>
+      <span className="bd-api-toc-summary">Get user by user name</span>
+    </a>
+    <a className="bd-api-toc-item" href={"#put-user-username"}>
+      <span className="bd-api-toc-method bd-method-put">PUT</span>
+      <span className="bd-api-toc-path">{`/user/{username}`}</span>
+      <span className="bd-api-toc-summary">Update user</span>
+    </a>
+    <a className="bd-api-toc-item" href={"#delete-user-username"}>
+      <span className="bd-api-toc-method bd-method-delete">DELETE</span>
+      <span className="bd-api-toc-path">{`/user/{username}`}</span>
+      <span className="bd-api-toc-summary">Delete user</span>
+    </a>
+  </div>
+</nav>
+
+<ApiEndpoint method="POST" path={`/user`} summary="Create user"  />
+
+Creates a new user account.
+
+<div className="bd-api-section">
+
+#### Request Body
+
+<span className="bd-api-content-type">`application/json`</span>
+
+<div className="bd-api-param-list">
+
+<div className="bd-api-param-item">
+  <div className="bd-api-param-name">
+    <code>id</code> <span className="bd-param-optional">optional</span>
+    <span className="bd-api-param-type">integer</span>
+  </div>
+  <div className="bd-api-param-desc">User ID</div>
+</div>
+
+<div className="bd-api-param-item">
+  <div className="bd-api-param-name">
+    <code>username</code> <span className="bd-param-optional">optional</span>
+    <span className="bd-api-param-type">string</span>
+  </div>
+  <div className="bd-api-param-desc">Login username</div>
+</div>
+
+<div className="bd-api-param-item">
+  <div className="bd-api-param-name">
+    <code>firstName</code> <span className="bd-param-optional">optional</span>
+    <span className="bd-api-param-type">string</span>
+  </div>
+  <div className="bd-api-param-desc">First name</div>
+</div>
+
+<div className="bd-api-param-item">
+  <div className="bd-api-param-name">
+    <code>lastName</code> <span className="bd-param-optional">optional</span>
+    <span className="bd-api-param-type">string</span>
+  </div>
+  <div className="bd-api-param-desc">Last name</div>
+</div>
+
+<div className="bd-api-param-item">
+  <div className="bd-api-param-name">
+    <code>email</code> <span className="bd-param-optional">optional</span>
+    <span className="bd-api-param-type">string</span>
+  </div>
+  <div className="bd-api-param-desc">Email address</div>
+</div>
+
+<div className="bd-api-param-item">
+  <div className="bd-api-param-name">
+    <code>password</code> <span className="bd-param-optional">optional</span>
+    <span className="bd-api-param-type">string</span>
+  </div>
+  <div className="bd-api-param-desc">Account password</div>
+</div>
+
+<div className="bd-api-param-item">
+  <div className="bd-api-param-name">
+    <code>phone</code> <span className="bd-param-optional">optional</span>
+    <span className="bd-api-param-type">string</span>
+  </div>
+  <div className="bd-api-param-desc">Phone number</div>
+</div>
+
+<div className="bd-api-param-item">
+  <div className="bd-api-param-name">
+    <code>userStatus</code> <span className="bd-param-optional">optional</span>
+    <span className="bd-api-param-type">integer</span>
+  </div>
+  <div className="bd-api-param-desc">User status (0=active)</div>
+</div>
+
+</div>
+
+</div>
+
+<div className="bd-api-section">
+
+#### Responses
+
+<div className="bd-api-responses">
+
+<div className="bd-api-response-item">
+  <span className="bd-api-status-badge bd-status-2xx">200</span>
+  <span className="bd-api-response-desc">User created</span>
+</div>
+
+</div>
+
+</div>
+
+<details className="bd-api-example-details">
+<summary>Request Example</summary>
+
+```bash
+curl -X POST 'https://petstore.swagger.io/v2/user' \
+  -H 'Content-Type: application/json' \
+  -d '{"id":10,"username":"string","firstName":"string","lastName":"string","email":"string","password":"string","phone":"string","userStatus":0}'
+```
+
+</details>
+
+<ApiPlayground client:load method="POST" url="https://petstore.swagger.io/v2/user" params={[]} body={"{\n  \"id\": 10,\n  \"username\": \"string\",\n  \"firstName\": \"string\",\n  \"lastName\": \"string\",\n  \"email\": \"string\",\n  \"password\": \"string\",\n  \"phone\": \"string\",\n  \"userStatus\": 0\n}"} />
+
+<hr className="bd-api-divider" />
+
+<ApiEndpoint method="GET" path={`/user/login`} summary="Logs user into the system"  />
+
+Authenticates a user and returns a session token.
+
+<div className="bd-api-section">
+
+#### Parameters
+
+<div className="bd-api-param-list">
+
+<div className="bd-api-param-item">
+  <div className="bd-api-param-name">
+    <code>username</code> <span className="bd-param-required">required</span>
+    <span className="bd-api-param-type">string</span>
+  </div>
+  <div className="bd-api-param-desc">The user name for login</div>
+</div>
+
+<div className="bd-api-param-item">
+  <div className="bd-api-param-name">
+    <code>password</code> <span className="bd-param-required">required</span>
+    <span className="bd-api-param-type">string</span>
+  </div>
+  <div className="bd-api-param-desc">The password for login in clear text</div>
+</div>
+
+</div>
+
+</div>
+
+<div className="bd-api-section">
+
+#### Responses
+
+<div className="bd-api-responses">
+
+<div className="bd-api-response-item">
+  <span className="bd-api-status-badge bd-status-2xx">200</span>
+  <span className="bd-api-response-desc">Successful operation (returns session token in X-Rate-Limit and X-Expires-After headers)</span>
+</div>
+
+<div className="bd-api-response-item">
+  <span className="bd-api-status-badge bd-status-4xx">400</span>
+  <span className="bd-api-response-desc">Invalid username/password supplied</span>
+</div>
+
+</div>
+
+</div>
+
+<details className="bd-api-example-details">
+<summary>Request Example</summary>
+
+```bash
+curl -X GET 'https://petstore.swagger.io/v2/user/login'
+```
+
+</details>
+
+<ApiPlayground client:load method="GET" url="https://petstore.swagger.io/v2/user/login" params={[{ name: "username", in: "query", type: "string", required: true, description: "The user name for login" }, { name: "password", in: "query", type: "string", required: true, description: "The password for login in clear text" }]} />
+
+<hr className="bd-api-divider" />
+
+<ApiEndpoint method="GET" path={`/user/logout`} summary="Logs out current logged in user session"  />
+
+Terminates the current user session.
+
+<div className="bd-api-section">
+
+#### Responses
+
+<div className="bd-api-responses">
+
+<div className="bd-api-response-item">
+  <span className="bd-api-status-badge bd-status-2xx">200</span>
+  <span className="bd-api-response-desc">Successful operation</span>
+</div>
+
+</div>
+
+</div>
+
+<details className="bd-api-example-details">
+<summary>Request Example</summary>
+
+```bash
+curl -X GET 'https://petstore.swagger.io/v2/user/logout'
+```
+
+</details>
+
+<ApiPlayground client:load method="GET" url="https://petstore.swagger.io/v2/user/logout" params={[]} />
+
+<hr className="bd-api-divider" />
+
+<ApiEndpoint method="GET" path={`/user/{username}`} summary="Get user by user name"  />
+
+Returns user details by username.
+
+<div className="bd-api-section">
+
+#### Parameters
+
+<div className="bd-api-param-list">
+
+<div className="bd-api-param-item">
+  <div className="bd-api-param-name">
+    <code>username</code> <span className="bd-param-required">required</span>
+    <span className="bd-api-param-type">string</span>
+  </div>
+  <div className="bd-api-param-desc">The name of the user to fetch</div>
+</div>
+
+</div>
+
+</div>
+
+<div className="bd-api-section">
+
+#### Responses
+
+<div className="bd-api-responses">
+
+<div className="bd-api-response-item">
+  <span className="bd-api-status-badge bd-status-2xx">200</span>
+  <span className="bd-api-response-desc">Successful operation</span>
+</div>
+
+<details className="bd-api-example-details">
+<summary>Example Response</summary>
+
+```json
+{
+  "id": 10,
+  "username": "string",
+  "firstName": "string",
+  "lastName": "string",
+  "email": "string",
+  "password": "string",
+  "phone": "string",
+  "userStatus": 0
+}
+```
+
+</details>
+
+<div className="bd-api-response-item">
+  <span className="bd-api-status-badge bd-status-4xx">400</span>
+  <span className="bd-api-response-desc">Invalid username supplied</span>
+</div>
+
+<div className="bd-api-response-item">
+  <span className="bd-api-status-badge bd-status-4xx">404</span>
+  <span className="bd-api-response-desc">User not found</span>
+</div>
+
+</div>
+
+</div>
+
+<details className="bd-api-example-details">
+<summary>Request Example</summary>
+
+```bash
+curl -X GET 'https://petstore.swagger.io/v2/user/{username}'
+```
+
+</details>
+
+<ApiPlayground client:load method="GET" url="https://petstore.swagger.io/v2/user/{username}" params={[{ name: "username", in: "path", type: "string", required: true, description: "The name of the user to fetch" }]} />
+
+<hr className="bd-api-divider" />
+
+<ApiEndpoint method="PUT" path={`/user/{username}`} summary="Update user"  />
+
+Updates an existing user by username.
+
+<div className="bd-api-section">
+
+#### Parameters
+
+<div className="bd-api-param-list">
+
+<div className="bd-api-param-item">
+  <div className="bd-api-param-name">
+    <code>username</code> <span className="bd-param-required">required</span>
+    <span className="bd-api-param-type">string</span>
+  </div>
+  <div className="bd-api-param-desc">Name of user to update</div>
+</div>
+
+</div>
+
+</div>
+
+<div className="bd-api-section">
+
+#### Request Body
+
+<span className="bd-api-content-type">`application/json`</span>
+
+<div className="bd-api-param-list">
+
+<div className="bd-api-param-item">
+  <div className="bd-api-param-name">
+    <code>id</code> <span className="bd-param-optional">optional</span>
+    <span className="bd-api-param-type">integer</span>
+  </div>
+  <div className="bd-api-param-desc">User ID</div>
+</div>
+
+<div className="bd-api-param-item">
+  <div className="bd-api-param-name">
+    <code>username</code> <span className="bd-param-optional">optional</span>
+    <span className="bd-api-param-type">string</span>
+  </div>
+  <div className="bd-api-param-desc">Login username</div>
+</div>
+
+<div className="bd-api-param-item">
+  <div className="bd-api-param-name">
+    <code>firstName</code> <span className="bd-param-optional">optional</span>
+    <span className="bd-api-param-type">string</span>
+  </div>
+  <div className="bd-api-param-desc">First name</div>
+</div>
+
+<div className="bd-api-param-item">
+  <div className="bd-api-param-name">
+    <code>lastName</code> <span className="bd-param-optional">optional</span>
+    <span className="bd-api-param-type">string</span>
+  </div>
+  <div className="bd-api-param-desc">Last name</div>
+</div>
+
+<div className="bd-api-param-item">
+  <div className="bd-api-param-name">
+    <code>email</code> <span className="bd-param-optional">optional</span>
+    <span className="bd-api-param-type">string</span>
+  </div>
+  <div className="bd-api-param-desc">Email address</div>
+</div>
+
+<div className="bd-api-param-item">
+  <div className="bd-api-param-name">
+    <code>password</code> <span className="bd-param-optional">optional</span>
+    <span className="bd-api-param-type">string</span>
+  </div>
+  <div className="bd-api-param-desc">Account password</div>
+</div>
+
+<div className="bd-api-param-item">
+  <div className="bd-api-param-name">
+    <code>phone</code> <span className="bd-param-optional">optional</span>
+    <span className="bd-api-param-type">string</span>
+  </div>
+  <div className="bd-api-param-desc">Phone number</div>
+</div>
+
+<div className="bd-api-param-item">
+  <div className="bd-api-param-name">
+    <code>userStatus</code> <span className="bd-param-optional">optional</span>
+    <span className="bd-api-param-type">integer</span>
+  </div>
+  <div className="bd-api-param-desc">User status (0=active)</div>
+</div>
+
+</div>
+
+</div>
+
+<div className="bd-api-section">
+
+#### Responses
+
+<div className="bd-api-responses">
+
+<div className="bd-api-response-item">
+  <span className="bd-api-status-badge bd-status-2xx">200</span>
+  <span className="bd-api-response-desc">User updated</span>
+</div>
+
+<div className="bd-api-response-item">
+  <span className="bd-api-status-badge bd-status-4xx">400</span>
+  <span className="bd-api-response-desc">Invalid user supplied</span>
+</div>
+
+<div className="bd-api-response-item">
+  <span className="bd-api-status-badge bd-status-4xx">404</span>
+  <span className="bd-api-response-desc">User not found</span>
+</div>
+
+</div>
+
+</div>
+
+<details className="bd-api-example-details">
+<summary>Request Example</summary>
+
+```bash
+curl -X PUT 'https://petstore.swagger.io/v2/user/{username}' \
+  -H 'Content-Type: application/json' \
+  -d '{"id":10,"username":"string","firstName":"string","lastName":"string","email":"string","password":"string","phone":"string","userStatus":0}'
+```
+
+</details>
+
+<ApiPlayground client:load method="PUT" url="https://petstore.swagger.io/v2/user/{username}" params={[{ name: "username", in: "path", type: "string", required: true, description: "Name of user to update" }]} body={"{\n  \"id\": 10,\n  \"username\": \"string\",\n  \"firstName\": \"string\",\n  \"lastName\": \"string\",\n  \"email\": \"string\",\n  \"password\": \"string\",\n  \"phone\": \"string\",\n  \"userStatus\": 0\n}"} />
+
+<hr className="bd-api-divider" />
+
+<ApiEndpoint method="DELETE" path={`/user/{username}`} summary="Delete user"  />
+
+Deletes a user by username.
+
+<div className="bd-api-section">
+
+#### Parameters
+
+<div className="bd-api-param-list">
+
+<div className="bd-api-param-item">
+  <div className="bd-api-param-name">
+    <code>username</code> <span className="bd-param-required">required</span>
+    <span className="bd-api-param-type">string</span>
+  </div>
+  <div className="bd-api-param-desc">The name of the user to delete</div>
+</div>
+
+</div>
+
+</div>
+
+<div className="bd-api-section">
+
+#### Responses
+
+<div className="bd-api-responses">
+
+<div className="bd-api-response-item">
+  <span className="bd-api-status-badge bd-status-2xx">200</span>
+  <span className="bd-api-response-desc">User deleted</span>
+</div>
+
+<div className="bd-api-response-item">
+  <span className="bd-api-status-badge bd-status-4xx">400</span>
+  <span className="bd-api-response-desc">Invalid username supplied</span>
+</div>
+
+<div className="bd-api-response-item">
+  <span className="bd-api-status-badge bd-status-4xx">404</span>
+  <span className="bd-api-response-desc">User not found</span>
+</div>
+
+</div>
+
+</div>
+
+<details className="bd-api-example-details">
+<summary>Request Example</summary>
+
+```bash
+curl -X DELETE 'https://petstore.swagger.io/v2/user/{username}'
+```
+
+</details>
+
+<ApiPlayground client:load method="DELETE" url="https://petstore.swagger.io/v2/user/{username}" params={[{ name: "username", in: "path", type: "string", required: true, description: "The name of the user to delete" }]} />
+
+<hr className="bd-api-divider" />
