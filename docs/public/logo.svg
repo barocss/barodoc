@@ -1,8 +1,33 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="32" height="32">
-  <rect x="10" y="20" width="80" height="60" rx="8" fill="currentColor" opacity="0.1"/>
-  <rect x="18" y="32" width="40" height="4" rx="2" fill="currentColor"/>
-  <rect x="18" y="42" width="64" height="3" rx="1.5" fill="currentColor" opacity="0.5"/>
-  <rect x="18" y="50" width="56" height="3" rx="1.5" fill="currentColor" opacity="0.5"/>
-  <rect x="18" y="58" width="48" height="3" rx="1.5" fill="currentColor" opacity="0.5"/>
-  <rect x="18" y="66" width="60" height="3" rx="1.5" fill="currentColor" opacity="0.5"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="512" height="512">
+  <defs>
+    <linearGradient id="main" x1="0" y1="0" x2="100" y2="100" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#0070f3"/>
+      <stop offset="100%" stop-color="#38bdf8"/>
+    </linearGradient>
+    <linearGradient id="fold" x1="62" y1="0" x2="90" y2="28" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#60a5fa"/>
+      <stop offset="100%" stop-color="#93c5fd"/>
+    </linearGradient>
+    <linearGradient id="back" x1="0" y1="14" x2="66" y2="96" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#0070f3" stop-opacity="0.25"/>
+      <stop offset="100%" stop-color="#38bdf8" stop-opacity="0.15"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Back page (offset, lighter) -->
+  <rect x="2" y="16" width="60" height="82" rx="8" fill="url(#back)"/>
+
+  <!-- Front page body -->
+  <path d="M20 4 C20 1.8 21.8 0 24 0 L62 0 L90 28 L90 92 C90 94.2 88.2 96 86 96 L24 96 C21.8 96 20 94.2 20 92 Z" fill="url(#main)"/>
+
+  <!-- Fold corner -->
+  <path d="M62 0 L62 20 C62 24.4 65.6 28 70 28 L90 28 Z" fill="url(#fold)"/>
+
+  <!-- Title line -->
+  <rect x="34" y="42" width="30" height="5.5" rx="2.75" fill="white" opacity="0.95"/>
+
+  <!-- Body text lines -->
+  <rect x="34" y="56" width="42" height="3.5" rx="1.75" fill="white" opacity="0.4"/>
+  <rect x="34" y="66" width="36" height="3.5" rx="1.75" fill="white" opacity="0.4"/>
+  <rect x="34" y="76" width="40" height="3.5" rx="1.75" fill="white" opacity="0.4"/>
 </svg>
