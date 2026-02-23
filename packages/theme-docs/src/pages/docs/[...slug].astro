@@ -89,6 +89,28 @@ const nextPage = currentIndex < allPages.length - 1
   : null;
 
 const category = findCategory(cleanSlug);
+
+// Edit link
+const editBaseUrl = config.editLink?.baseUrl;
+const editUrl = editBaseUrl
+  ? `${editBaseUrl.replace(/\/$/, "")}/${doc.id}`
+  : null;
+
+// Last updated: use file modification if available
+let lastUpdated: Date | null = null;
+if (config.lastUpdated) {
+  const mod = (doc.data as Record<string, unknown>).lastUpdated;
+  if (mod instanceof Date) {
+    lastUpdated = mod;
+  }
+}
+
+// Breadcrumbs: [Group, Page Title]
+const breadcrumbs: { label: string; href?: string }[] = [];
+if (category) {
+  breadcrumbs.push({ label: category });
+}
+breadcrumbs.push({ label: doc.data.title });
 ---
 
 <DocsLayout 
@@ -97,6 +119,9 @@ const category = findCategory(cleanSlug);
   headings={headings}
   prevPage={prevPage}
   nextPage={nextPage}
+  editUrl={editUrl}
+  lastUpdated={lastUpdated}
+  breadcrumbs={breadcrumbs}
 >
   {category && (
     <p class="text-xs font-medium uppercase tracking-wider text-primary-600 dark:text-primary-400 mb-2">

@@ -43,6 +43,21 @@ export const searchSchema = z.object({
 
 export const lineNumbersSchema = z.boolean().optional();
 
+export const editLinkSchema = z.object({
+  baseUrl: z.string(),
+}).optional();
+
+export const announcementSchema = z.object({
+  text: z.string(),
+  link: z.string().optional(),
+  dismissible: z.boolean().optional(),
+}).optional();
+
+export const feedbackSchema = z.object({
+  enabled: z.boolean(),
+  endpoint: z.string().optional(),
+}).optional();
+
 export const pluginConfigSchema = z.union([
   z.string(),
   z.tuple([z.string(), z.record(z.unknown())]),
@@ -60,6 +75,10 @@ export const barodocConfigSchema = z.object({
   topbar: topbarSchema,
   search: searchSchema,
   lineNumbers: lineNumbersSchema,
+  editLink: editLinkSchema,
+  lastUpdated: z.boolean().optional(),
+  announcement: announcementSchema,
+  feedback: feedbackSchema,
   plugins: z.array(pluginConfigSchema).optional(),
   customCss: z.array(z.string()).optional(),
 });

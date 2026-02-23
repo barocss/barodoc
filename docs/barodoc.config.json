@@ -53,5 +53,9 @@
   "topbar": {
     "github": "https://github.com/barocss/barodoc"
   },
-  "lineNumbers": true
+  "lineNumbers": true,
+  "editLink": {
+    "baseUrl": "https://github.com/barocss/barodoc/edit/main/docs/src/content/docs/"
+  },
+  "lastUpdated": true
 }
