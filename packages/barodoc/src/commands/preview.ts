@@ -1,7 +1,7 @@
 import path from "path";
 import pc from "picocolors";
 import fs from "fs-extra";
-import { execa } from "execa";
+import { preview as astroPreview } from "astro";
 
 export interface PreviewOptions {
   port: number;
@@ -19,7 +19,6 @@ export async function preview(
   console.log(pc.bold(pc.cyan("  barodoc preview")));
   console.log();
 
-  // Check if dist exists
   if (!(await fs.pathExists(distDir))) {
     console.log(
       pc.red(`Error: Build directory not found: ${options.output}/`)
@@ -33,21 +32,16 @@ export async function preview(
   console.log(pc.dim(`Serving from ${options.output}/`));
   console.log();
 
-  // Use a simple static server
-  try {
-    await execa(
-      "npx",
-      ["serve", distDir, "-l", String(options.port)],
-      {
-        stdio: "inherit",
-      }
-    );
-  } catch (error: any) {
-    if (error.signal === "SIGINT") {
-      console.log();
-      console.log(pc.dim("Shutting down..."));
-    } else {
-      throw error;
-    }
-  }
+  const previewServer = await astroPreview({
+    root,
+    server: {
+      port: options.port,
+    },
+  });
+
+  process.on("SIGINT", async () => {
+    console.log();
+    console.log(pc.dim("Shutting down..."));
+    await previewServer.stop();
+  });
 }

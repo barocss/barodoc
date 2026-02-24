@@ -34,9 +34,10 @@ interface Props {
   breadcrumbs?: BreadcrumbItem[];
   readingTime?: string;
   filePath?: string;
+  sectionSlug?: string;
 }
 
-const { title, description, headings = [], prevPage, nextPage, editUrl, lastUpdated, breadcrumbs = [], readingTime, filePath } = Astro.props;
+const { title, description, headings = [], prevPage, nextPage, editUrl, lastUpdated, breadcrumbs = [], readingTime, filePath, sectionSlug } = Astro.props;
 const currentPath = Astro.url.pathname;
 
 // Get locale from path
@@ -57,14 +58,14 @@ const feedbackEndpoint = config.feedback?.endpoint;
       <!-- Desktop Sidebar -->
       <aside class="hidden lg:block w-[240px] shrink-0 border-r border-[var(--bd-border)]">
         <div class="sticky top-14 h-[calc(100vh-3.5rem)] overflow-y-auto overscroll-contain pt-2 pb-8 px-4 sidebar-scroll">
-          <Sidebar currentPath={currentPath} currentLocale={currentLocale} />
+          <Sidebar currentPath={currentPath} currentLocale={currentLocale} sectionSlug={sectionSlug} />
         </div>
       </aside>
 
       <!-- Main Content -->
       <main class="flex-1 min-w-0 max-w-[768px]">
         <div class="px-4 py-8 sm:px-6 sm:py-10 lg:px-10 lg:py-10">
-          {breadcrumbs.length > 0 && <Breadcrumb items={breadcrumbs} />}
+          {breadcrumbs.length > 0 && <Breadcrumb items={breadcrumbs} sectionSlug={sectionSlug} />}
           {readingTime && (
             <div class="bd-reading-time mb-4">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -174,7 +175,7 @@ const feedbackEndpoint = config.feedback?.endpoint;
   </div>
 
   <!-- Mobile Navigation -->
-  <MobileNav currentPath={currentPath} currentLocale={currentLocale} />
+  <MobileNav currentPath={currentPath} currentLocale={currentLocale} sectionSlug={sectionSlug} />
   
   <!-- Code copy functionality -->
   <CodeCopy />

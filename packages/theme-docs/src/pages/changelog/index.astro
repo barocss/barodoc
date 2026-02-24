@@ -1,5 +1,5 @@
 ---
-import { getCollection } from "astro:content";
+import { getCollection, render } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import Header from "../../components/Header.astro";
 import Banner from "../../components/Banner.astro";
@@ -39,7 +39,7 @@ const sorted = entries.sort((a, b) => {
       ) : (
         <div class="bd-changelog-timeline">
           {sorted.map(async (entry) => {
-            const { Content } = await entry.render();
+            const { Content } = await render(entry);
             return (
               <article class="bd-changelog-entry">
                 <div class="bd-changelog-marker">

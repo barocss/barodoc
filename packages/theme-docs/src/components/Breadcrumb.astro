@@ -1,4 +1,6 @@
 ---
+import config from "virtual:barodoc/config";
+
 interface BreadcrumbItem {
   label: string;
   href?: string;
@@ -6,15 +8,24 @@ interface BreadcrumbItem {
 
 interface Props {
   items: BreadcrumbItem[];
+  sectionSlug?: string;
 }
 
-const { items } = Astro.props;
+const { items, sectionSlug = "docs" } = Astro.props;
+
+function getSectionLabel(): string {
+  if (sectionSlug === "docs") return "Docs";
+  const sec = config.sections?.find((s: any) => s.slug === sectionSlug);
+  return sec?.label ?? sectionSlug.charAt(0).toUpperCase() + sectionSlug.slice(1);
+}
+
+const sectionLabel = getSectionLabel();
 ---
 
 <nav aria-label="Breadcrumb" class="mb-4">
   <ol class="flex flex-wrap items-center gap-1.5 text-[13px] text-[var(--bd-text-muted)]">
     <li class="flex items-center gap-1.5">
-      <a href="/docs" class="hover:text-[var(--bd-text)] transition-colors">Docs</a>
+      <a href={`/${sectionSlug}`} class="hover:text-[var(--bd-text)] transition-colors">{sectionLabel}</a>
     </li>
     {items.map((item, i) => (
       <li class="flex items-center gap-1.5">

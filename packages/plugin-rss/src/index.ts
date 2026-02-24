@@ -17,7 +17,11 @@ export default definePlugin<RssPluginOptions>((options = {}) => {
   return {
     name: "@barodoc/plugin-rss",
     astroIntegration: (context) => {
-      const feedTitle = title || context.config.name;
+      const siteUrl = (context.config as any).site as string | undefined;
+
+      if (!siteUrl) {
+        console.warn("[rss] No 'site' configured in barodoc.config.json — RSS links will use localhost");
+      }
 
       const integration: AstroIntegration = {
         name: "@barodoc/plugin-rss",

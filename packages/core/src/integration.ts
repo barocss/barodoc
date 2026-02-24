@@ -1,14 +1,16 @@
 import type { AstroIntegration } from "astro";
 import { existsSync } from "node:fs";
 import { join } from "node:path";
+import { fileURLToPath } from "node:url";
 import { loadConfig } from "./config/loader.js";
 import {
   loadPlugins,
+  runHook,
   runConfigHook,
   getPluginIntegrations,
 } from "./plugins/loader.js";
 import type { BarodocOptions, ResolvedBarodocConfig } from "./types.js";
-import type { PluginContext } from "./plugins/types.js";
+import type { PluginContext, ResolvedPlugin } from "./plugins/types.js";
 
 const VIRTUAL_CONFIG_ID = "virtual:barodoc/config";
 const VIRTUAL_I18N_ID = "virtual:barodoc/i18n";
@@ -53,6 +55,8 @@ function createVirtualModulesPlugin(
 export default function barodoc(options: BarodocOptions): AstroIntegration {
   const configPath = options.config || "barodoc.config.json";
   let resolvedConfig: ResolvedBarodocConfig;
+  let resolvedPlugins: ResolvedPlugin[] = [];
+  let pluginCtx: PluginContext;
 
   return {
     name: "@barodoc/core",
@@ -75,24 +79,23 @@ export default function barodoc(options: BarodocOptions): AstroIntegration {
         logger.info(`Loaded config: ${resolvedConfig.name}`);
 
         const mode = command === "dev" ? "development" : "production";
-        const pluginContext: PluginContext = {
+        pluginCtx = {
           config: resolvedConfig,
           root: rootPath,
           mode,
         };
 
-        // Load and run plugins
         const pluginConfigs = resolvedConfig.plugins ?? [];
-        const plugins = await loadPlugins(pluginConfigs, pluginContext);
+        resolvedPlugins = await loadPlugins(pluginConfigs, pluginCtx);
         resolvedConfig = await runConfigHook(
-          plugins,
+          resolvedPlugins,
           resolvedConfig,
-          pluginContext
+          pluginCtx
         );
-        pluginContext.config = resolvedConfig;
+        pluginCtx.config = resolvedConfig;
 
-        if (plugins.length > 0) {
-          logger.info(`Loaded ${plugins.length} plugin(s)`);
+        if (resolvedPlugins.length > 0) {
+          logger.info(`Loaded ${resolvedPlugins.length} plugin(s)`);
         }
 
         // Setup i18n
@@ -101,9 +104,8 @@ export default function barodoc(options: BarodocOptions): AstroIntegration {
           locales: ["en"],
         };
 
-        // Theme + plugin integrations
         const themeIntegration = options.theme.integration(resolvedConfig);
-        const pluginIntegrations = getPluginIntegrations(plugins, pluginContext);
+        const pluginIntegrations = getPluginIntegrations(resolvedPlugins, pluginCtx);
 
         // Detect overrides directory for component/layout customization
         const overridesDir = join(rootPath, "overrides");
@@ -135,6 +137,25 @@ export default function barodoc(options: BarodocOptions): AstroIntegration {
 
       "astro:config:done": ({ logger }) => {
         logger.info("Barodoc setup complete");
+      },
+
+      "astro:build:start": async ({ logger }) => {
+        if (resolvedPlugins.length > 0) {
+          await runHook(resolvedPlugins, "build:start", pluginCtx);
+          logger.info("Plugin build:start hooks executed");
+        }
+      },
+
+      "astro:build:done": async ({ dir, pages, logger }) => {
+        if (resolvedPlugins.length > 0) {
+          const outDir = dir instanceof URL ? fileURLToPath(dir) : String(dir);
+          const buildContext = {
+            outDir,
+            pages: pages.map((p) => p.pathname),
+          };
+          await runHook(resolvedPlugins, "build:done", buildContext, pluginCtx);
+          logger.info("Plugin build:done hooks executed");
+        }
       },
     },
   };

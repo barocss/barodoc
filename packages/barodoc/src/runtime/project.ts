@@ -1,12 +1,37 @@
 import fs from "fs-extra";
 import path from "path";
+import { fileURLToPath } from "url";
 import pc from "picocolors";
-import { execa } from "execa";
 import type { BarodocConfig } from "@barodoc/core";
-import { version as cliVersion } from "../../package.json";
 
 const BARODOC_DIR = ".barodoc";
-const CLI_VERSION_FILE = ".cli-version";
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+/**
+ * Walk up from the CLI's dist directory to find the best node_modules
+ * for Astro's module resolution. Prefers the highest ancestor that
+ * has all transitive deps (e.g. monorepo root). Works with npm, pnpm, npx.
+ */
+function findCliNodeModules(): string {
+  let best: string | null = null;
+  let dir = __dirname;
+  while (dir !== path.parse(dir).root) {
+    const candidate = path.join(dir, "node_modules");
+    if (
+      fs.existsSync(candidate) &&
+      fs.existsSync(path.join(candidate, "@barodoc", "theme-docs"))
+    ) {
+      best = candidate;
+    }
+    dir = path.dirname(dir);
+  }
+  if (!best) {
+    throw new Error(
+      "Could not locate node_modules for barodoc runtime dependencies"
+    );
+  }
+  return best;
+}
 
 export interface ProjectOptions {
   root: string;
@@ -45,7 +70,6 @@ export async function loadProjectConfig(
     };
   }
 
-  // Return default config if not found
   return {
     config: getDefaultConfig(),
     configPath: null,
@@ -70,58 +94,35 @@ export function getDefaultConfig(): BarodocConfig {
 }
 
 /**
- * Create temporary Astro project for quick mode
+ * Create temporary Astro project for quick mode.
+ * Only generates config files and content symlinks — no node_modules needed.
+ * Astro is invoked programmatically from the CLI process.
  */
 export async function createProject(options: ProjectOptions): Promise<string> {
-  const { root, docsDir, config, configPath } = options;
+  const { root, docsDir, config } = options;
   const projectDir = path.join(root, BARODOC_DIR);
 
   console.log(pc.dim(`Creating temporary project in ${BARODOC_DIR}/`));
 
-  const nodeModulesDir = path.join(projectDir, "node_modules");
-  const hasNodeModules = fs.existsSync(nodeModulesDir);
+  await fs.remove(projectDir);
+  await fs.ensureDir(projectDir);
 
-  if (hasNodeModules) {
-    const preserve = new Set(["node_modules", CLI_VERSION_FILE]);
-    const entries = await fs.readdir(projectDir);
-    for (const entry of entries) {
-      if (!preserve.has(entry)) {
-        await fs.remove(path.join(projectDir, entry));
-      }
-    }
-  } else {
-    await fs.remove(projectDir);
-    await fs.ensureDir(projectDir);
-  }
+  // Symlink node_modules so Astro can resolve injected routes & components
+  const cliNodeModules = findCliNodeModules();
+  await fs.symlink(cliNodeModules, path.join(projectDir, "node_modules"), "junction");
 
-  // Create package.json
   await fs.writeJSON(
     path.join(projectDir, "package.json"),
-    {
-      name: "barodoc-temp",
-      type: "module",
-      private: true,
-      dependencies: {
-        astro: "^5.0.0",
-        "@astrojs/mdx": "^4.0.0",
-        "@astrojs/react": "^4.0.0",
-        "@tailwindcss/typography": "^0.5.19",
-        "@tailwindcss/vite": "^4.0.0",
-        tailwindcss: "^4.0.0",
-        "@barodoc/core": `^${cliVersion.split(".")[0]}.0.0`,
-        "@barodoc/theme-docs": `^${cliVersion.split(".")[0]}.0.0`,
-        react: "^19.0.0",
-        "react-dom": "^19.0.0",
-      },
-    },
+    { name: "barodoc-temp", private: true },
     { spaces: 2 }
   );
 
-  // Create astro.config.mjs
-  const astroConfig = generateAstroConfig(config, configPath || null, docsDir);
-  await fs.writeFile(path.join(projectDir, "astro.config.mjs"), astroConfig);
+  // Create barodoc.config.json in temp dir
+  await fs.writeJSON(path.join(projectDir, "barodoc.config.json"), config, {
+    spaces: 2,
+  });
 
-  // Create tsconfig.json
+  // Create tsconfig.json (needed for Astro TypeScript support)
   await fs.writeJSON(
     path.join(projectDir, "tsconfig.json"),
     {
@@ -134,42 +135,64 @@ export async function createProject(options: ProjectOptions): Promise<string> {
     { spaces: 2 }
   );
 
-  // Create barodoc.config.json in temp dir
-  const tempConfigPath = path.join(projectDir, "barodoc.config.json");
-  await fs.writeJSON(tempConfigPath, config, { spaces: 2 });
-
-  // Create src/content structure
   const contentDir = path.join(projectDir, "src/content");
   await fs.ensureDir(contentDir);
 
-  // Create content config
-  await fs.writeFile(
-    path.join(contentDir, "config.ts"),
-    generateContentConfig()
-  );
-
-  // Symlink docs directory
+  // Copy docs directory (symlinks not followed by Astro's content sync)
   const docsAbsolute = path.resolve(root, docsDir);
   const docsLink = path.join(contentDir, "docs");
-  
+
   if (fs.existsSync(docsAbsolute)) {
-    await fs.symlink(docsAbsolute, docsLink, "dir");
+    await fs.copy(docsAbsolute, docsLink);
   } else {
-    // Create empty docs dir if doesn't exist
     await fs.ensureDir(docsLink);
+  }
+
+  // Copy blog directory if exists
+  const blogDir = path.join(root, "blog");
+  const blogLink = path.join(contentDir, "blog");
+  if (fs.existsSync(blogDir)) {
+    await fs.copy(blogDir, blogLink);
+  }
+
+  // Copy changelog directory if exists
+  const changelogDir = path.join(root, "changelog");
+  const changelogLink = path.join(contentDir, "changelog");
+  if (fs.existsSync(changelogDir)) {
+    await fs.copy(changelogDir, changelogLink);
+  }
+
+  // Copy additional section directories (help/, guides/, etc.)
+  if (config.sections) {
+    for (const section of config.sections) {
+      const sectionDir = path.join(root, section.slug);
+      const sectionDest = path.join(contentDir, section.slug);
+      if (fs.existsSync(sectionDir)) {
+        await fs.copy(sectionDir, sectionDest);
+        console.log(pc.dim(`  Copied ${section.slug}/ section`));
+      }
+    }
+  }
+
+  // Copy pages directory for standalone pages
+  const pagesDir = path.join(root, "pages");
+  const pagesDest = path.join(contentDir, "pages");
+  if (fs.existsSync(pagesDir)) {
+    await fs.copy(pagesDir, pagesDest);
+    console.log(pc.dim("  Copied pages/ directory"));
   }
 
   // Symlink public directory if exists
   const publicDir = path.join(root, "public");
   const publicLink = path.join(projectDir, "public");
-  
+
   if (fs.existsSync(publicDir)) {
     await fs.symlink(publicDir, publicLink, "dir");
   } else {
     await fs.ensureDir(publicLink);
   }
 
-  // Symlink overrides directory if exists (for component/layout overrides)
+  // Symlink overrides directory if exists
   const overridesDir = path.join(root, "overrides");
   const overridesLink = path.join(projectDir, "overrides");
 
@@ -182,94 +205,25 @@ export async function createProject(options: ProjectOptions): Promise<string> {
 }
 
 /**
- * Check if cached dependencies need updating by comparing CLI versions.
- */
-function needsReinstall(projectDir: string): boolean {
-  const versionFile = path.join(projectDir, CLI_VERSION_FILE);
-  if (!fs.existsSync(versionFile)) return true;
-
-  const cached = fs.readFileSync(versionFile, "utf-8").trim();
-  return cached !== cliVersion;
-}
-
-/**
- * Write current CLI version to the temp project for future comparisons.
- */
-function writeCLIVersion(projectDir: string): void {
-  fs.writeFileSync(path.join(projectDir, CLI_VERSION_FILE), cliVersion);
-}
-
-/**
- * Install dependencies in temporary project.
- * Automatically reinstalls when the CLI version changes.
- */
-export async function installDependencies(
-  projectDir: string,
-  force = false
-): Promise<void> {
-  const nodeModulesDir = path.join(projectDir, "node_modules");
-  const hasNodeModules = fs.existsSync(nodeModulesDir);
-
-  const versionChanged = hasNodeModules && needsReinstall(projectDir);
-
-  if (versionChanged && !force) {
-    console.log(
-      pc.yellow(`Barodoc updated (→ ${cliVersion}), reinstalling dependencies...`)
-    );
-    force = true;
-  }
-
-  if (!force && hasNodeModules) {
-    console.log(pc.dim("Using cached dependencies..."));
-    console.log();
-    return;
-  }
-
-  if (force && hasNodeModules) {
-    console.log(pc.dim("Clearing cached dependencies..."));
-    await fs.remove(nodeModulesDir);
-  }
-
-  console.log(pc.dim("Installing dependencies..."));
-
-  await execa("npm", ["install", "--prefer-offline"], {
-    cwd: projectDir,
-    stdio: "inherit",
-  });
-
-  writeCLIVersion(projectDir);
-
-  console.log(pc.green("✓ Dependencies installed"));
-  console.log();
-}
-
-/**
- * Clean up temporary project files but preserve node_modules cache and version marker.
+ * Clean up temporary project (remove everything).
  */
 export async function cleanupProject(root: string): Promise<void> {
   const projectDir = path.join(root, BARODOC_DIR);
-
-  if (!fs.existsSync(projectDir)) return;
-
-  const preserve = new Set(["node_modules", CLI_VERSION_FILE]);
-  const entries = await fs.readdir(projectDir);
-  for (const entry of entries) {
-    if (!preserve.has(entry)) {
-      await fs.remove(path.join(projectDir, entry));
-    }
+  if (fs.existsSync(projectDir)) {
+    await fs.remove(projectDir);
   }
 }
 
 /**
- * Generate Astro config content
+ * Generate Astro config file content (used only for eject command)
  */
-function generateAstroConfig(
-  config: BarodocConfig,
-  configPath: string | null,
-  docsDir: string
-): string {
-  const siteLine = config.site ? `\n  site: ${JSON.stringify(config.site)},` : "";
-  const baseLine = config.base ? `\n  base: ${JSON.stringify(config.base)},` : "";
+export function generateAstroConfigFile(config: BarodocConfig): string {
+  const siteLine = config.site
+    ? `\n  site: ${JSON.stringify(config.site)},`
+    : "";
+  const baseLine = config.base
+    ? `\n  base: ${JSON.stringify(config.base)},`
+    : "";
 
   return `import { defineConfig } from "astro/config";
 import barodoc from "@barodoc/core";
@@ -286,14 +240,14 @@ export default defineConfig({${siteLine}${baseLine}
     resolve: {
       preserveSymlinks: true,
     },
+    ssr: {
+      noExternal: true,
+    },
   },
 });
 `;
 }
 
-/**
- * Generate content collection config
- */
 function generateContentConfig(): string {
   return `import { defineCollection, z } from "astro:content";
 
@@ -354,6 +308,5 @@ export function findDocsDir(root: string): string {
     }
   }
 
-  // Default to docs
   return "docs";
 }

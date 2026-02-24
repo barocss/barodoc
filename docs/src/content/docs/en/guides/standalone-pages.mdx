@@ -1,0 +1,134 @@
+---
+title: Standalone Pages
+description: Create independent pages without sidebar navigation
+tags: [pages, standalone, layout, navigation]
+related: [guides/sections, guides/content-structure, guides/configuration]
+difficulty: beginner
+---
+
+import { Callout } from "@barodoc/theme-docs";
+
+Standalone pages are single, independent content pages — like an About page, Pricing page, or Terms of Service. They use a clean single-column layout without a sidebar.
+
+## When to use standalone pages
+
+Use standalone pages for content that doesn't belong in a docs section:
+
+- **About** / **Team** pages
+- **Pricing** pages
+- **Terms of Service** / **Privacy Policy**
+- **Landing pages** for specific features
+
+For content that needs sidebar navigation, use [sections](/docs/guides/sections) instead.
+
+## Directory structure
+
+### Quick Mode (CLI)
+
+Create a `pages/` directory at the project root:
+
+```
+my-project/
+├── docs/en/
+│   └── introduction.md
+├── pages/                    ← standalone pages
+│   ├── about.md             → /about
+│   ├── pricing.md           → /pricing
+│   └── terms.md             → /terms
+├── barodoc.config.json
+└── public/
+```
+
+### Full Custom Mode (Astro)
+
+Place standalone pages in `src/content/pages/`:
+
+```
+src/content/
+├── docs/en/
+├── blog/
+└── pages/
+    ├── about.md             → /about
+    └── pricing.md           → /pricing
+```
+
+## Creating a standalone page
+
+Create a Markdown or MDX file in the `pages/` directory:
+
+```md
+# About Us
+
+We are a team of developers passionate about documentation.
+
+## Our Mission
+
+Great software deserves great documentation.
+```
+
+Or with frontmatter:
+
+```md
+---
+title: About Us
+description: Learn about our team and mission
+---
+
+## Our Mission
+
+Great software deserves great documentation.
+```
+
+The page title is extracted from the first `# Heading` if no frontmatter `title` is provided.
+
+## Layout
+
+Standalone pages use a simple single-column layout:
+
+- **Header** with logo, tabs, search, and theme toggle
+- **Content area** centered, max-width 720px
+- **No sidebar** — no navigation groups
+- **No table of contents** — clean reading experience
+
+## Adding to navigation
+
+Add standalone pages to `tabs` to make them accessible from the header:
+
+```json
+{
+  "tabs": [
+    { "label": "Docs", "href": "/docs/introduction" },
+    { "label": "Blog", "href": "/blog" },
+    { "label": "Pricing", "href": "/pricing" },
+    { "label": "About", "href": "/about" }
+  ]
+}
+```
+
+<Callout type="info">
+Tabs are optional. You can also link to standalone pages from your docs content or external sources — they work as regular URLs.
+</Callout>
+
+## Reserved slugs
+
+Some top-level URL paths are reserved and cannot be used for standalone pages:
+
+| Reserved path | Used by |
+|---------------|---------|
+| `/docs` | Default docs section |
+| `/blog` | Blog |
+| `/changelog` | Changelog |
+| `/rss.xml` | RSS feed |
+| Section slugs | Any slug defined in `sections` config |
+
+If a page slug conflicts with a reserved path, it will be ignored.
+
+## Standalone pages vs sections
+
+| | Standalone pages | Sections |
+|--|--|--|
+| **Layout** | Single column, no sidebar | Sidebar + TOC |
+| **Navigation** | Via tabs or direct links | Sidebar groups |
+| **URL** | `/{slug}` | `/{section}/{slug}` |
+| **Use case** | About, Pricing, Terms | Help center, Guides |
+| **Config** | Just create files in `pages/` | Requires `sections` config |

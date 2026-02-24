@@ -1,0 +1,165 @@
+---
+title: Multiple Sections
+description: Create multiple documentation sections with independent sidebars
+tags: [sections, navigation, sidebar, multi-section]
+related: [guides/content-structure, guides/configuration]
+difficulty: beginner
+---
+
+import { Callout } from "@barodoc/theme-docs";
+
+By default, Barodoc has a single docs section at `/docs/`. You can add additional sections — like a Help Center, Guides hub, or Knowledge Base — each with its own sidebar navigation.
+
+## How sections work
+
+Each section gets:
+
+- Its own **URL prefix** (`/help/*`, `/guides/*`, `/api-docs/*`)
+- Its own **sidebar navigation** defined in config
+- The same **DocsLayout** (sidebar + table of contents + prev/next)
+- Its own **content collection** from a separate directory
+
+```
+/docs/introduction       ← default docs section
+/docs/quickstart
+
+/help/general            ← "help" section
+/help/billing
+
+/guides/setup            ← "guides" section
+/guides/deploy
+```
+
+## Configuration
+
+Add `sections` to your `barodoc.config.json`:
+
+```json
+{
+  "navigation": [
+    { "group": "Getting Started", "pages": ["introduction", "quickstart"] }
+  ],
+
+  "sections": [
+    {
+      "slug": "help",
+      "label": "Help Center",
+      "navigation": [
+        { "group": "FAQ", "pages": ["general", "billing"] }
+      ]
+    },
+    {
+      "slug": "guides",
+      "label": "Guides",
+      "navigation": [
+        { "group": "Tutorials", "pages": ["setup", "deploy"] }
+      ]
+    }
+  ],
+
+  "tabs": [
+    { "label": "Docs", "href": "/docs/introduction" },
+    { "label": "Help", "href": "/help/general" },
+    { "label": "Guides", "href": "/guides/setup" }
+  ]
+}
+```
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `slug` | `string` | URL prefix and content directory name. |
+| `label` | `string` | Display name used in breadcrumbs. Falls back to capitalized slug. |
+| `navigation` | `BarodocNavItem[]` | Sidebar groups for this section (same format as top-level `navigation`). |
+
+<Callout type="info">
+The top-level `navigation` always maps to the `/docs/` section. You don't need to add `docs` to `sections`.
+</Callout>
+
+## Directory structure
+
+### Quick Mode (CLI)
+
+Each section maps to a directory at the project root:
+
+```
+my-project/
+├── docs/en/                  ← /docs/* (default section)
+│   ├── introduction.md
+│   └── quickstart.md
+├── help/en/                  ← /help/* (from sections config)
+│   ├── general.md
+│   └── billing.md
+├── guides/en/                ← /guides/* (from sections config)
+│   ├── setup.md
+│   └── deploy.md
+├── barodoc.config.json
+└── public/
+```
+
+### Full Custom Mode (Astro)
+
+Section content goes under `src/content/{slug}/`:
+
+```
+src/content/
+├── docs/en/                  ← /docs/*
+├── help/en/                  ← /help/*
+└── guides/en/                ← /guides/*
+```
+
+## Sidebar navigation
+
+Each section has an independent sidebar. When you navigate to `/help/general`, only the help section's navigation groups appear in the sidebar — not the docs navigation.
+
+The sidebar format is the same as the top-level `navigation`:
+
+```json
+{
+  "sections": [
+    {
+      "slug": "help",
+      "navigation": [
+        {
+          "group": "FAQ",
+          "group:ko": "자주 묻는 질문",
+          "pages": ["general", "billing"]
+        },
+        {
+          "group": "Guides",
+          "group:ko": "가이드",
+          "pages": ["getting-started", "troubleshooting"]
+        }
+      ]
+    }
+  ]
+}
+```
+
+Localized group labels (`group:ko`, `group:ja`, etc.) work exactly like they do in the default navigation.
+
+## Breadcrumbs
+
+Breadcrumbs automatically use the section's `label`:
+
+- `/docs/introduction` → **Docs** > Getting Started
+- `/help/general` → **Help Center** > FAQ
+
+## Adding tabs
+
+Use the `tabs` config to make sections accessible from the header navigation:
+
+```json
+{
+  "tabs": [
+    { "label": "Docs", "href": "/docs/introduction" },
+    { "label": "Help", "href": "/help/general" },
+    { "label": "Blog", "href": "/blog" }
+  ]
+}
+```
+
+The active tab is highlighted based on the current URL path.
+
+<Callout type="tip">
+You can have as many sections as you need. There's no limit — each one gets its own slug, sidebar, and content collection.
+</Callout>
