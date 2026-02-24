@@ -37,8 +37,29 @@ const changelogCollection = defineCollection({
   }),
 });
 
+const helpCollection = defineCollection({
+  type: "content",
+  schema: z.object({
+    title: z.string(),
+    description: z.string().optional(),
+    tags: z.array(z.string()).optional(),
+    related: z.array(z.string()).optional(),
+    difficulty: z.enum(["beginner", "intermediate", "advanced"]).optional(),
+  }),
+});
+
+const pagesCollection = defineCollection({
+  type: "content",
+  schema: z.object({
+    title: z.string(),
+    description: z.string().optional(),
+  }),
+});
+
 export const collections = {
   docs: docsCollection,
   blog: blogCollection,
   changelog: changelogCollection,
+  help: helpCollection,
+  pages: pagesCollection,
 };
