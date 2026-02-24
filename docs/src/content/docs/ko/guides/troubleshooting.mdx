@@ -1,0 +1,103 @@
+---
+title: 문제 해결
+description: Barodoc 사용 시 자주 발생하는 문제와 해결 방법을 안내합니다.
+---
+
+import { Callout, Accordion, AccordionGroup } from "@barodoc/theme-docs";
+
+# 문제 해결
+
+자주 발생하는 문제와 해결 방법입니다.
+
+## 설정 & 설치
+
+<AccordionGroup>
+  <Accordion title="'Config file not found' 에러">
+    프로젝트 루트에 `barodoc.config.json`이 있는지 확인하세요.
+
+    ```bash
+    ls barodoc.config.json
+
+    # 또는 경로를 명시적으로 지정
+    barodoc serve --config ./path/to/barodoc.config.json
+    ```
+  </Accordion>
+
+  <Accordion title="Node.js 버전 에러">
+    Barodoc은 **Node.js 20 이상**이 필요합니다.
+
+    ```bash
+    node --version
+
+    # nvm 사용 시
+    nvm install 20 && nvm use 20
+    ```
+  </Accordion>
+
+  <Accordion title="포트 충돌">
+    ```bash
+    barodoc serve --port 4322
+    ```
+  </Accordion>
+</AccordionGroup>
+
+## 콘텐츠 & 빌드
+
+<AccordionGroup>
+  <Accordion title="사이드바에 페이지가 안 보임">
+    `barodoc.config.json`의 `navigation`에 페이지를 추가해야 합니다:
+
+    ```json
+    {
+      "navigation": [
+        {
+          "group": "가이드",
+          "pages": ["guides/my-new-page"]
+        }
+      ]
+    }
+    ```
+
+    경로는 로캘 폴더 기준 상대 경로이며 확장자는 제외합니다.
+  </Accordion>
+
+  <Accordion title="MDX 컴포넌트가 렌더링되지 않음">
+    파일 상단에 import를 확인하세요:
+
+    ```mdx
+    import { Callout } from "@barodoc/theme-docs";
+    ```
+
+    <Callout type="warning">
+      컴포넌트를 사용하려면 `.md`가 아닌 `.mdx` 확장자를 사용해야 합니다.
+    </Callout>
+  </Accordion>
+
+  <Accordion title="이미지가 로드되지 않음">
+    정적 에셋은 `public/` 디렉토리에 넣고 절대 경로로 참조하세요:
+
+    ```mdx
+    ![스크린샷](/images/screenshot.png)
+    ```
+  </Accordion>
+</AccordionGroup>
+
+## 배포
+
+<AccordionGroup>
+  <Accordion title="GitHub Pages 배포 후 빈 페이지">
+    서브 경로에 배포하는 경우 `base` 옵션을 설정하세요:
+
+    ```json
+    {
+      "base": "/my-docs"
+    }
+    ```
+  </Accordion>
+</AccordionGroup>
+
+## 해결되지 않는 문제
+
+1. `barodoc check`으로 프로젝트 검증
+2. [GitHub Issues](https://github.com/barocss/barodoc/issues)에서 유사한 이슈 검색
+3. 에러 메시지와 설정을 포함해 새 이슈 등록

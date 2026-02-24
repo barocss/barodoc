@@ -1,0 +1,246 @@
+---
+title: Troubleshooting
+description: Solutions for common issues when working with Barodoc.
+---
+
+import { Callout, Accordion, AccordionGroup } from "@barodoc/theme-docs";
+
+# Troubleshooting
+
+Common issues and their solutions.
+
+## Setup & Installation
+
+<AccordionGroup>
+  <Accordion title="'Config file not found' error">
+    Make sure `barodoc.config.json` exists in your project root (or the directory you're running from).
+
+    ```bash
+    # Verify the file exists
+    ls barodoc.config.json
+
+    # Or specify the config path explicitly
+    barodoc serve --config ./path/to/barodoc.config.json
+    ```
+  </Accordion>
+
+  <Accordion title="'Unsupported Node.js version' error">
+    Barodoc requires **Node.js 20 or later**. Check your version:
+
+    ```bash
+    node --version
+    ```
+
+    If you're using a version manager, switch to Node 20+:
+
+    ```bash
+    # nvm
+    nvm install 20
+    nvm use 20
+
+    # fnm
+    fnm use 20
+    ```
+  </Accordion>
+
+  <Accordion title="Port already in use">
+    Use a different port:
+
+    ```bash
+    barodoc serve --port 4322
+    ```
+
+    Or kill the process using the default port:
+
+    ```bash
+    lsof -ti:4321 | xargs kill -9
+    ```
+  </Accordion>
+</AccordionGroup>
+
+## Content & Build
+
+<AccordionGroup>
+  <Accordion title="Pages not appearing in sidebar">
+    Pages must be listed in `barodoc.config.json` under `navigation`:
+
+    ```json
+    {
+      "navigation": [
+        {
+          "group": "Guides",
+          "pages": ["guides/my-new-page"]
+        }
+      ]
+    }
+    ```
+
+    The page path should match the file path relative to your docs locale folder, without the extension. For example, `docs/en/guides/my-new-page.mdx` becomes `"guides/my-new-page"`.
+  </Accordion>
+
+  <Accordion title="MDX component not rendering">
+    Make sure you're importing the component at the top of your MDX file:
+
+    ```mdx
+    import { Callout, Card } from "@barodoc/theme-docs";
+
+    <Callout type="tip">
+      This will render correctly.
+    </Callout>
+    ```
+
+    <Callout type="warning">
+      MDX files must use `.mdx` extension (not `.md`) to use components.
+    </Callout>
+  </Accordion>
+
+  <Accordion title="Build fails with 'collection not found'">
+    If you're in **Full Custom Mode** (with `astro.config.mjs`), make sure your content collections are defined in `src/content/config.ts`:
+
+    ```typescript
+    import { defineCollection, z } from "astro:content";
+
+    const docsCollection = defineCollection({
+      type: "content",
+      schema: z.object({
+        title: z.string(),
+        description: z.string().optional(),
+      }),
+    });
+
+    export const collections = { docs: docsCollection };
+    ```
+
+    In **Quick Mode**, this is handled automatically.
+  </Accordion>
+
+  <Accordion title="Images not loading">
+    Static assets should be placed in the `public/` directory:
+
+    ```
+    my-docs/
+    ├── public/
+    │   └── images/
+    │       └── screenshot.png   ← here
+    └── docs/
+        └── en/
+            └── guide.mdx        ← references /images/screenshot.png
+    ```
+
+    Reference them with absolute paths:
+
+    ```mdx
+    ![Screenshot](/images/screenshot.png)
+    ```
+  </Accordion>
+</AccordionGroup>
+
+## i18n
+
+<AccordionGroup>
+  <Accordion title="Translations not showing up">
+    Ensure your folder structure matches the configured locales:
+
+    ```json
+    {
+      "i18n": {
+        "defaultLocale": "en",
+        "locales": ["en", "ko"]
+      }
+    }
+    ```
+
+    Each locale needs its own directory with matching file paths:
+
+    ```
+    docs/
+    ├── en/
+    │   └── guides/setup.mdx
+    └── ko/
+        └── guides/setup.mdx   ← same path structure
+    ```
+  </Accordion>
+
+  <Accordion title="Language switcher not appearing">
+    The language switcher only appears when **more than one locale** is configured in `barodoc.config.json`. Make sure `locales` has at least two entries.
+  </Accordion>
+</AccordionGroup>
+
+## Plugins
+
+<AccordionGroup>
+  <Accordion title="Search not working after build">
+    Search is powered by Pagefind, which indexes your site **during the build step**. Make sure you:
+
+    1. Run a full build: `barodoc build`
+    2. Preview the build: `barodoc preview`
+
+    Search won't work in dev mode — it only works on built output.
+  </Accordion>
+
+  <Accordion title="OpenAPI spec not generating pages">
+    Check your plugin configuration:
+
+    ```json
+    {
+      "plugins": [
+        ["@barodoc/plugin-openapi", {
+          "specFile": "openapi.yaml",
+          "basePath": "api"
+        }]
+      ]
+    }
+    ```
+
+    The `specFile` path is relative to your project root. Verify the file exists and is valid YAML/JSON.
+  </Accordion>
+
+  <Accordion title="Analytics not tracking">
+    Ensure you've provided the correct tracking ID for your provider:
+
+    ```json
+    {
+      "plugins": [
+        ["@barodoc/plugin-analytics", {
+          "google": { "measurementId": "G-XXXXXXXXXX" },
+          "plausible": { "domain": "docs.example.com" }
+        }]
+      ]
+    }
+    ```
+
+    Analytics scripts are only injected in production builds, not during development.
+  </Accordion>
+</AccordionGroup>
+
+## Deployment
+
+<AccordionGroup>
+  <Accordion title="Blank page after deploying to GitHub Pages">
+    If your docs are hosted at a subpath (e.g., `username.github.io/my-docs/`), set the `base` option:
+
+    ```json
+    {
+      "base": "/my-docs"
+    }
+    ```
+
+    Without this, asset paths will resolve incorrectly.
+  </Accordion>
+
+  <Accordion title="404 on page refresh (SPA-like behavior)">
+    Barodoc generates static HTML files. Configure your hosting provider to serve `index.html` for directory routes:
+
+    - **Netlify**: Add `_redirects` file with `/* /index.html 200`
+    - **Vercel**: Works automatically
+    - **GitHub Pages**: Works automatically for static files
+  </Accordion>
+</AccordionGroup>
+
+## Still stuck?
+
+If your issue isn't covered here:
+
+1. Run `barodoc check` to validate your project
+2. Check the [GitHub Issues](https://github.com/barocss/barodoc/issues) for similar reports
+3. Open a new issue with your error message and config
