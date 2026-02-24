@@ -1,5 +1,16 @@
 # barodoc
 
+## 7.0.0
+
+### Patch Changes
+
+- 00de675: Add unit test infrastructure with Vitest (38 tests), fix CI pipeline, add migration guide and troubleshooting docs, add sample blog posts
+- Updated dependencies [36b58fd]
+- Updated dependencies [b4811da]
+- Updated dependencies [00de675]
+  - @barodoc/theme-docs@7.0.0
+  - @barodoc/core@7.0.0
+
 ## 6.1.1
 
 ### Patch Changes

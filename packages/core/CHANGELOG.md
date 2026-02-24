@@ -1,5 +1,15 @@
 # @barodoc/core
 
+## 7.0.0
+
+### Minor Changes
+
+- b4811da: Add configurable header tabs navigation for top-level section switching (Docs, Blog, API Reference, etc.)
+
+### Patch Changes
+
+- 00de675: Add unit test infrastructure with Vitest (38 tests), fix CI pipeline, add migration guide and troubleshooting docs, add sample blog posts
+
 ## 6.0.0
 
 ### Minor Changes
