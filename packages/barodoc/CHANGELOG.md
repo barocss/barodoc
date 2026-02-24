@@ -1,5 +1,11 @@
 # barodoc
 
+## 7.2.1
+
+### Patch Changes
+
+- 44a11cb: Fix MDX component imports in Quick Mode by enabling Vite preserveSymlinks
+
 ## 7.2.0
 
 ### Minor Changes
