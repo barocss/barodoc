@@ -1,5 +1,12 @@
 # barodoc
 
+## 7.1.1
+
+### Patch Changes
+
+- Updated dependencies [c190a89]
+  - @barodoc/theme-docs@7.1.1
+
 ## 7.1.0
 
 ### Patch Changes
