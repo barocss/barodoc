@@ -1,6 +1,6 @@
 {
   "name": "@barodoc/plugin-openapi",
-  "version": "6.1.0",
+  "version": "7.0.0",
   "description": "OpenAPI/Swagger auto-generation plugin for Barodoc",
   "type": "module",
   "main": "./dist/index.js",
