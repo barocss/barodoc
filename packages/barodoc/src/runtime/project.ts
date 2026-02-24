@@ -3,8 +3,10 @@ import path from "path";
 import pc from "picocolors";
 import { execa } from "execa";
 import type { BarodocConfig } from "@barodoc/core";
+import { version as cliVersion } from "../../package.json";
 
 const BARODOC_DIR = ".barodoc";
+const CLI_VERSION_FILE = ".cli-version";
 
 export interface ProjectOptions {
   root: string;
@@ -76,14 +78,14 @@ export async function createProject(options: ProjectOptions): Promise<string> {
 
   console.log(pc.dim(`Creating temporary project in ${BARODOC_DIR}/`));
 
-  // Preserve node_modules if it exists to avoid reinstalling on every run
   const nodeModulesDir = path.join(projectDir, "node_modules");
   const hasNodeModules = fs.existsSync(nodeModulesDir);
 
   if (hasNodeModules) {
+    const preserve = new Set(["node_modules", CLI_VERSION_FILE]);
     const entries = await fs.readdir(projectDir);
     for (const entry of entries) {
-      if (entry !== "node_modules") {
+      if (!preserve.has(entry)) {
         await fs.remove(path.join(projectDir, entry));
       }
     }
@@ -106,8 +108,8 @@ export async function createProject(options: ProjectOptions): Promise<string> {
         "@tailwindcss/typography": "^0.5.19",
         "@tailwindcss/vite": "^4.0.0",
         tailwindcss: "^4.0.0",
-        "@barodoc/core": "^1.0.0",
-        "@barodoc/theme-docs": "^1.0.0",
+        "@barodoc/core": `^${cliVersion.split(".")[0]}.0.0`,
+        "@barodoc/theme-docs": `^${cliVersion.split(".")[0]}.0.0`,
         react: "^19.0.0",
         "react-dom": "^19.0.0",
       },
@@ -180,21 +182,50 @@ export async function createProject(options: ProjectOptions): Promise<string> {
 }
 
 /**
- * Install dependencies in temporary project
+ * Check if cached dependencies need updating by comparing CLI versions.
+ */
+function needsReinstall(projectDir: string): boolean {
+  const versionFile = path.join(projectDir, CLI_VERSION_FILE);
+  if (!fs.existsSync(versionFile)) return true;
+
+  const cached = fs.readFileSync(versionFile, "utf-8").trim();
+  return cached !== cliVersion;
+}
+
+/**
+ * Write current CLI version to the temp project for future comparisons.
+ */
+function writeCLIVersion(projectDir: string): void {
+  fs.writeFileSync(path.join(projectDir, CLI_VERSION_FILE), cliVersion);
+}
+
+/**
+ * Install dependencies in temporary project.
+ * Automatically reinstalls when the CLI version changes.
  */
 export async function installDependencies(
   projectDir: string,
   force = false
 ): Promise<void> {
   const nodeModulesDir = path.join(projectDir, "node_modules");
+  const hasNodeModules = fs.existsSync(nodeModulesDir);
 
-  if (!force && fs.existsSync(nodeModulesDir)) {
+  const versionChanged = hasNodeModules && needsReinstall(projectDir);
+
+  if (versionChanged && !force) {
+    console.log(
+      pc.yellow(`Barodoc updated (→ ${cliVersion}), reinstalling dependencies...`)
+    );
+    force = true;
+  }
+
+  if (!force && hasNodeModules) {
     console.log(pc.dim("Using cached dependencies..."));
     console.log();
     return;
   }
 
-  if (force && fs.existsSync(nodeModulesDir)) {
+  if (force && hasNodeModules) {
     console.log(pc.dim("Clearing cached dependencies..."));
     await fs.remove(nodeModulesDir);
   }
@@ -206,21 +237,24 @@ export async function installDependencies(
     stdio: "inherit",
   });
 
+  writeCLIVersion(projectDir);
+
   console.log(pc.green("✓ Dependencies installed"));
   console.log();
 }
 
 /**
- * Clean up temporary project files but preserve node_modules cache
+ * Clean up temporary project files but preserve node_modules cache and version marker.
  */
 export async function cleanupProject(root: string): Promise<void> {
   const projectDir = path.join(root, BARODOC_DIR);
 
   if (!fs.existsSync(projectDir)) return;
 
+  const preserve = new Set(["node_modules", CLI_VERSION_FILE]);
   const entries = await fs.readdir(projectDir);
   for (const entry of entries) {
-    if (entry !== "node_modules") {
+    if (!preserve.has(entry)) {
       await fs.remove(path.join(projectDir, entry));
     }
   }
