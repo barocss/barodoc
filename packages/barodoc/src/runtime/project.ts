@@ -282,6 +282,11 @@ export default defineConfig({${siteLine}${baseLine}
       theme: docsTheme(),
     }),
   ],
+  vite: {
+    resolve: {
+      preserveSymlinks: true,
+    },
+  },
 });
 `;
 }
