@@ -43,10 +43,24 @@ const features = [
     <header class="sticky top-0 z-50 border-b border-[var(--bd-border)] bg-[var(--bd-bg)]/95 backdrop-blur-md">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex h-16 items-center justify-between">
-          <a href="/" class="flex items-center gap-2.5 font-semibold text-[var(--bd-text)]">
-            {config.logo && <img src={config.logo} alt={config.name} class="h-7 w-7" />}
-            <span class="text-lg">{config.name}</span>
-          </a>
+          <div class="flex items-center gap-6">
+            <a href="/" class="flex items-center gap-2.5 font-semibold text-[var(--bd-text)]">
+              {config.logo && <img src={config.logo} alt={config.name} class="h-7 w-7" />}
+              <span class="text-lg">{config.name}</span>
+            </a>
+            {config.tabs && config.tabs.length > 0 && (
+              <nav class="hidden md:flex items-center gap-1">
+                {config.tabs.map((tab: { label: string; href: string }) => (
+                  <a
+                    href={tab.href}
+                    class="px-3 py-1.5 text-sm font-medium rounded-lg text-[var(--bd-text-secondary)] hover:text-[var(--bd-text)] hover:bg-[var(--bd-bg-subtle)] transition-colors"
+                  >
+                    {tab.label}
+                  </a>
+                ))}
+              </nav>
+            )}
+          </div>
           <div class="flex items-center gap-2">
             {config.topbar?.github && (
               <a

@@ -10,9 +10,15 @@ import {
 } from "./ui/tooltip";
 import { cn } from "../lib/utils";
 
+interface TabItem {
+  label: string;
+  href: string;
+}
+
 interface DocHeaderProps {
   siteName: string;
   logo?: string;
+  tabs?: TabItem[];
   githubUrl?: string;
   hasMultipleLocales?: boolean;
   currentLocale?: string;
@@ -46,6 +52,7 @@ function getLocalizedUrl(
 export function DocHeader({
   siteName,
   logo,
+  tabs = [],
   githubUrl,
   hasMultipleLocales,
   currentLocale = "en",
@@ -92,7 +99,7 @@ export function DocHeader({
     <TooltipProvider>
       <header className="sticky top-0 z-50 w-full min-w-0 border-b border-[var(--bd-border)] bg-[var(--bd-bg)]/95 backdrop-blur-md supports-[backdrop-filter]:bg-[var(--bd-bg)]/80">
         <div className="flex h-14 items-center justify-between gap-2 px-4 sm:px-6 max-w-[1280px] mx-auto min-w-0">
-          {/* Logo */}
+          {/* Logo + Tabs */}
           <div className="flex items-center gap-6 min-w-0 shrink">
             <a
               href="/"
@@ -101,6 +108,27 @@ export function DocHeader({
               {logo && <img src={logo} alt={siteName} className="h-7 w-7 shrink-0" />}
               <span className="text-[15px] tracking-tight truncate">{siteName}</span>
             </a>
+            {tabs.length > 0 && (
+              <nav className="hidden md:flex items-center gap-1">
+                {tabs.map((tab) => {
+                  const isActive = currentPath === tab.href || currentPath.startsWith(tab.href + "/");
+                  return (
+                    <a
+                      key={tab.href}
+                      href={tab.href}
+                      className={cn(
+                        "px-3 py-1.5 text-[13px] font-medium rounded-lg transition-colors",
+                        isActive
+                          ? "text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-950/50"
+                          : "text-[var(--bd-text-secondary)] hover:text-[var(--bd-text)] hover:bg-[var(--bd-bg-subtle)]"
+                      )}
+                    >
+                      {tab.label}
+                    </a>
+                  );
+                })}
+              </nav>
+            )}
           </div>
 
           {/* Right side actions */}
