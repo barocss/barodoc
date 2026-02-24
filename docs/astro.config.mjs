@@ -1,6 +1,6 @@
 import { defineConfig } from "astro/config";
 import barodoc from "@barodoc/core";
-import docsTheme from "@barodoc/theme-docs";
+import docsTheme from "@barodoc/theme-docs/theme";
 
 export default defineConfig({
   site: "https://barodoc.dev",

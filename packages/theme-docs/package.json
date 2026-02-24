@@ -3,8 +3,10 @@
   "version": "7.0.0",
   "description": "Documentation theme for Barodoc",
   "type": "module",
+  "sideEffects": false,
   "exports": {
     ".": "./src/index.ts",
+    "./theme": "./src/theme.ts",
     "./components": "./src/components/index.ts",
     "./components/*": "./src/components/*",
     "./layouts/*": "./src/layouts/*",
