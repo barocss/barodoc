@@ -36,4 +36,7 @@ jobs:
         run: pnpm build:packages
 
       - name: Type check
-        run: pnpm -r exec tsc --noEmit || true
+        run: pnpm -r exec tsc --noEmit
+
+      - name: Run tests
+        run: pnpm test

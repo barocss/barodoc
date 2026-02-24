@@ -1,0 +1,165 @@
+---
+title: Migration Guide
+description: Migrate to Barodoc from other documentation frameworks.
+---
+
+import { Callout, Tabs, Tab, Steps, Step } from "@barodoc/theme-docs";
+
+# Migration Guide
+
+Moving to Barodoc from another documentation framework? This guide walks you through the key differences and steps for a smooth migration.
+
+## From Docusaurus
+
+<Steps>
+  <Step title="Create a Barodoc project">
+    ```bash
+    barodoc create my-docs
+    ```
+  </Step>
+  <Step title="Move your content">
+    Copy your Markdown/MDX files from `docs/` into `docs/en/` (or your locale folder).
+    
+    ```bash
+    cp -r old-project/docs/* my-docs/docs/en/
+    ```
+  </Step>
+  <Step title="Update frontmatter">
+    Docusaurus uses `sidebar_position` and `sidebar_label`. In Barodoc, navigation order is controlled by `barodoc.config.json`:
+
+    ```diff
+    ---
+    - sidebar_position: 1
+    - sidebar_label: "Getting Started"
+    + title: Getting Started
+    ---
+    ```
+
+    You can remove Docusaurus-specific frontmatter fields. Barodoc only requires `title` (or a `# Heading`).
+  </Step>
+  <Step title="Configure navigation">
+    Replace Docusaurus `sidebars.js` with `barodoc.config.json` navigation:
+
+    ```json
+    {
+      "navigation": [
+        {
+          "group": "Getting Started",
+          "pages": ["introduction", "quickstart"]
+        }
+      ]
+    }
+    ```
+  </Step>
+  <Step title="Update MDX components">
+    Replace Docusaurus components with Barodoc equivalents:
+
+    | Docusaurus | Barodoc |
+    |------------|---------|
+    | `:::note` / `:::tip` / `:::warning` | `<Callout type="note">` / `<Callout type="tip">` / `<Callout type="warning">` |
+    | `<Tabs>` / `<TabItem>` | `<Tabs>` / `<Tab>` |
+    | `<details>` | `<Accordion>` |
+    | `@theme/CodeBlock` | Fenced code blocks (built-in) |
+  </Step>
+</Steps>
+
+## From GitBook
+
+<Steps>
+  <Step title="Export your content">
+    Export your GitBook space as Markdown files. GitBook provides this in **Space Settings → Export**.
+  </Step>
+  <Step title="Create a Barodoc project">
+    ```bash
+    barodoc create my-docs
+    ```
+  </Step>
+  <Step title="Reorganize files">
+    GitBook uses `SUMMARY.md` for navigation. In Barodoc, move your content into `docs/en/` and define navigation in `barodoc.config.json`:
+
+    ```json
+    {
+      "navigation": [
+        {
+          "group": "Overview",
+          "pages": ["introduction", "quickstart"]
+        },
+        {
+          "group": "Guides",
+          "pages": ["guides/setup", "guides/deployment"]
+        }
+      ]
+    }
+    ```
+    
+    Delete `SUMMARY.md` — it's no longer needed.
+  </Step>
+  <Step title="Update image paths">
+    GitBook often stores images in `.gitbook/assets/`. Move them to `public/` and update references:
+
+    ```diff
+    - ![Screenshot](.gitbook/assets/screenshot.png)
+    + ![Screenshot](/images/screenshot.png)
+    ```
+  </Step>
+</Steps>
+
+## From Mintlify
+
+Barodoc's configuration is designed to be familiar if you've used Mintlify.
+
+<Steps>
+  <Step title="Copy your content">
+    Your MDX files can be used largely as-is. Copy them into `docs/en/`.
+  </Step>
+  <Step title="Convert mint.json to barodoc.config.json">
+    The structure is very similar:
+
+    ```diff
+    // mint.json → barodoc.config.json
+    {
+    -  "name": "My Docs",
+    -  "navigation": [
+    -    { "group": "Guides", "pages": ["quickstart"] }
+    -  ],
+    -  "colors": { "primary": "#0070f3" }
+    +  "name": "My Docs",
+    +  "navigation": [
+    +    { "group": "Guides", "pages": ["quickstart"] }
+    +  ],
+    +  "theme": { "colors": { "primary": "#0070f3" } }
+    }
+    ```
+
+    Key differences:
+    - Colors are nested under `theme.colors` instead of top-level `colors`
+    - `anchors` → use `topbar` for external links
+    - `tabs` → use navigation groups
+  </Step>
+  <Step title="Update components">
+    Most Mintlify components have direct equivalents:
+
+    | Mintlify | Barodoc |
+    |----------|---------|
+    | `<Note>` / `<Warning>` / `<Tip>` | `<Callout type="note">` / `<Callout type="warning">` / `<Callout type="tip">` |
+    | `<Card>` / `<CardGroup>` | `<Card>` / `<CardGroup>` (same) |
+    | `<Tabs>` / `<Tab>` | `<Tabs>` / `<Tab>` (same) |
+    | `<Steps>` / `<Step>` | `<Steps>` / `<Step>` (same) |
+    | `<Accordion>` | `<Accordion>` (same) |
+    | `<CodeGroup>` | `<CodeGroup>` (same) |
+    | `<ParamField>` | `<ParamField>` (same) |
+    | `<ResponseField>` | `<ResponseField>` (same) |
+    | `<Expandable>` | `<Expandable>` (same) |
+  </Step>
+</Steps>
+
+<Callout type="tip">
+  Many Mintlify components work in Barodoc without any changes since Barodoc was designed with Mintlify API compatibility in mind.
+</Callout>
+
+## Common Migration Tips
+
+- **Frontmatter is optional**: If your file starts with `# Title`, Barodoc extracts the title automatically — no frontmatter needed.
+- **Static assets**: Place images, fonts, and other assets in the `public/` directory.
+- **Plugins**: Add search, analytics, sitemap, etc. via the `plugins` array in config.
+- **Testing**: Run `barodoc check` to validate your docs structure after migration.

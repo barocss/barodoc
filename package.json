@@ -8,6 +8,8 @@
     "dev:docs": "pnpm --filter docs dev",
     "build": "pnpm --filter docs build",
     "build:packages": "pnpm --filter @barodoc/core --filter barodoc --filter create-barodoc --filter @barodoc/plugin-sitemap --filter @barodoc/plugin-search --filter @barodoc/plugin-analytics build",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "typecheck": "pnpm -r typecheck",
     "barodoc": "tsx packages/barodoc/src/cli.ts",
     "test:cli": "pnpm --filter barodoc build && node packages/barodoc/dist/cli.js",
@@ -30,7 +32,8 @@
   "devDependencies": {
     "@changesets/cli": "^2.27.0",
     "concurrently": "^9.2.1",
-    "tsx": "^4.21.0"
+    "tsx": "^4.21.0",
+    "vitest": "^4.0.18"
   },
   "pnpm": {
     "overrides": {

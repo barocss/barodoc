@@ -1,0 +1,71 @@
+---
+title: "Tips for Writing Great Documentation"
+description: "Practical advice for creating documentation that developers actually want to read."
+excerpt: "Learn the principles behind effective technical documentation and how to apply them."
+date: 2026-02-10
+author: "Barodoc Team"
+tags: ["guide", "writing"]
+---
+
+Great documentation isn't just about having the right information — it's about presenting it in a way that respects your readers' time.
+
+## Start With Why
+
+Before diving into how, explain **why**. Developers need to understand the purpose of a feature before learning its API.
+
+```mdx
+## Authentication
+
+Barodoc uses token-based auth to keep your API 
+stateless and horizontally scalable.
+```
+
+Compare with a less effective approach:
+
+```mdx
+## Authentication
+
+Call `POST /auth/login` with username and password.
+```
+
+The first version helps readers decide if this is even the right approach for them.
+
+## Use Progressive Disclosure
+
+Don't dump everything on the reader at once. Start with the simplest case and layer complexity:
+
+1. **Quick Start** — The happy path, 5 minutes
+2. **Guides** — Common use cases with context
+3. **API Reference** — Complete details for every option
+
+## Show, Don't Just Tell
+
+A code example is worth a thousand words of explanation.
+
+```typescript
+// Good: Shows real usage
+const config = {
+  name: "My Docs",
+  theme: { colors: { primary: "#0070f3" } },
+  navigation: [
+    { group: "Guides", pages: ["quickstart", "setup"] }
+  ]
+};
+```
+
+## Keep Pages Focused
+
+Each page should answer **one question**. If you find yourself writing "See also..." frequently, consider splitting the page.
+
+## Write for Scanners
+
+Most readers scan before reading. Help them:
+
+- Use descriptive headings
+- Bold key terms on first use
+- Use tables for reference data
+- Keep paragraphs short (3-4 lines max)
+
+## Test Your Docs
+
+The best way to find gaps in documentation: follow your own instructions on a fresh machine. If you get stuck, your users will too.
