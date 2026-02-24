@@ -1,5 +1,11 @@
 # @barodoc/theme-docs
 
+## 7.1.1
+
+### Patch Changes
+
+- c190a89: Fix CodeGroup tabs not displaying titles - reverted to Astro component for client-side interactivity
+
 ## 7.1.0
 
 ### Minor Changes
