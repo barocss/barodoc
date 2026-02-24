@@ -1,0 +1,146 @@
+---
+title: Community & Contributing
+description: Join the Barodoc community and contribute to the project
+tags: [community, contributing, open-source]
+difficulty: beginner
+---
+
+import { Callout, CardGroup, Card } from "@barodoc/theme-docs";
+
+Barodoc is an open-source project built by the community, for the community. There are many ways to get involved.
+
+## Where to Find Us
+
+<CardGroup cols={2}>
+  <Card title="GitHub" icon="💻" href="https://github.com/barocss/barodoc">
+    Source code, issues, and pull requests.
+  </Card>
+  <Card title="Discussions" icon="💬" href="https://github.com/barocss/barodoc/discussions">
+    Questions, ideas, and community conversations.
+  </Card>
+  <Card title="Discord" icon="🎮" href="https://discord.gg/barodoc">
+    Real-time chat with the team and community.
+  </Card>
+  <Card title="Twitter/X" icon="🐦" href="https://twitter.com/barodoc">
+    Updates, tips, and announcements.
+  </Card>
+</CardGroup>
+
+## Reporting Bugs
+
+Found a bug? Help us fix it by opening a GitHub issue with:
+
+1. **Barodoc version** — Run `npx barodoc --version`
+2. **Node.js version** — Run `node --version`
+3. **Operating system** — macOS, Linux, Windows
+4. **Steps to reproduce** — Minimal steps to trigger the bug
+5. **Expected vs actual behavior** — What should happen vs what does happen
+6. **Error messages** — Full error output or screenshots
+
+<Callout type="tip" title="Minimal reproduction">
+  A minimal reproduction (a small project that demonstrates the bug) dramatically speeds up debugging. Consider creating a fresh project with `pnpm create barodoc repro` and adding only the steps needed to trigger the issue.
+</Callout>
+
+## Requesting Features
+
+We love hearing ideas! Open a [GitHub Discussion](https://github.com/barocss/barodoc/discussions/categories/ideas) with:
+
+- **Problem** — What are you trying to do?
+- **Proposed solution** — How would you solve it?
+- **Alternatives** — Other approaches you've considered
+- **Context** — Your use case and why this matters
+
+Popular feature requests get promoted to issues and added to the roadmap.
+
+## Contributing Code
+
+### Getting Started
+
+1. **Fork** the repository on GitHub
+2. **Clone** your fork locally:
+
+```bash
+git clone https://github.com/YOUR_USERNAME/barodoc.git
+cd barodoc
+pnpm install
+```
+
+3. **Build** all packages:
+
+```bash
+pnpm build:packages
+```
+
+4. **Start** the docs dev server to test changes:
+
+```bash
+pnpm dev
+```
+
+### Project Structure
+
+```
+packages/
+├── barodoc/          # CLI (serve, build, create)
+├── core/             # @barodoc/core - Astro integration
+├── theme-docs/       # @barodoc/theme-docs - UI components
+├── create-barodoc/   # Scaffolding CLI
+├── plugin-sitemap/   # Sitemap generation
+├── plugin-search/    # Pagefind search
+├── plugin-rss/       # RSS feeds
+├── plugin-pwa/       # Progressive Web App
+├── plugin-og-image/  # OG image generation
+├── plugin-openapi/   # API docs from OpenAPI
+├── plugin-analytics/ # Analytics integrations
+├── plugin-llms-txt/  # AI-readable summary
+└── plugin-docsearch/ # Algolia DocSearch
+```
+
+### Workflow
+
+1. Create a feature branch from `main`
+2. Make your changes with tests if applicable
+3. Run `pnpm build:packages` to verify the build
+4. Create a PR with a clear description
+5. Add a changeset if your change affects published packages:
+
+```bash
+pnpm changeset
+```
+
+### Code Style
+
+- TypeScript for all packages
+- ESM modules (no CommonJS)
+- Astro components for server-rendered UI
+- React components for interactive islands
+
+## Contributing Documentation
+
+Documentation improvements are always welcome. The docs site lives in `docs/` and uses Full Custom Mode.
+
+To work on docs:
+
+```bash
+pnpm dev        # Start docs dev server
+pnpm build      # Test production build
+```
+
+Content files are in `docs/src/content/docs/en/` (English) and `docs/src/content/docs/ko/` (Korean).
+
+### Translation
+
+We're actively looking for translators! Currently supported:
+
+- **English** (en) — Primary language
+- **Korean** (ko) — Partial translation
+
+To add a new locale, see the [i18n guide](/docs/guides/i18n).
+
+## Code of Conduct
+
+We follow the [Contributor Covenant](https://www.contributor-covenant.org/) code of conduct. Be respectful, inclusive, and constructive in all interactions.
+
+## Recognition
+
+All contributors are recognized in the project's README and release notes. Significant contributions may earn a "Core Contributor" role with write access to the repository.

@@ -1,0 +1,75 @@
+---
+title: Roadmap
+description: What's coming next for Barodoc
+---
+
+This roadmap reflects our current priorities. It's a living document — priorities may shift based on community feedback and contributions.
+
+Want to influence the roadmap? [Start a discussion](https://github.com/barocss/barodoc/discussions/categories/ideas) or vote on existing proposals.
+
+## In Progress
+
+### Versioned Documentation
+
+Maintain multiple versions of your docs side-by-side (e.g., v1.x, v2.x). Users can switch between versions via a dropdown in the header. Each version has its own content directory and navigation.
+
+**Status:** Design phase — evaluating file-based vs branch-based approaches.
+
+### Feedback Widget
+
+A "Was this page helpful?" widget at the bottom of each page. Collects anonymous thumbs-up/thumbs-down feedback and optional text comments. Data can be sent to a configurable webhook or stored locally.
+
+**Status:** Prototype built, refining the UI.
+
+## Planned
+
+### Mermaid Diagrams (built-in)
+
+While Mermaid diagrams already work in Full Custom Mode, we're working on seamless support in Quick Mode with server-side rendering for faster page loads and better SEO.
+
+### TypeScript API Generation
+
+Auto-generate API reference documentation from TypeScript source files. Extract types, interfaces, function signatures, and JSDoc comments into structured documentation pages.
+
+### Visual Diff for Docs
+
+A GitHub Action that generates visual screenshots of documentation changes in PRs, making it easy to review layout and content changes before merging.
+
+### Component Playground
+
+An interactive playground where users can experiment with Barodoc's MDX components (Callout, Card, Steps, etc.) and see live previews of their Markdown.
+
+## Exploring
+
+These ideas are in early exploration. We're gathering feedback before committing to implementation.
+
+### Collaborative Editing
+
+Real-time collaborative editing with live preview, similar to Google Docs but for Markdown documentation. Would integrate with the Git workflow for version control.
+
+### AI-Powered Search
+
+Enhance the built-in search with semantic understanding. Instead of keyword matching, users could ask natural language questions like "How do I deploy to Vercel?" and get relevant results.
+
+### Custom Theme Marketplace
+
+A registry of community-built themes that can be installed with a single command. Each theme would provide its own layout, components, and styling.
+
+### Docs-as-Code CI Pipeline
+
+A GitHub Action that validates documentation quality on every PR: broken links, missing descriptions, orphaned pages, readability scores, and screenshot regression tests.
+
+## Recently Completed
+
+### v7.1 — Multi-Section Docs & Standalone Pages
+Multiple documentation sections with independent sidebars, plus sidebar-free pages for content like About and Pricing.
+
+### v7.0 — Quick Mode & Plugin System
+Zero-install Quick Mode using Astro's programmatic API. Eight official plugins for search, RSS, analytics, and more.
+
+### v6.5 — Component Library & Dark Mode
+Rich MDX components (Callout, Card, Steps, CodeGroup) and built-in dark mode toggle.
+
+---
+
+Last updated: February 2026

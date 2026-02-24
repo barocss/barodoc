@@ -17,9 +17,23 @@
   },
   "tabs": [
     { "label": "Docs", "href": "/docs/introduction" },
+    { "label": "Help", "href": "/help/faq" },
     { "label": "Blog", "href": "/blog" },
     { "label": "API Reference", "href": "/docs/api/pet" },
-    { "label": "Changelog", "href": "/changelog" }
+    { "label": "Changelog", "href": "/changelog" },
+    { "label": "About", "href": "/about" }
+  ],
+  "sections": [
+    {
+      "slug": "help",
+      "label": "Help Center",
+      "navigation": [
+        {
+          "group": "Support",
+          "pages": ["faq", "upgrade-guide", "community"]
+        }
+      ]
+    }
   ],
   "navigation": [
     {

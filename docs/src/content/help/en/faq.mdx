@@ -1,0 +1,127 @@
+---
+title: Frequently Asked Questions
+description: Answers to the most common questions about Barodoc
+tags: [faq, getting-started]
+difficulty: beginner
+---
+
+import { Callout } from "@barodoc/theme-docs";
+
+Common questions about Barodoc and how it works.
+
+## General
+
+### What is Barodoc?
+
+Barodoc is a documentation framework built on [Astro](https://astro.build) that turns Markdown and MDX files into fast, searchable documentation sites. It supports two modes:
+
+- **Quick Mode** — Zero-config, just Markdown files and `npx barodoc serve`
+- **Full Custom Mode** — Full Astro project with complete control over layouts, components, and pages
+
+### How is Barodoc different from Docusaurus or VitePress?
+
+Barodoc's **Quick Mode** requires no project setup — no `package.json`, no `node_modules`. Just write Markdown and run a single command. Other differentiators:
+
+| Feature | Barodoc | Docusaurus | VitePress |
+|---------|---------|------------|-----------|
+| Zero-config mode | Yes | No | No |
+| Plugin system | 8+ official | Plugin API | Limited |
+| Multi-section docs | Native | Manual | Manual |
+| Built-in search | Pagefind | Algolia required | MiniSearch |
+| API playground | OpenAPI plugin | Separate tool | No |
+
+### Is Barodoc free?
+
+Yes. Barodoc is fully open source under the [MIT license](https://github.com/barocss/barodoc/blob/main/LICENSE). You can use it for personal, commercial, and enterprise projects.
+
+## Quick Mode
+
+### What does Quick Mode actually do?
+
+When you run `npx barodoc serve`, the CLI:
+
+1. Reads your `barodoc.config.json`
+2. Creates a temporary `.barodoc/` directory with an Astro project
+3. Symlinks your content into the project's content collections
+4. Starts Astro's dev server programmatically
+
+No files are installed into your project. The `.barodoc/` directory can be safely added to `.gitignore`.
+
+### Can I use Quick Mode for production?
+
+Absolutely. `npx barodoc build` generates a fully static site in `dist/` that you can deploy anywhere. Many production documentation sites run on Quick Mode.
+
+### When should I switch to Full Custom Mode?
+
+Switch when you need:
+
+- Custom Astro pages beyond docs/blog/changelog
+- Custom React components not available in the standard theme
+- Direct control over the Astro config and build pipeline
+- Custom middleware or server-side logic
+
+<Callout type="tip" title="Eject command">
+  Use `npx barodoc eject` to convert a Quick Mode project into a Full Custom Mode project without losing any content.
+</Callout>
+
+## Content
+
+### Do I need frontmatter in my Markdown files?
+
+No. Barodoc automatically extracts the title from the first `# Heading` and the description from the first paragraph. Frontmatter is only needed for advanced metadata like `tags`, `related`, or `api_reference`.
+
+### Can I mix `.md` and `.mdx` files?
+
+Yes. Use `.md` for standard Markdown content and `.mdx` when you need React components (like `Callout`, `Card`, `Steps`, etc.). Both formats work in the same project.
+
+### How are URLs determined?
+
+Page URLs come from the file path relative to the locale directory:
+
+| File Path | URL |
+|-----------|-----|
+| `docs/en/introduction.md` | `/docs/introduction` |
+| `docs/en/guides/deployment.md` | `/docs/guides/deployment` |
+| `docs/api/users.mdx` | `/docs/api/users` |
+
+## Plugins
+
+### Do I need to install plugins separately?
+
+In **Quick Mode**, no. All official plugins are bundled with the CLI. Just add them to `barodoc.config.json`:
+
+```json
+{
+  "plugins": ["@barodoc/plugin-search", "@barodoc/plugin-sitemap"]
+}
+```
+
+In **Full Custom Mode**, install them as npm dependencies.
+
+### Can I create custom plugins?
+
+Yes. See the plugin API documentation for creating custom plugins using `definePlugin()` from `@barodoc/core`.
+
+### Which analytics providers are supported?
+
+The analytics plugin supports Google Analytics, Plausible, and Umami:
+
+```json
+["@barodoc/plugin-analytics", { "provider": "google", "id": "G-XXXXX" }]
+["@barodoc/plugin-analytics", { "provider": "plausible", "domain": "docs.example.com" }]
+["@barodoc/plugin-analytics", { "provider": "umami", "id": "xxx", "src": "https://..." }]
+```
+
+## Technical
+
+### What Node.js version is required?
+
+Barodoc requires **Node.js 20 or later**. We recommend using the latest LTS version.
+
+### What Astro version does Barodoc use?
+
+Barodoc is built on **Astro 5.x** and uses the Content Layer API with `glob()` loaders.
+
+### Does Barodoc support server-side rendering?
+
+No. Barodoc generates fully static sites (SSG). This keeps sites fast, cheap to host, and deployable to any CDN or static host.

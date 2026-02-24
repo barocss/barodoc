@@ -1,0 +1,129 @@
+---
+title: Upgrade Guide
+description: How to upgrade between major Barodoc versions
+tags: [upgrade, migration]
+difficulty: intermediate
+---
+
+import { Callout, Steps, Step } from "@barodoc/theme-docs";
+
+This guide covers upgrading between major Barodoc versions. For minor/patch updates, simply update your CLI or dependencies — no migration steps needed.
+
+## Upgrading to v7.x (from v6.x)
+
+Version 7 introduces Quick Mode's new architecture (programmatic Astro API), the plugin system, and multi-section documentation.
+
+### What Changed
+
+| Area | v6.x | v7.x |
+|------|------|------|
+| Quick Mode | Creates `package.json` + `node_modules` | Creates temporary `.barodoc/` directory |
+| Plugins | Built-in only | Configurable plugin system |
+| Content | `docs/` only | `docs/`, `blog/`, `changelog/`, `help/`, `pages/` |
+| Navigation | Single section | Multi-section with `sections` config |
+| Standalone pages | Not supported | `pages/` directory |
+
+### Migration Steps
+
+<Steps>
+  <Step title="Update the CLI">
+    If using Quick Mode, just run the latest version:
+
+    ```bash
+    npx barodoc@latest serve docs
+    ```
+  </Step>
+  <Step title="Clean up old artifacts">
+    Remove the old generated files from your project:
+
+    ```bash
+    rm -rf node_modules package.json package-lock.json
+    ```
+
+    Add `.barodoc/` to your `.gitignore`:
+
+    ```
+    .barodoc/
+    dist/
+    ```
+  </Step>
+  <Step title="Update plugin configuration">
+    Plugins are now declared in `barodoc.config.json` instead of being implicitly enabled:
+
+    ```json
+    {
+      "plugins": [
+        "@barodoc/plugin-sitemap",
+        "@barodoc/plugin-search"
+      ]
+    }
+    ```
+  </Step>
+  <Step title="Test your site">
+    Run the dev server and check that all pages render correctly:
+
+    ```bash
+    npx barodoc serve
+    ```
+  </Step>
+</Steps>
+
+<Callout type="info" title="Content files unchanged">
+  Your Markdown and MDX files don't need any changes. Only the CLI invocation and config format have changed.
+</Callout>
+
+### Full Custom Mode
+
+If you're using Full Custom Mode (with `astro.config.mjs`):
+
+1. Update your dependencies:
+
+```bash
+pnpm update @barodoc/core @barodoc/theme-docs
+```
+
+2. The theme integration API is unchanged — `docsTheme()` works the same way.
+
+3. If you want multi-section support, add `sections` to your `barodoc.config.json` and create matching content collections in `src/content/config.ts`.
+
+## Upgrading to v6.x (from v5.x)
+
+Version 6 upgraded to Astro 5 and introduced the component library.
+
+### What Changed
+
+- **Astro 5** — Content Layer API replaces the old content collections
+- **New components** — `Callout`, `Card`, `Steps`, `CodeGroup`, and more
+- **Dark mode** — Built-in theme toggle
+- **Reading time** — Automatic reading time estimates
+
+### Migration Steps
+
+<Steps>
+  <Step title="Update dependencies">
+    ```bash
+    pnpm update @barodoc/core @barodoc/theme-docs astro
+    ```
+  </Step>
+  <Step title="Update content config">
+    Replace `defineCollection` with the new Astro 5 content config format if you're using Full Custom Mode. The `glob()` loader is now the default.
+  </Step>
+  <Step title="Update component imports">
+    Component imports changed from deep paths to a single entry point:
+
+    ```diff
+    - import Callout from "@barodoc/theme-docs/components/Callout";
+    + import { Callout } from "@barodoc/theme-docs";
+    ```
+  </Step>
+</Steps>
+
+## Version Support Policy
+
+| Version | Status | Node.js | Astro |
+|---------|--------|---------|-------|
+| 7.x | **Current** | 20+ | 5.x |
+| 6.x | Maintenance (security fixes only) | 18+ | 5.x |
+| 5.x | End of life | 16+ | 4.x |
+
+We recommend always running the latest version. Quick Mode users get automatic updates via `npx`.
