@@ -15,6 +15,11 @@
       "ko": "한국어"
     }
   },
+  "tabs": [
+    { "label": "Docs", "href": "/docs/introduction" },
+    { "label": "Blog", "href": "/blog" },
+    { "label": "API Reference", "href": "/docs/api/pet" }
+  ],
   "navigation": [
     {
       "group": "Getting Started",

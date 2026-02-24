@@ -21,13 +21,20 @@ interface NavGroup {
   defaultOpen?: boolean;
 }
 
+interface TabItem {
+  label: string;
+  href: string;
+}
+
 interface MobileNavSheetProps {
   groups: NavGroup[];
   siteName: string;
   logo?: string;
+  tabs?: TabItem[];
+  currentPath?: string;
 }
 
-export function MobileNavSheet({ groups, siteName, logo }: MobileNavSheetProps) {
+export function MobileNavSheet({ groups, siteName, logo, tabs = [], currentPath = "" }: MobileNavSheetProps) {
   const [open, setOpen] = React.useState(false);
 
   React.useEffect(() => {
@@ -61,6 +68,27 @@ export function MobileNavSheet({ groups, siteName, logo }: MobileNavSheetProps) 
           </SheetTitle>
         </SheetHeader>
         <ScrollArea className="h-[calc(100vh-65px)]">
+          {tabs.length > 0 && (
+            <div className="px-4 pt-4 pb-2 flex flex-col gap-1 border-b border-[var(--bd-border)]">
+              {tabs.map((tab) => {
+                const isActive = currentPath === tab.href || currentPath.startsWith(tab.href + "/");
+                return (
+                  <a
+                    key={tab.href}
+                    href={tab.href}
+                    className={cn(
+                      "px-3 py-2 text-sm font-medium rounded-lg transition-colors",
+                      isActive
+                        ? "text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-950/50"
+                        : "text-[var(--bd-text-secondary)] hover:text-[var(--bd-text)] hover:bg-[var(--bd-bg-subtle)]"
+                    )}
+                  >
+                    {tab.label}
+                  </a>
+                );
+              })}
+            </div>
+          )}
           <div className="px-2 py-4">
             <DocsSidebar groups={groups} />
           </div>

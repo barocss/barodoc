@@ -49,6 +49,11 @@ export interface BarodocConfig {
   
   navigation: BarodocNavItem[];
   
+  tabs?: {
+    label: string;
+    href: string;
+  }[];
+
   topbar?: {
     github?: string;
     discord?: string;
