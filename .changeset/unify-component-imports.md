@@ -1,6 +1,6 @@
 ---
 "@barodoc/theme-docs": minor
-"@barodoc/barodoc": patch
+"barodoc": patch
 ---
 
 Unify all component imports to use `@barodoc/theme-docs` instead of deep sub-paths
