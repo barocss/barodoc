@@ -1,5 +1,13 @@
 # @barodoc/plugin-analytics
 
+## 8.0.0
+
+### Patch Changes
+
+- Updated dependencies [27db93c]
+- Updated dependencies [27db93c]
+  - @barodoc/core@8.0.0
+
 ## 7.0.0
 
 ### Patch Changes

@@ -1,5 +1,26 @@
 # @barodoc/core
 
+## 8.0.0
+
+### Minor Changes
+
+- 27db93c: Add multi-section docs and standalone pages support.
+
+  - **Multiple sections**: Add `sections` config to create additional doc sections (e.g. `/help/*`, `/guides/*`) each with independent sidebar navigation.
+  - **Standalone pages**: Create `pages/` directory for sidebar-free content pages (e.g. `/about`, `/pricing`) using a single-column article layout.
+  - **Section-aware sidebar**: Sidebar and breadcrumbs dynamically adapt to the current section context.
+  - **CLI root fix**: Fix project root detection in `serve` and `build` commands so `barodoc.config.json` and content directories are correctly resolved.
+  - **Dev server SSR fix**: Use targeted SSR noExternal for `@barodoc/*` packages instead of blanket `true` to prevent CJS/ESM errors in dev mode.
+
+### Patch Changes
+
+- 27db93c: Fix plugin build:done hook dispatch and plugin output issues.
+
+  - **Core integration**: Add `astro:build:start` and `astro:build:done` hooks to correctly dispatch plugin lifecycle hooks.
+  - **OG Image plugin**: Fix hook signature, output directory, and font loading (TTF via Google Fonts API).
+  - **LLMs-TXT plugin**: Fix content scanning to find all markdown files recursively.
+  - **RSS plugin**: Refactor to use static endpoint with virtual module config, eliminating `src/pages` file generation.
+
 ## 7.0.0
 
 ### Minor Changes

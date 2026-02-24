@@ -1,5 +1,33 @@
 # barodoc
 
+## 8.0.0
+
+### Minor Changes
+
+- 27db93c: Add multi-section docs and standalone pages support.
+
+  - **Multiple sections**: Add `sections` config to create additional doc sections (e.g. `/help/*`, `/guides/*`) each with independent sidebar navigation.
+  - **Standalone pages**: Create `pages/` directory for sidebar-free content pages (e.g. `/about`, `/pricing`) using a single-column article layout.
+  - **Section-aware sidebar**: Sidebar and breadcrumbs dynamically adapt to the current section context.
+  - **CLI root fix**: Fix project root detection in `serve` and `build` commands so `barodoc.config.json` and content directories are correctly resolved.
+  - **Dev server SSR fix**: Use targeted SSR noExternal for `@barodoc/*` packages instead of blanket `true` to prevent CJS/ESM errors in dev mode.
+
+### Patch Changes
+
+- Updated dependencies [27db93c]
+- Updated dependencies [27db93c]
+  - @barodoc/core@8.0.0
+  - @barodoc/theme-docs@8.0.0
+  - @barodoc/plugin-og-image@7.0.0
+  - @barodoc/plugin-llms-txt@8.0.0
+  - @barodoc/plugin-rss@8.0.0
+  - @barodoc/plugin-analytics@8.0.0
+  - @barodoc/plugin-docsearch@8.0.0
+  - @barodoc/plugin-openapi@8.0.0
+  - @barodoc/plugin-pwa@8.0.0
+  - @barodoc/plugin-search@8.0.0
+  - @barodoc/plugin-sitemap@8.0.0
+
 ## 7.2.1
 
 ### Patch Changes
