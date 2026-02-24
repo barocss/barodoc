@@ -22,6 +22,7 @@ const blogCollection = defineCollection({
     excerpt: z.string().optional(),
     date: z.coerce.date().optional(),
     author: z.string().optional(),
+    avatar: z.string().optional(),
     image: z.string().optional(),
     tags: z.array(z.string()).optional(),
   }),

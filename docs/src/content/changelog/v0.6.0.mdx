@@ -1,0 +1,22 @@
+---
+version: "0.6.0"
+date: 2026-02-24
+title: "Multi-spec OpenAPI, Author Avatars & Header Tabs"
+---
+
+### New Features
+
+- **Multiple OpenAPI specs** — `specFile` now accepts an array of spec entries, each with its own `basePath`, `baseUrl`, and `groupBy`. Perfect for projects with separate public, admin, and webhook APIs.
+- **Author avatars in blog** — Blog posts now support an `avatar` field in frontmatter. Avatars appear on both the blog index and individual post pages.
+- **Header tabs navigation** — New `tabs` config option adds top-level navigation links (Docs, Blog, API, Changelog) in the header, visible on both desktop and mobile.
+
+### Improvements
+
+- **Content structure guide** — Comprehensive documentation covering how Docs, Blog, API Reference, and Changelog content types work together.
+- **OpenAPI plugin docs** — Expanded with quick start guide, multi-spec examples, and full options reference.
+- **Configuration guide** — Added `tabs` configuration documentation.
+
+### Bug Fixes
+
+- Fixed code copy button styling broken on blog pages (missing `CodeCopy` component in `BlogLayout`).
+- Fixed Callout component import path in MDX files.

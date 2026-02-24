@@ -1,10 +1,13 @@
 ---
 title: OpenAPI 플러그인
 description: OpenAPI/Swagger 스펙에서 API 문서를 자동 생성
+tags: [api, openapi, swagger, plugin]
+related: [guides/content-structure, components/api-reference]
 ---
 import { ParamField, ParamFieldGroup } from "@barodoc/theme-docs/components/mdx/ParamField.tsx";
+import Callout from "@barodoc/theme-docs/components/mdx/Callout.astro";
 
-OpenAPI 플러그인은 OpenAPI (Swagger) 스펙 파일에서 API 문서 페이지를 자동으로 생성합니다. 문서에서 직접 엔드포인트를 테스트할 수 있는 인터랙티브 API Playground가 포함됩니다.
+OpenAPI 플러그인은 OpenAPI (Swagger) 스펙 파일을 읽어서 API 문서 페이지를 자동으로 생성합니다. 파라미터 테이블, 응답 예제, cURL 스니펫, 그리고 엔드포인트를 바로 테스트할 수 있는 인터랙티브 플레이그라운드까지 포함됩니다.
 
 ## 설치
 
@@ -12,9 +15,18 @@ OpenAPI 플러그인은 OpenAPI (Swagger) 스펙 파일에서 API 문서 페이�
 pnpm add @barodoc/plugin-openapi@latest
 ```
 
-## 설정
+## 빠른 시작
 
-`barodoc.config.json`에 플러그인을 추가합니다:
+1. 프로젝트 루트에 OpenAPI 스펙 파일을 배치합니다:
+
+```
+my-docs/
+├── openapi.yaml          ← 스펙 파일
+├── barodoc.config.json
+└── src/content/docs/...
+```
+
+2. `barodoc.config.json`에 플러그인을 추가합니다:
 
 ```json
 {
@@ -30,75 +42,208 @@ pnpm add @barodoc/plugin-openapi@latest
 }
 ```
 
-## 스펙 파일
-
-OpenAPI 스펙 파일 (YAML 또는 JSON)을 docs 루트 디렉토리에 배치합니다:
-
-```
-docs/
-├── openapi.yaml    ← 스펙 파일
-├── barodoc.config.json
-└── src/
-```
-
-OpenAPI 3.0+ 스펙을 지원합니다. 경로, 오퍼레이션, 파라미터, 요청 본문, 응답 스키마, 예제를 읽습니다.
-
-## 생성되는 결과물
-
-플러그인은 태그(또는 경로)별로 그룹화된 MDX 페이지를 생성합니다. 각 페이지에는 다음이 포함됩니다:
-
-- **엔드포인트 헤더**: 메서드 배지, 경로, 설명
-- **엔드포인트 목차**: 상단에서 빠른 네비게이션
-- **파라미터 테이블**: 이름, 타입, 필수 여부, enum 값
-- **요청 본문 스키마**: 필드 설명 포함
-- **응답 예제**: 스키마에서 자동 생성
-- **cURL 요청 예제**
-- **인터랙티브 API Playground** (`playground: true` 설정 시)
-
-## API Playground 기능
-
-생성된 Playground는 다음을 지원합니다:
-
-- **다중 인증 방식**: Bearer Token, API Key, Basic Auth
-- **Enum 드롭다운**: enum 값이 있는 파라미터는 `<select>` 드롭다운으로 렌더링
-- **JSON 본문 유효성 검증**: 전송 전 요청 본문 검증
-- **코드 스니펫**: cURL, JavaScript, Python, Node.js
-- **응답 인스펙터**: JSON 구문 강조, 헤더, 상태, 시간, 크기 표시
-- **요청 히스토리**: 최근 5건의 요청을 IndexedDB에 저장
-
-## 네비게이션
-
-생성된 페이지를 네비게이션에 추가합니다:
+3. 생성된 페이지를 네비게이션에 추가합니다:
 
 ```json
 {
   "navigation": [
     {
       "group": "API Reference",
-      "pages": ["api/pet", "api/store", "api/user"]
+      "pages": ["api/users", "api/auth", "api/billing"]
     }
   ]
 }
 ```
 
-페이지 슬러그는 스펙의 태그 이름을 소문자로 변환하고 하이픈으로 연결한 값입니다.
+페이지 슬러그는 스펙의 **태그 이름**에서 파생됩니다 — 소문자로 변환하고 하이픈으로 연결합니다. 예를 들어 `User Management` 태그는 `api/user-management`이 됩니다.
 
-## 옵션
+4. (선택) 빠른 접근을 위한 탭 추가:
+
+```json
+{
+  "tabs": [
+    { "label": "Docs", "href": "/docs/introduction" },
+    { "label": "API", "href": "/docs/api/users" }
+  ]
+}
+```
+
+## 동작 원리
+
+빌드 시 플러그인이 수행하는 작업:
+
+1. OpenAPI 3.0+ 스펙 파일(YAML 또는 JSON)을 읽습니다
+2. 엔드포인트를 `tags` (또는 `paths`) 기준으로 그룹화합니다
+3. `src/content/docs/{basePath}/` 에 `.mdx` 파일을 생성합니다
+4. 각 파일에 API 컴포넌트와 플레이그라운드 임포트가 포함됩니다
+
+생성된 페이지는 일반 문서 페이지와 동일합니다 — 사이드바에 표시되고, 검색을 지원하며, 같은 테마를 공유합니다.
+
+## 여러 API 스펙 사용
+
+프로젝트에 여러 API가 있는 경우(예: 공개 API, 관리자 API, 웹훅), `specFile`에 배열을 전달합니다:
+
+```json
+{
+  "plugins": [
+    ["@barodoc/plugin-openapi", {
+      "specFile": [
+        {
+          "file": "api/public.yaml",
+          "basePath": "api/public",
+          "baseUrl": "https://api.example.com/v1"
+        },
+        {
+          "file": "api/admin.yaml",
+          "basePath": "api/admin",
+          "baseUrl": "https://admin.example.com"
+        },
+        {
+          "file": "api/webhooks.yaml",
+          "basePath": "api/webhooks",
+          "groupBy": "paths"
+        }
+      ],
+      "playground": true
+    }]
+  ]
+}
+```
+
+각 항목은 자체 `basePath` 아래에 별도의 페이지 세트를 생성합니다. 네비게이션에도 따로 추가합니다:
+
+```json
+{
+  "navigation": [
+    {
+      "group": "Public API",
+      "pages": ["api/public/users", "api/public/products"]
+    },
+    {
+      "group": "Admin API",
+      "pages": ["api/admin/dashboard", "api/admin/settings"]
+    },
+    {
+      "group": "Webhooks",
+      "pages": ["api/webhooks/events"]
+    }
+  ]
+}
+```
+
+<Callout type="info">
+배열을 사용할 때 각 항목에서 `basePath`, `baseUrl`, `groupBy`를 개별적으로 재정의할 수 있습니다. 최상위 값이 기본값으로 사용됩니다.
+</Callout>
+
+### 여러 스펙을 사용할 때의 프로젝트 구조
+
+```
+my-docs/
+├── api/
+│   ├── public.yaml        ← 공개 API 스펙
+│   ├── admin.yaml         ← 관리자 API 스펙
+│   └── webhooks.yaml      ← 웹훅 스펙
+├── barodoc.config.json
+└── src/content/docs/
+    ├── ko/
+    │   └── ...            ← 문서
+    └── api/               ← 자동 생성 (수정 금지)
+        ├── public/
+        │   ├── users.mdx
+        │   └── products.mdx
+        ├── admin/
+        │   ├── dashboard.mdx
+        │   └── settings.mdx
+        └── webhooks/
+            └── events.mdx
+```
+
+<Callout type="warning">
+`src/content/docs/{basePath}/` 아래의 파일은 **자동 생성**되며 매 빌드마다 덮어쓰여집니다. 직접 편집하지 말고, OpenAPI 스펙 파일을 수정하세요.
+</Callout>
+
+## 생성되는 결과물
+
+각 생성된 페이지에 포함되는 내용:
+
+| 섹션 | 설명 |
+|------|------|
+| **API 개요** | Base URL, 콘텐츠 타입, 스펙 버전 |
+| **엔드포인트 목차** | 페이지 내 모든 엔드포인트 빠른 이동 |
+| **엔드포인트 헤더** | 메서드 배지 (GET/POST/...), 경로, 요약 |
+| **파라미터** | 이름, 타입, 필수/선택, 설명, enum 값 |
+| **요청 본문** | 콘텐츠 타입, 필드 스키마 및 설명 |
+| **응답** | 상태 코드, 설명, 자동 생성된 JSON 예제 |
+| **cURL 예제** | 바로 복사 가능한 요청 예제 |
+| **API Playground** | 엔드포인트를 바로 테스트할 수 있는 인터랙티브 폼 |
+
+## API Playground
+
+`playground: true` (기본값)로 설정하면 각 엔드포인트에 인터랙티브 플레이그라운드가 생성됩니다:
+
+- **인증** — Bearer Token, API Key (헤더/쿼리), Basic Auth
+- **파라미터 입력** — 텍스트 필드, enum 드롭다운, 필수 필드 유효성 검증
+- **요청 본문 편집기** — 자동 생성된 예제 본문이 포함된 JSON 편집기
+- **코드 스니펫** — cURL, JavaScript (fetch), Python (requests), Node.js
+- **응답 뷰어** — JSON 구문 강조, 헤더, 상태, 응답 시간, 크기
+- **요청 히스토리** — 최근 5건의 요청을 IndexedDB에 저장하여 빠른 재테스트
+
+`playground: false`로 설정하면 인터랙티브 폼 없이 문서 전용 페이지를 생성합니다.
+
+## 옵션 레퍼런스
+
+### 단일 스펙 (string)
 
 <ParamFieldGroup>
   <ParamField name="specFile" type="string" required>
-    docs 루트 기준 OpenAPI 스펙 파일 경로 (YAML 또는 JSON)
+    OpenAPI 스펙 파일 경로 (YAML 또는 JSON), 프로젝트 루트 기준 상대 경로.
   </ParamField>
   <ParamField name="basePath" type="string">
-    생성될 API 문서 페이지의 기본 경로. 기본값: `"api"`
+    `src/content/docs/` 내에서 생성될 페이지 디렉토리. 기본값: `"api"`
   </ParamField>
   <ParamField name="groupBy" type="'tags' | 'paths'">
-    엔드포인트 그룹화 방식. 기본값: `"tags"`
+    엔드포인트를 페이지로 그룹화하는 방식. `"tags"`는 태그당 하나의 페이지를 생성하고, `"paths"`는 모든 엔드포인트를 단일 페이지로 그룹화합니다. 기본값: `"tags"`
   </ParamField>
   <ParamField name="baseUrl" type="string">
-    Playground에서 API 요청에 사용할 기본 URL. 기본값: `""`
+    플레이그라운드와 cURL 예제에서 엔드포인트 경로 앞에 붙는 기본 URL. 기본값: `""`
   </ParamField>
   <ParamField name="playground" type="boolean">
-    인터랙티브 API Playground 활성화 여부. 기본값: `true`
+    각 엔드포인트에 인터랙티브 API Playground를 활성화합니다. 기본값: `true`
   </ParamField>
 </ParamFieldGroup>
+
+### 여러 스펙 (array)
+
+`specFile`이 배열일 때 각 항목에서 지원하는 속성:
+
+<ParamFieldGroup>
+  <ParamField name="file" type="string" required>
+    OpenAPI 스펙 파일 경로, 프로젝트 루트 기준 상대 경로.
+  </ParamField>
+  <ParamField name="basePath" type="string">
+    이 스펙의 생성 페이지 디렉토리. 최상위 `basePath`를 재정의합니다.
+  </ParamField>
+  <ParamField name="groupBy" type="'tags' | 'paths'">
+    이 스펙의 그룹화 방식. 최상위 `groupBy`를 재정의합니다.
+  </ParamField>
+  <ParamField name="baseUrl" type="string">
+    이 스펙의 플레이그라운드 기본 URL. 최상위 `baseUrl`을 재정의합니다.
+  </ParamField>
+</ParamFieldGroup>
+
+## 지원하는 스펙 기능
+
+플러그인이 OpenAPI 스펙에서 읽어오는 항목:
+
+- `info` — 제목, 버전, 설명 (API 개요에 사용)
+- `paths` — HTTP 메서드별 모든 오퍼레이션
+- `parameters` — query, path, header, cookie 파라미터와 타입, 설명
+- `requestBody` — 콘텐츠 타입과 JSON 스키마
+- `responses` — 상태 코드, 설명, 응답 스키마
+- `components/schemas` — 중첩 스키마에 대한 `$ref` 해석
+- `tags` — 엔드포인트를 페이지로 그룹화하는 데 사용
+- enum 값, 포맷 힌트 (`date`, `email`, `int64`), 중첩 객체
+
+<Callout type="tip">
+스펙이 완전하지 않아도 됩니다 — 설명, 스키마, 예제가 없어도 플러그인이 합리적인 기본값을 생성합니다.
+</Callout>

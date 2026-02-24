@@ -31,6 +31,7 @@ const readTime = readingTime(post.body ?? "");
   description={post.data.description || post.data.excerpt}
   date={post.data.date ? new Date(post.data.date) : undefined}
   author={post.data.author}
+  avatar={post.data.avatar}
   image={post.data.image}
   tags={post.data.tags}
   readingTime={readTime.text}

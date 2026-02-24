@@ -73,6 +73,25 @@ difficulty: intermediate
 }
 ```
 
+## 탭 (tabs)
+
+헤더에 최상위 네비게이션 링크를 추가하여 콘텐츠 섹션(Docs, Blog, API, Changelog 등) 간 전환할 수 있습니다:
+
+```json
+{
+  "tabs": [
+    { "label": "Docs", "href": "/docs/introduction" },
+    { "label": "Blog", "href": "/blog" },
+    { "label": "API Reference", "href": "/docs/api/pet" },
+    { "label": "Changelog", "href": "/changelog" }
+  ]
+}
+```
+
+각 탭은 `label`(표시 텍스트)과 `href`(링크 대상)를 가집니다. 현재 URL에 따라 활성 탭이 하이라이트됩니다. 탭은 데스크톱 헤더와 모바일 네비게이션 드로어에 표시됩니다. 선택 사항 — 생략하면 로고와 topbar 아이콘만 표시합니다.
+
+자세한 내용은 [Content Structure](/docs/guides/content-structure)에서 각 콘텐츠 타입이 어떻게 연결되는지 확인하세요.
+
 ## 네비게이션
 
 사이드바 구조를 정의합니다:
@@ -172,6 +191,12 @@ UI 요소의 border radius (예: `"0.5rem"`, `"8px"`).
   "lastUpdated": true
 }
 ```
+
+## 페이지 기여자
+
+문서 페이지 하단에 기여자가 자동으로 표시됩니다 — 별도 설정이 필요 없습니다. Barodoc이 Git 히스토리를 읽어 가장 최근 수정자의 아바타를 보여주고, 추가 기여자가 있으면 **+N** 배지로 표시합니다. 배지에 마우스를 올리면 이름이 표시됩니다.
+
+아바타는 GitHub (noreply 이메일) 또는 Gravatar에서 가져옵니다. 이 기능은 프로젝트가 커밋 히스토리가 있는 Git 저장소여야 합니다. 자세한 내용은 [콘텐츠 구조](/docs/guides/content-structure)를 참고하세요.
 
 ## announcement
 

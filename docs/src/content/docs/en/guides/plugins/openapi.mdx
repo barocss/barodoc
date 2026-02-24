@@ -1,10 +1,13 @@
 ---
 title: OpenAPI Plugin
 description: Generate API documentation from OpenAPI/Swagger specs
+tags: [api, openapi, swagger, plugin]
+related: [guides/content-structure, components/api-reference]
 ---
 import { ParamField, ParamFieldGroup } from "@barodoc/theme-docs/components/mdx/ParamField.tsx";
+import Callout from "@barodoc/theme-docs/components/mdx/Callout.astro";
 
-The OpenAPI plugin automatically generates API documentation pages from an OpenAPI (Swagger) specification file. It includes an interactive API Playground for testing endpoints directly from the docs.
+The OpenAPI plugin reads your OpenAPI (Swagger) spec files and auto-generates full API documentation pages — complete with parameter tables, response examples, cURL snippets, and an interactive playground for testing endpoints live.
 
 ## Installation
 
@@ -12,9 +15,18 @@ The OpenAPI plugin automatically generates API documentation pages from an OpenA
 pnpm add @barodoc/plugin-openapi@latest
 ```
 
-## Configuration
+## Quick Start
 
-Add the plugin to `barodoc.config.json`:
+1. Place your OpenAPI spec file in the project root:
+
+```
+my-docs/
+├── openapi.yaml          ← your spec
+├── barodoc.config.json
+└── src/content/docs/...
+```
+
+2. Add the plugin to `barodoc.config.json`:
 
 ```json
 {
@@ -30,75 +42,208 @@ Add the plugin to `barodoc.config.json`:
 }
 ```
 
-## Spec File
-
-Place your OpenAPI spec file (YAML or JSON) in the docs root directory:
-
-```
-docs/
-├── openapi.yaml    ← spec file
-├── barodoc.config.json
-└── src/
-```
-
-The plugin supports OpenAPI 3.0+ specs. It reads paths, operations, parameters, request bodies, response schemas, and examples.
-
-## Generated Output
-
-The plugin generates MDX pages grouped by tags (or paths). Each page includes:
-
-- **Endpoint header** with method badge, path, and description
-- **Endpoint TOC** at the top for quick navigation
-- **Parameters table** with name, type, required status, and enum values
-- **Request body schema** with field descriptions
-- **Response examples** auto-generated from schemas
-- **cURL request examples**
-- **Interactive API Playground** (when `playground: true`)
-
-## API Playground Features
-
-The generated playground supports:
-
-- **Multiple auth types**: Bearer Token, API Key, and Basic Auth
-- **Enum dropdowns**: Parameters with enum values render as `<select>` dropdowns
-- **JSON body validation**: Request body is validated before sending
-- **Code snippets**: cURL, JavaScript, Python, and Node.js
-- **Response inspector**: Body with JSON syntax highlighting, headers, status, time, and size
-- **Request history**: Last 5 requests stored in IndexedDB
-
-## Navigation
-
-Add the generated pages to your navigation:
+3. Add the generated pages to your navigation:
 
 ```json
 {
   "navigation": [
     {
       "group": "API Reference",
-      "pages": ["api/pet", "api/store", "api/user"]
+      "pages": ["api/users", "api/auth", "api/billing"]
     }
   ]
 }
 ```
 
-Page slugs match the tag names from your spec, lowercased and hyphenated.
+Page slugs are derived from your spec's **tag names** — lowercased and hyphenated. For example, a tag named `User Management` becomes `api/user-management`.
 
-## Options
+4. (Optional) Add a tab for quick access:
+
+```json
+{
+  "tabs": [
+    { "label": "Docs", "href": "/docs/introduction" },
+    { "label": "API", "href": "/docs/api/users" }
+  ]
+}
+```
+
+## How It Works
+
+At build time, the plugin:
+
+1. Reads your OpenAPI 3.0+ spec file (YAML or JSON)
+2. Groups endpoints by `tags` (or `paths`)
+3. Generates `.mdx` files into `src/content/docs/{basePath}/`
+4. Each file includes imports for API components and playground
+
+The generated pages are regular docs pages — they appear in the sidebar, support search, and share the same theme.
+
+## Multiple API Specs
+
+If your project has multiple APIs (e.g. public API, admin API, webhooks), pass an array to `specFile`:
+
+```json
+{
+  "plugins": [
+    ["@barodoc/plugin-openapi", {
+      "specFile": [
+        {
+          "file": "api/public.yaml",
+          "basePath": "api/public",
+          "baseUrl": "https://api.example.com/v1"
+        },
+        {
+          "file": "api/admin.yaml",
+          "basePath": "api/admin",
+          "baseUrl": "https://admin.example.com"
+        },
+        {
+          "file": "api/webhooks.yaml",
+          "basePath": "api/webhooks",
+          "groupBy": "paths"
+        }
+      ],
+      "playground": true
+    }]
+  ]
+}
+```
+
+Each entry generates its own set of pages under its own `basePath`. Add them to navigation separately:
+
+```json
+{
+  "navigation": [
+    {
+      "group": "Public API",
+      "pages": ["api/public/users", "api/public/products"]
+    },
+    {
+      "group": "Admin API",
+      "pages": ["api/admin/dashboard", "api/admin/settings"]
+    },
+    {
+      "group": "Webhooks",
+      "pages": ["api/webhooks/events"]
+    }
+  ]
+}
+```
+
+<Callout type="info">
+When using an array, each entry can override `basePath`, `baseUrl`, and `groupBy` individually. The top-level values serve as defaults.
+</Callout>
+
+### Project structure with multiple specs
+
+```
+my-docs/
+├── api/
+│   ├── public.yaml        ← Public API spec
+│   ├── admin.yaml         ← Admin API spec
+│   └── webhooks.yaml      ← Webhooks spec
+├── barodoc.config.json
+└── src/content/docs/
+    ├── en/
+    │   └── ...            ← your docs
+    └── api/               ← auto-generated (don't edit)
+        ├── public/
+        │   ├── users.mdx
+        │   └── products.mdx
+        ├── admin/
+        │   ├── dashboard.mdx
+        │   └── settings.mdx
+        └── webhooks/
+            └── events.mdx
+```
+
+<Callout type="warning">
+Files under `src/content/docs/{basePath}/` are **auto-generated** and overwritten on each build. Don't edit them by hand — modify your OpenAPI spec instead.
+</Callout>
+
+## Generated Output
+
+Each generated page includes:
+
+| Section | Description |
+|---------|-------------|
+| **API Overview** | Base URL, content type, and spec version |
+| **Endpoint TOC** | Quick-nav list of all endpoints on the page |
+| **Endpoint Header** | Method badge (GET/POST/...), path, summary |
+| **Parameters** | Name, type, required/optional, description, enum values |
+| **Request Body** | Content type, field schema with descriptions |
+| **Responses** | Status codes with descriptions and auto-generated JSON examples |
+| **cURL Example** | Ready-to-copy request example |
+| **API Playground** | Interactive form to test the endpoint live |
+
+## API Playground
+
+When `playground: true` (default), each endpoint gets an interactive playground:
+
+- **Authentication** — Bearer Token, API Key (header/query), Basic Auth
+- **Parameter inputs** — Text fields, enum dropdowns, required field validation
+- **Request body editor** — JSON editor with auto-generated example body
+- **Code snippets** — cURL, JavaScript (fetch), Python (requests), Node.js
+- **Response viewer** — Syntax-highlighted JSON body, headers, status, timing, size
+- **Request history** — Last 5 requests stored in IndexedDB for quick re-testing
+
+Set `playground: false` to generate documentation-only pages without the interactive form.
+
+## Options Reference
+
+### Single spec (string)
 
 <ParamFieldGroup>
   <ParamField name="specFile" type="string" required>
-    Path to the OpenAPI spec file (YAML or JSON), relative to the docs root
+    Path to the OpenAPI spec file (YAML or JSON), relative to the project root.
   </ParamField>
   <ParamField name="basePath" type="string">
-    Base path for generated API doc pages. Default: `"api"`
+    Directory for generated pages inside `src/content/docs/`. Default: `"api"`
   </ParamField>
   <ParamField name="groupBy" type="'tags' | 'paths'">
-    Group endpoints by tags or paths. Default: `"tags"`
+    How to group endpoints into pages. `"tags"` creates one page per tag, `"paths"` groups all endpoints into a single page. Default: `"tags"`
   </ParamField>
   <ParamField name="baseUrl" type="string">
-    Base URL for API requests in the playground. Default: `""`
+    Base URL prepended to endpoint paths in the playground and cURL examples. Default: `""`
   </ParamField>
   <ParamField name="playground" type="boolean">
-    Enable the interactive API Playground. Default: `true`
+    Enable the interactive API Playground on each endpoint. Default: `true`
   </ParamField>
 </ParamFieldGroup>
+
+### Multiple specs (array)
+
+When `specFile` is an array, each entry supports:
+
+<ParamFieldGroup>
+  <ParamField name="file" type="string" required>
+    Path to the OpenAPI spec file, relative to the project root.
+  </ParamField>
+  <ParamField name="basePath" type="string">
+    Directory for this spec's generated pages. Overrides the top-level `basePath`.
+  </ParamField>
+  <ParamField name="groupBy" type="'tags' | 'paths'">
+    Grouping strategy for this spec. Overrides the top-level `groupBy`.
+  </ParamField>
+  <ParamField name="baseUrl" type="string">
+    Base URL for this spec's playground. Overrides the top-level `baseUrl`.
+  </ParamField>
+</ParamFieldGroup>
+
+## Supported Spec Features
+
+The plugin reads the following from your OpenAPI spec:
+
+- `info` — title, version, description (used in API overview)
+- `paths` — all operations with their HTTP methods
+- `parameters` — query, path, header, cookie params with types and descriptions
+- `requestBody` — content types and JSON schema
+- `responses` — status codes, descriptions, and response schemas
+- `components/schemas` — `$ref` resolution for nested schemas
+- `tags` — used for grouping endpoints into pages
+- Enum values, format hints (`date`, `email`, `int64`), and nested objects
+
+<Callout type="tip">
+Your spec doesn't need to be complete — the plugin gracefully handles missing descriptions, schemas, or examples by generating sensible defaults.
+</Callout>

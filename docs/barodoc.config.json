@@ -18,7 +18,8 @@
   "tabs": [
     { "label": "Docs", "href": "/docs/introduction" },
     { "label": "Blog", "href": "/blog" },
-    { "label": "API Reference", "href": "/docs/api/pet" }
+    { "label": "API Reference", "href": "/docs/api/pet" },
+    { "label": "Changelog", "href": "/changelog" }
   ],
   "navigation": [
     {
