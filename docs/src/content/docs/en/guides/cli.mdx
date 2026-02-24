@@ -8,6 +8,40 @@ difficulty: beginner
 
 Barodoc ships a CLI (`barodoc`) for developing, building, and validating your documentation.
 
+## The `[dir]` argument
+
+Most commands accept an optional `[dir]` argument that specifies which directory contains your documentation content.
+
+```bash
+barodoc serve [dir]
+barodoc build [dir]
+barodoc preview [dir]
+```
+
+**If omitted**, Barodoc auto-detects the content directory by looking for these folders in order:
+
+1. `docs/`
+2. `content/`
+3. `src/content/docs/`
+
+If none are found, it defaults to `docs/`.
+
+This means the following commands are equivalent when a `docs/` directory exists:
+
+```bash
+barodoc serve docs
+barodoc serve          # auto-detects docs/
+```
+
+You can use any directory name for your content:
+
+```bash
+barodoc serve wiki         # uses wiki/ as content directory
+barodoc build knowledge    # uses knowledge/ as content directory
+```
+
+All commands must be run from the project root — the directory containing `barodoc.config.json`.
+
 ## serve
 
 Start a development server with hot reload:
