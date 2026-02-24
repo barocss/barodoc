@@ -52,6 +52,8 @@ npx barodoc serve
 
 Opens the site (e.g. `http://localhost:4321`). The CLI creates a temporary Astro project under `.barodoc/` and runs the dev server. You edit only `docs/` and `barodoc.config.json`.
 
+The `[dir]` argument is optional — Barodoc auto-detects `docs/` if it exists. You can also specify a custom content directory: `npx barodoc serve wiki`. See [CLI Commands](/docs/guides/cli#the-dir-argument) for details.
+
 ## Build
 
 ```bash
