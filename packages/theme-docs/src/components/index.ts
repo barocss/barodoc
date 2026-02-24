@@ -29,6 +29,11 @@ export { ImageZoom } from "./mdx/ImageZoom.tsx";
 export { Video } from "./mdx/Video.tsx";
 export { ApiPlayground } from "./mdx/ApiPlayground.tsx";
 export { ApiEndpoint } from "./mdx/ApiEndpoint.tsx";
+export { Card, CardGroup } from "./mdx/Card.tsx";
+export { CodeItem } from "./mdx/CodeItem.tsx";
+export { ApiParams } from "./mdx/ApiParams.tsx";
+export { ApiParam } from "./mdx/ApiParam.tsx";
+export { ApiResponse } from "./mdx/ApiResponse.tsx";
 
 export { VersionSwitcher } from "./VersionSwitcher.tsx";
 
