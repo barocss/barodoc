@@ -1,0 +1,20 @@
+---
+version: "0.7.0"
+date: 2026-02-24
+title: "Unified Component Imports & CodeGroup Fix"
+---
+
+### New Features
+
+- **Unified component imports** — All MDX components (`Callout`, `Card`, `CardGroup`, `CodeItem`, `ApiParams`, `ApiParam`, `ApiResponse`) can now be imported directly from `@barodoc/theme-docs` barrel export instead of deep paths.
+- **Separated theme entry point** — New `@barodoc/theme-docs/theme` entry point isolates server-side Astro integration from client-safe component exports, preventing Tailwind native binary from leaking into client bundles.
+
+### Improvements
+
+- **Page contributors** — Documentation pages now display the most recent contributor avatar with a `+N` badge when multiple contributors exist.
+- **Changelog tab** — Added dedicated Changelog section accessible from the header navigation.
+
+### Bug Fixes
+
+- **CodeGroup tab titles** — Fixed issue where CodeGroup component only showed "Tab 1" instead of the actual tab titles (JavaScript, Python, npm, etc.). The component now correctly uses Astro's native `<script>` tag for client-side DOM interactivity.
+- **Client build stability** — Resolved Tailwind native binary (`@tailwindcss/oxide`) being pulled into client bundles by restructuring package exports.
