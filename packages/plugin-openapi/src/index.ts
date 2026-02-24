@@ -4,8 +4,15 @@ import fs from "node:fs";
 import path from "node:path";
 import { parse as parseYaml } from "yaml";
 
+export interface OpenApiSpecEntry {
+  file: string;
+  basePath?: string;
+  groupBy?: "tags" | "paths";
+  baseUrl?: string;
+}
+
 export interface OpenApiPluginOptions {
-  specFile: string;
+  specFile: string | OpenApiSpecEntry[];
   basePath?: string;
   groupBy?: "tags" | "paths";
   baseUrl?: string;
@@ -300,38 +307,120 @@ function generateMdxForOperation(
   return lines.join("\n");
 }
 
+function processSpec(
+  root: string,
+  entry: { file: string; basePath: string; groupBy: string; baseUrl: string },
+  playground: boolean,
+  importBlock: string,
+) {
+  const specPath = path.resolve(root, entry.file);
+
+  if (!fs.existsSync(specPath)) {
+    console.warn(`[plugin-openapi] Spec file not found: ${specPath}`);
+    return;
+  }
+
+  const raw = fs.readFileSync(specPath, "utf-8");
+  const spec: OpenApiSpec = specPath.endsWith(".yaml") || specPath.endsWith(".yml")
+    ? parseYaml(raw)
+    : JSON.parse(raw);
+
+  if (!spec.paths) return;
+
+  const genOpts: GenerateOptions = { playground, baseUrl: entry.baseUrl };
+
+  const pagesDir = path.join(root, "src/content/docs");
+  const apiDir = path.join(pagesDir, entry.basePath.replace(/^\//, ""));
+  fs.mkdirSync(apiDir, { recursive: true });
+
+  const apiOverview = buildApiOverview(spec, entry.baseUrl);
+
+  if (entry.groupBy === "tags") {
+    const tagMap = new Map<string, { method: string; path: string; summary: string }[]>();
+    const tagOps = new Map<string, string[]>();
+
+    for (const [urlPath, methods] of Object.entries(spec.paths)) {
+      for (const [method, op] of Object.entries(methods)) {
+        const tags = op.tags?.length ? op.tags : ["default"];
+        const mdx = generateMdxForOperation(method, urlPath, op, spec, genOpts);
+        for (const tag of tags) {
+          if (!tagMap.has(tag)) tagMap.set(tag, []);
+          if (!tagOps.has(tag)) tagOps.set(tag, []);
+          tagMap.get(tag)!.push({ method: method.toUpperCase(), path: urlPath, summary: op.summary || "" });
+          tagOps.get(tag)!.push(mdx);
+        }
+      }
+    }
+
+    for (const [tag, endpoints] of tagMap) {
+      const slug = tag.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+      const toc = buildEndpointToc(endpoints);
+      const content = [
+        "---",
+        `title: "${tag}"`,
+        `description: "API endpoints for ${tag}"`,
+        "api_reference: true",
+        "---",
+        importBlock,
+        apiOverview,
+        toc,
+        ...tagOps.get(tag)!,
+      ].join("\n");
+      fs.writeFileSync(path.join(apiDir, `${slug}.mdx`), content);
+    }
+  } else {
+    const allOps: string[] = [];
+    const allEndpoints: { method: string; path: string; summary: string }[] = [];
+    for (const [urlPath, methods] of Object.entries(spec.paths)) {
+      for (const [method, op] of Object.entries(methods)) {
+        allOps.push(generateMdxForOperation(method, urlPath, op, spec, genOpts));
+        allEndpoints.push({ method: method.toUpperCase(), path: urlPath, summary: op.summary || "" });
+      }
+    }
+    const toc = buildEndpointToc(allEndpoints);
+    const content = [
+      "---",
+      `title: "API Reference"`,
+      `description: "Auto-generated from OpenAPI spec"`,
+      "api_reference: true",
+      "---",
+      importBlock,
+      apiOverview,
+      toc,
+      ...allOps,
+    ].join("\n");
+    fs.writeFileSync(path.join(apiDir, "index.mdx"), content);
+  }
+}
+
 export default definePlugin<OpenApiPluginOptions>((options) => {
   const {
     specFile,
-    basePath = "/api",
+    basePath = "api",
     groupBy = "tags",
     baseUrl = "",
     playground = true,
   } = options;
 
+  const entries: { file: string; basePath: string; groupBy: string; baseUrl: string }[] =
+    Array.isArray(specFile)
+      ? specFile.map((s) => ({
+          file: s.file,
+          basePath: s.basePath ?? basePath,
+          groupBy: s.groupBy ?? groupBy,
+          baseUrl: s.baseUrl ?? baseUrl,
+        }))
+      : [{ file: specFile, basePath, groupBy, baseUrl }];
+
   return {
     name: "@barodoc/plugin-openapi",
-    astroIntegration: (context) => {
+    astroIntegration: () => {
       const integration: AstroIntegration = {
         name: "@barodoc/plugin-openapi",
         hooks: {
-          "astro:config:setup": ({ injectRoute, config: astroConfig }) => {
+          "astro:config:setup": ({ config: astroConfig }) => {
             const root = astroConfig.root.pathname;
-            const specPath = path.resolve(root, specFile);
 
-            if (!fs.existsSync(specPath)) {
-              console.warn(`[plugin-openapi] Spec file not found: ${specPath}`);
-              return;
-            }
-
-            const raw = fs.readFileSync(specPath, "utf-8");
-            const spec: OpenApiSpec = specPath.endsWith(".yaml") || specPath.endsWith(".yml")
-              ? parseYaml(raw)
-              : JSON.parse(raw);
-
-            if (!spec.paths) return;
-
-            const genOpts: GenerateOptions = { playground, baseUrl };
             const imports: string[] = [];
             imports.push(`import { ApiEndpoint } from "@barodoc/theme-docs/components";`);
             if (playground) {
@@ -339,67 +428,8 @@ export default definePlugin<OpenApiPluginOptions>((options) => {
             }
             const importBlock = imports.join("\n") + "\n";
 
-            const pagesDir = path.join(root, "src/content/docs");
-            const apiDir = path.join(pagesDir, basePath.replace(/^\//, ""));
-            fs.mkdirSync(apiDir, { recursive: true });
-
-            const apiOverview = buildApiOverview(spec, baseUrl);
-
-            if (groupBy === "tags") {
-              const tagMap = new Map<string, { method: string; path: string; summary: string }[]>();
-              const tagOps = new Map<string, string[]>();
-
-              for (const [urlPath, methods] of Object.entries(spec.paths)) {
-                for (const [method, op] of Object.entries(methods)) {
-                  const tags = op.tags?.length ? op.tags : ["default"];
-                  const mdx = generateMdxForOperation(method, urlPath, op, spec, genOpts);
-                  for (const tag of tags) {
-                    if (!tagMap.has(tag)) tagMap.set(tag, []);
-                    if (!tagOps.has(tag)) tagOps.set(tag, []);
-                    tagMap.get(tag)!.push({ method: method.toUpperCase(), path: urlPath, summary: op.summary || "" });
-                    tagOps.get(tag)!.push(mdx);
-                  }
-                }
-              }
-
-              for (const [tag, endpoints] of tagMap) {
-                const slug = tag.toLowerCase().replace(/[^a-z0-9]+/g, "-");
-                const toc = buildEndpointToc(endpoints);
-                const content = [
-                  "---",
-                  `title: "${tag}"`,
-                  `description: "API endpoints for ${tag}"`,
-                  "api_reference: true",
-                  "---",
-                  importBlock,
-                  apiOverview,
-                  toc,
-                  ...tagOps.get(tag)!,
-                ].join("\n");
-                fs.writeFileSync(path.join(apiDir, `${slug}.mdx`), content);
-              }
-            } else {
-              const allOps: string[] = [];
-              const allEndpoints: { method: string; path: string; summary: string }[] = [];
-              for (const [urlPath, methods] of Object.entries(spec.paths)) {
-                for (const [method, op] of Object.entries(methods)) {
-                  allOps.push(generateMdxForOperation(method, urlPath, op, spec, genOpts));
-                  allEndpoints.push({ method: method.toUpperCase(), path: urlPath, summary: op.summary || "" });
-                }
-              }
-              const toc = buildEndpointToc(allEndpoints);
-              const content = [
-                "---",
-                `title: "API Reference"`,
-                `description: "Auto-generated from OpenAPI spec"`,
-                "api_reference: true",
-                "---",
-                importBlock,
-                apiOverview,
-                toc,
-                ...allOps,
-              ].join("\n");
-              fs.writeFileSync(path.join(apiDir, "index.mdx"), content);
+            for (const entry of entries) {
+              processSpec(root, entry, playground, importBlock);
             }
           },
         },

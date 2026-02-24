@@ -27,11 +27,21 @@ if (filePath) {
       for (const line of raw.split("\n")) {
         const [name, email] = line.split("|");
         if (!name || seen.has(email)) continue;
-        const hash = email.trim().toLowerCase();
-        seen.set(email, {
-          name: name.trim(),
-          email: email.trim(),
-          avatarUrl: `https://gravatar.com/avatar/${await computeHash(hash)}?s=64&d=mp`,
+
+        const trimmedEmail = email.trim();
+        const trimmedName = name.trim();
+
+        const noreplyMatch = trimmedEmail.match(
+          /^(\d+\+)?([^@]+)@users\.noreply\.github\.com$/
+        );
+        const avatarUrl = noreplyMatch
+          ? `https://github.com/${noreplyMatch[2]}.png?size=64`
+          : `https://gravatar.com/avatar/${await computeHash(trimmedEmail.toLowerCase())}?s=64&d=mp`;
+
+        seen.set(trimmedEmail, {
+          name: trimmedName,
+          email: trimmedEmail,
+          avatarUrl,
         });
       }
       contributors = Array.from(seen.values());
@@ -55,17 +65,23 @@ async function computeHash(input: string): Promise<string> {
   <div class="bd-contributors">
     <span class="bd-contributors-label">Contributors</span>
     <div class="bd-contributors-avatars">
-      {contributors.map((c) => (
-        <img
-          src={c.avatarUrl}
-          alt={c.name}
-          title={c.name}
-          class="bd-contributor-avatar"
-          loading="lazy"
-          width="28"
-          height="28"
-        />
-      ))}
+      <img
+        src={contributors[0].avatarUrl}
+        alt={contributors[0].name}
+        title={contributors[0].name}
+        class="bd-contributor-avatar"
+        loading="lazy"
+        width="28"
+        height="28"
+      />
+      {contributors.length > 1 && (
+        <span
+          class="bd-contributor-count"
+          title={contributors.slice(1).map((c) => c.name).join(", ")}
+        >
+          +{contributors.length - 1}
+        </span>
+      )}
     </div>
   </div>
 )}

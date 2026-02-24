@@ -74,7 +74,18 @@ const sortedPosts = posts.sort((a, b) => {
                   </p>
                 )}
                 <div class="mt-auto pt-2 flex items-center gap-2 text-xs text-[var(--bd-text-muted)]">
-                  {post.data.author && <span>{post.data.author}</span>}
+                  {post.data.author && (
+                    <span class="flex items-center gap-1.5">
+                      {post.data.avatar && (
+                        <img
+                          src={post.data.avatar}
+                          alt={post.data.author}
+                          class="w-4 h-4 rounded-full object-cover"
+                        />
+                      )}
+                      <span>{post.data.author}</span>
+                    </span>
+                  )}
                   {post.data.author && post.data.date && <span>&middot;</span>}
                   {post.data.date && (
                     <time datetime={new Date(post.data.date).toISOString()}>

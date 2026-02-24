@@ -112,6 +112,25 @@ Override heading and body fonts:
 
 Border radius for UI elements (e.g. `"0.5rem"`, `"8px"`).
 
+### tabs
+
+Add top-level navigation links in the header for switching between content sections (Docs, Blog, API, Changelog, etc.):
+
+```json
+{
+  "tabs": [
+    { "label": "Docs", "href": "/docs/introduction" },
+    { "label": "Blog", "href": "/blog" },
+    { "label": "API Reference", "href": "/docs/api/pet" },
+    { "label": "Changelog", "href": "/changelog" }
+  ]
+}
+```
+
+Each tab has a `label` (display text) and `href` (link target). The active tab is highlighted based on the current URL. Tabs appear on desktop in the header and in the mobile navigation drawer. Optional — omit to show only the logo and topbar icons.
+
+See [Content Structure](/docs/guides/content-structure) for details on how tabs connect different content types.
+
 ### navigation
 
 Define the sidebar navigation structure. Use `group` for the default locale and `group:LOCALE` for translated group names (see [I18n](/docs/guides/i18n)):
@@ -203,6 +222,12 @@ When `true`, shows a git-based "Last updated" timestamp in the page footer:
   "lastUpdated": true
 }
 ```
+
+### Page contributors
+
+Contributors are shown automatically at the bottom of every docs page — no configuration needed. Barodoc reads Git history to display the most recent editor's avatar, with a **+N** badge for additional contributors. Hover the badge to see their names.
+
+Avatars are fetched from GitHub (for noreply emails) or Gravatar. This feature requires the project to be a Git repository with commit history. See [Content Structure](/docs/guides/content-structure) for details.
 
 ### announcement
 
