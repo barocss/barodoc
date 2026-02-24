@@ -1,5 +1,5 @@
 ---
-import { getCollection } from "astro:content";
+import { getCollection, render } from "astro:content";
 import BlogLayout from "../../layouts/BlogLayout.astro";
 import readingTime from "reading-time";
 
@@ -12,7 +12,7 @@ export async function getStaticPaths() {
   }
 
   return posts.map((post) => ({
-    params: { slug: post.slug },
+    params: { slug: post.slug ?? post.id },
     props: { post },
   }));
 }
@@ -22,7 +22,7 @@ interface Props {
 }
 
 const { post } = Astro.props;
-const { Content } = await post.render();
+const { Content } = await render(post);
 const readTime = readingTime(post.body ?? "");
 ---
 

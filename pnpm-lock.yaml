@@ -61,12 +61,54 @@ importers:
 
   packages/barodoc:
     dependencies:
+      '@astrojs/mdx':
+        specifier: ^4.0.0
+        version: 4.3.13(astro@5.17.1(@types/node@22.19.8)(jiti@2.6.1)(lightningcss@1.30.2)(rollup@4.57.1)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.2))
+      '@astrojs/react':
+        specifier: ^4.0.0
+        version: 4.4.2(@types/node@22.19.8)(@types/react-dom@19.2.3(@types/react@19.2.10))(@types/react@19.2.10)(jiti@2.6.1)(lightningcss@1.30.2)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(tsx@4.21.0)(yaml@2.8.2)
       '@barodoc/core':
         specifier: workspace:*
         version: link:../core
+      '@barodoc/plugin-analytics':
+        specifier: workspace:*
+        version: link:../plugin-analytics
+      '@barodoc/plugin-docsearch':
+        specifier: workspace:*
+        version: link:../plugin-docsearch
+      '@barodoc/plugin-llms-txt':
+        specifier: workspace:*
+        version: link:../plugin-llms-txt
+      '@barodoc/plugin-og-image':
+        specifier: workspace:*
+        version: link:../plugin-og-image
+      '@barodoc/plugin-openapi':
+        specifier: workspace:*
+        version: link:../plugin-openapi
+      '@barodoc/plugin-pwa':
+        specifier: workspace:*
+        version: link:../plugin-pwa
+      '@barodoc/plugin-rss':
+        specifier: workspace:*
+        version: link:../plugin-rss
+      '@barodoc/plugin-search':
+        specifier: workspace:*
+        version: link:../plugin-search
+      '@barodoc/plugin-sitemap':
+        specifier: workspace:*
+        version: link:../plugin-sitemap
       '@barodoc/theme-docs':
         specifier: workspace:*
         version: link:../theme-docs
+      '@tailwindcss/typography':
+        specifier: ^0.5.19
+        version: 0.5.19(tailwindcss@4.1.18)
+      '@tailwindcss/vite':
+        specifier: ^4.0.0
+        version: 4.1.18(vite@6.4.1(@types/node@22.19.8)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.21.0)(yaml@2.8.2))
+      astro:
+        specifier: ^5.0.0
+        version: 5.17.1(@types/node@22.19.8)(jiti@2.6.1)(lightningcss@1.30.2)(rollup@4.57.1)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.2)
       cac:
         specifier: ^6.7.14
         version: 6.7.14
@@ -85,6 +127,15 @@ importers:
       picocolors:
         specifier: ^1.1.1
         version: 1.1.1
+      react:
+        specifier: ^19.0.0
+        version: 19.2.4
+      react-dom:
+        specifier: ^19.0.0
+        version: 19.2.4(react@19.2.4)
+      tailwindcss:
+        specifier: ^4.0.0
+        version: 4.1.18
       zod:
         specifier: ^3.24.0
         version: 3.25.76
@@ -407,6 +458,9 @@ importers:
       tailwindcss:
         specifier: ^4.0.0
         version: 4.1.18
+      tsup:
+        specifier: ^8.3.0
+        version: 8.5.1(jiti@2.6.1)(postcss@8.5.6)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.2)
       typescript:
         specifier: ^5.7.0
         version: 5.9.3

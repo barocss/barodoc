@@ -7,11 +7,21 @@ import { getLocalizedNavGroup } from "@barodoc/core";
 interface Props {
   currentPath: string;
   currentLocale?: string;
+  sectionSlug?: string;
 }
 
-const { currentPath, currentLocale = defaultLocale } = Astro.props;
+const { currentPath, currentLocale = defaultLocale, sectionSlug } = Astro.props;
 
-// Normalize path for comparison
+const currentSection = sectionSlug ?? "docs";
+
+function getNavForSection() {
+  if (currentSection === "docs") return config.navigation;
+  const sec = config.sections?.find((s: any) => s.slug === currentSection);
+  return sec?.navigation ?? config.navigation;
+}
+
+const sectionNav = getNavForSection();
+
 function normalizePath(path: string): string {
   return path.replace(/\/$/, '').replace(/^\//, '');
 }
@@ -19,19 +29,16 @@ function normalizePath(path: string): string {
 function isActive(page: string): boolean {
   const normalized = normalizePath(currentPath);
   const pagePath = normalizePath(page);
-  return normalized === pagePath || 
-    normalized === `docs/${pagePath}` ||
-    normalized === `${currentLocale}/docs/${pagePath}`;
+  return normalized === `${currentSection}/${pagePath}` ||
+    normalized === `${currentSection}/${currentLocale}/${pagePath}`;
 }
 
 function getPageHref(page: string): string {
-  if (currentLocale === defaultLocale) {
-    return `/docs/${page}`;
-  }
-  return `/${currentLocale}/docs/${page}`;
+  return currentLocale === defaultLocale
+    ? `/${currentSection}/${page}`
+    : `/${currentSection}/${currentLocale}/${page}`;
 }
 
-// Get page title from the page slug
 function getPageTitle(page: string): string {
   const parts = page.split('/');
   const name = parts[parts.length - 1];
@@ -41,11 +48,10 @@ function getPageTitle(page: string): string {
     .join(' ');
 }
 
-// Transform config.navigation to the format expected by MobileNavSheet
-const groups = config.navigation.map((group) => ({
+const groups = sectionNav.map((group: any) => ({
   title: getLocalizedNavGroup(group, currentLocale, defaultLocale),
   defaultOpen: true,
-  items: group.pages.map((page) => ({
+  items: group.pages.map((page: string) => ({
     title: getPageTitle(page),
     href: getPageHref(page),
     isActive: isActive(page),

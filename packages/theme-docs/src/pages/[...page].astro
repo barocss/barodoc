@@ -1,0 +1,45 @@
+---
+import { getCollection, render } from "astro:content";
+import PageLayout from "../layouts/PageLayout.astro";
+import config from "virtual:barodoc/config";
+
+export async function getStaticPaths() {
+  const reserved = new Set(["blog", "changelog", "docs", "rss.xml"]);
+  if (config.sections) {
+    for (const s of config.sections as any[]) {
+      reserved.add(s.slug);
+    }
+  }
+  let pages: any[] = [];
+  try {
+    pages = await getCollection("pages" as any);
+  } catch {
+    return [];
+  }
+
+  return pages
+    .filter((page) => {
+      const slug = page.slug ?? page.id;
+      const topLevel = slug.split("/")[0];
+      return !reserved.has(topLevel);
+    })
+    .map((page) => {
+      const slug = page.slug ?? page.id;
+      return {
+        params: { page: slug || undefined },
+        props: { page },
+      };
+    });
+}
+
+interface Props {
+  page: any;
+}
+
+const { page } = Astro.props;
+const { Content } = await render(page);
+---
+
+<PageLayout title={page.data.title} description={page.data.description}>
+  <Content />
+</PageLayout>

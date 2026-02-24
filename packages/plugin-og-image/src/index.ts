@@ -5,6 +5,27 @@ import sharp from "sharp";
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from "node:fs";
 import { join } from "node:path";
 
+const GOOGLE_FONT_CSS =
+  "https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap";
+
+async function fetchGoogleFont(weight: 400 | 700 = 400): Promise<ArrayBuffer> {
+  const cssRes = await fetch(GOOGLE_FONT_CSS, {
+    headers: { "User-Agent": "node" },
+  });
+  const css = await cssRes.text();
+  const blocks = css.split("@font-face");
+  for (const block of blocks) {
+    const wMatch = block.match(/font-weight:\s*(\d+)/);
+    if (!wMatch || parseInt(wMatch[1]) !== weight) continue;
+    const urlMatch = block.match(/src:\s*url\(([^)]+)\)/);
+    if (urlMatch?.[1]) {
+      const fontRes = await fetch(urlMatch[1]);
+      return fontRes.arrayBuffer();
+    }
+  }
+  throw new Error(`Could not extract font URL for weight ${weight}`);
+}
+
 export interface OgImagePluginOptions {
   /** Font file path (TTF/OTF) for rendering text. Falls back to a system default. */
   fontPath?: string;
@@ -86,22 +107,39 @@ export default definePlugin<OgImagePluginOptions>((options = {}) => {
     name: "@barodoc/plugin-og-image",
 
     hooks: {
-      "build:done": async (context) => {
-        const config = context.config;
-        const outDir = join(process.cwd(), "dist", "og");
+      "build:done": async (buildContext, context) => {
+        const { config } = context;
+        const outDir = join(buildContext.outDir, "og");
         if (!existsSync(outDir)) mkdirSync(outDir, { recursive: true });
 
-        let fontData: ArrayBuffer | undefined;
+        const fonts: Array<{ name: string; data: ArrayBuffer; weight: 400 | 700; style: "normal" }> = [];
+
         if (options.fontPath) {
           try {
-            fontData = readFileSync(options.fontPath).buffer as ArrayBuffer;
-          } catch {}
+            const fontData = readFileSync(options.fontPath).buffer as ArrayBuffer;
+            fonts.push({ name: "Custom", data: fontData, weight: 400 as const, style: "normal" as const });
+          } catch {
+            console.warn("[og-image] Could not load custom font, fetching Inter from Google Fonts");
+          }
         }
 
-        const fonts = fontData
-          ? [{ name: "Custom", data: fontData, weight: 400 as const, style: "normal" as const }]
-          : [];
+        if (fonts.length === 0) {
+          try {
+            const [regular, bold] = await Promise.all([
+              fetchGoogleFont(400),
+              fetchGoogleFont(700),
+            ]);
+            fonts.push(
+              { name: "Inter", data: regular, weight: 400 as const, style: "normal" as const },
+              { name: "Inter", data: bold, weight: 700 as const, style: "normal" as const },
+            );
+          } catch (err) {
+            console.warn("[og-image] Could not fetch default font, skipping OG image generation:", err);
+            return;
+          }
+        }
 
+        let count = 0;
         for (const group of config.navigation) {
           for (const page of group.pages) {
             const slug = page.replace(/\//g, "-");
@@ -127,13 +165,14 @@ export default definePlugin<OgImagePluginOptions>((options = {}) => {
               const svg = await satori(tree as any, { width, height, fonts });
               const png = await sharp(Buffer.from(svg)).png().toBuffer();
               writeFileSync(join(outDir, `${slug}.png`), png);
+              count++;
             } catch (err) {
               console.warn(`[og-image] Failed to generate image for ${page}:`, err);
             }
           }
         }
 
-        console.log(`[og-image] Generated OG images in dist/og/`);
+        console.log(`[og-image] Generated ${count} OG images in og/`);
       },
     },
   };

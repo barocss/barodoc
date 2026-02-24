@@ -1,12 +1,14 @@
 import path from "path";
 import pc from "picocolors";
 import fs from "fs-extra";
+import { execa } from "execa";
 import {
   isCustomProject,
   loadProjectConfig,
   createProject,
-  installDependencies,
+  cleanupProject,
   findDocsDir,
+  generateAstroConfigFile,
 } from "../runtime/project.js";
 
 const BARODOC_DIR = ".barodoc";
@@ -78,18 +80,13 @@ export async function eject(dir: string, options: EjectOptions): Promise<void> {
 
   console.log(pc.green("✓ Generated project files"));
 
-  // Install dependencies in the temp dir so we can move node_modules
-  await installDependencies(projectDir);
-
   // --- Copy key files from .barodoc/ to root ---
 
-  // 1. astro.config.mjs - update paths to point to local config
-  const astroConfigSrc = path.join(projectDir, "astro.config.mjs");
-  let astroConfigContent = await fs.readFile(astroConfigSrc, "utf-8");
-
-  // The generated config references "./barodoc.config.json" which is correct
-  // since the ejected project root will have barodoc.config.json
-  await fs.writeFile(path.join(root, "astro.config.mjs"), astroConfigContent);
+  // 1. astro.config.mjs
+  await fs.writeFile(
+    path.join(root, "astro.config.mjs"),
+    generateAstroConfigFile(config)
+  );
   console.log(pc.green("✓ Created astro.config.mjs"));
 
   // 2. tsconfig.json
@@ -99,8 +96,20 @@ export async function eject(dir: string, options: EjectOptions): Promise<void> {
   );
   console.log(pc.green("✓ Created tsconfig.json"));
 
-  // 3. package.json - merge with existing or create new
-  const tempPkg = await fs.readJSON(path.join(projectDir, "package.json"));
+  // 3. package.json with full dependency list
+  const runtimeDeps: Record<string, string> = {
+    astro: "^5.0.0",
+    "@astrojs/mdx": "^4.0.0",
+    "@astrojs/react": "^4.0.0",
+    "@barodoc/core": "latest",
+    "@barodoc/theme-docs": "latest",
+    "@tailwindcss/typography": "^0.5.19",
+    "@tailwindcss/vite": "^4.0.0",
+    tailwindcss: "^4.0.0",
+    react: "^19.0.0",
+    "react-dom": "^19.0.0",
+  };
+
   const rootPkgPath = path.join(root, "package.json");
 
   if (await fs.pathExists(rootPkgPath)) {
@@ -110,7 +119,7 @@ export async function eject(dir: string, options: EjectOptions): Promise<void> {
       type: "module",
       dependencies: {
         ...(existingPkg.dependencies ?? {}),
-        ...tempPkg.dependencies,
+        ...runtimeDeps,
       },
     };
     await fs.writeJSON(rootPkgPath, merged, { spaces: 2 });
@@ -125,7 +134,7 @@ export async function eject(dir: string, options: EjectOptions): Promise<void> {
         build: "astro build",
         preview: "astro preview",
       },
-      dependencies: tempPkg.dependencies,
+      dependencies: runtimeDeps,
     };
     await fs.writeJSON(rootPkgPath, newPkg, { spaces: 2 });
     console.log(pc.green("✓ Created package.json"));
@@ -140,23 +149,15 @@ export async function eject(dir: string, options: EjectOptions): Promise<void> {
     console.log(pc.green("✓ Created src/content/config.ts"));
   }
 
-  // 5. Move node_modules from .barodoc/ to root
-  const srcNodeModules = path.join(projectDir, "node_modules");
-  const dstNodeModules = path.join(root, "node_modules");
-
-  if (await fs.pathExists(srcNodeModules)) {
-    if (!(await fs.pathExists(dstNodeModules))) {
-      console.log(pc.dim("Moving node_modules to project root..."));
-      await fs.move(srcNodeModules, dstNodeModules);
-      console.log(pc.green("✓ Moved node_modules"));
-    } else {
-      console.log(pc.dim("node_modules already exists in root, skipping move"));
-    }
-  }
-
-  // 6. Remove .barodoc/ entirely (no longer needed)
-  await fs.remove(path.join(root, BARODOC_DIR));
+  // 5. Remove .barodoc/ (no longer needed)
+  await cleanupProject(root);
   console.log(pc.green("✓ Removed .barodoc/ directory"));
+
+  // 6. Install real dependencies
+  console.log();
+  console.log(pc.dim("Installing dependencies..."));
+  await execa("npm", ["install"], { cwd: root, stdio: "inherit" });
+  console.log(pc.green("✓ Dependencies installed"));
 
   // 7. Update .gitignore to remove .barodoc/ entry
   const gitignorePath = path.join(root, ".gitignore");

@@ -103,6 +103,12 @@ export const tabSchema = z.object({
   href: z.string(),
 });
 
+export const sectionSchema = z.object({
+  slug: z.string(),
+  label: z.string().optional(),
+  navigation: z.array(navItemSchema),
+});
+
 export const barodocConfigSchema = z.object({
   name: z.string(),
   logo: z.string().optional(),
@@ -112,6 +118,7 @@ export const barodocConfigSchema = z.object({
   theme: themeConfigSchema,
   i18n: i18nConfigSchema,
   navigation: z.array(navItemSchema),
+  sections: z.array(sectionSchema).optional(),
   tabs: z.array(tabSchema).optional(),
   topbar: topbarSchema,
   search: searchSchema,

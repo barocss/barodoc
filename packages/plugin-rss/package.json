@@ -9,10 +9,12 @@
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
-    }
+    },
+    "./feed-endpoint": "./src/feed.ts"
   },
   "files": [
-    "dist"
+    "dist",
+    "src/feed.ts"
   ],
   "scripts": {
     "build": "tsup src/index.ts --format esm --dts --clean",

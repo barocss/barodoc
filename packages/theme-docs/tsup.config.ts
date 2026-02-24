@@ -1,20 +1,18 @@
 import { defineConfig } from "tsup";
 
 export default defineConfig({
-  entry: ["src/cli.ts", "src/index.ts"],
+  entry: ["src/theme.ts"],
   format: ["esm"],
-  dts: true,
+  dts: false,
+  outDir: "dist",
   clean: true,
   external: [
-    /^@barodoc\//,
     "astro",
-    "astro/config",
+    "@barodoc/core",
     "@astrojs/mdx",
     "@astrojs/react",
-    "@tailwindcss/typography",
     "@tailwindcss/vite",
-    "tailwindcss",
-    "react",
-    "react-dom",
+    "remark-math",
+    "rehype-katex",
   ],
 });

@@ -1,11 +1,12 @@
 import path from "path";
 import pc from "picocolors";
-import { execa } from "execa";
+import { dev } from "astro";
+import barodoc from "@barodoc/core";
+import docsTheme from "@barodoc/theme-docs/theme";
 import {
   isCustomProject,
   loadProjectConfig,
   createProject,
-  installDependencies,
   findDocsDir,
 } from "../runtime/project.js";
 
@@ -18,26 +19,29 @@ export interface ServeOptions {
 }
 
 export async function serve(dir: string, options: ServeOptions): Promise<void> {
-  const root = path.resolve(process.cwd(), dir);
+  const root = path.resolve(process.cwd());
 
   console.log();
   console.log(pc.bold(pc.cyan("  barodoc serve")));
   console.log();
 
-  // Check if this is a custom project
   if (isCustomProject(root)) {
     console.log(pc.dim("Detected custom Astro project"));
     console.log(pc.dim("Running astro dev..."));
     console.log();
 
-    await runAstroDev(root, options);
+    const devServer = await dev({ root });
+    process.on("SIGINT", async () => {
+      console.log();
+      console.log(pc.dim("Shutting down..."));
+      await devServer.stop();
+    });
     return;
   }
 
-  // Quick mode - create temporary project
   console.log(pc.dim("Quick mode - creating temporary project..."));
 
-  const docsDir = findDocsDir(root);
+  const docsDir = dir || findDocsDir(root);
   const { config } = await loadProjectConfig(root, options.config);
 
   const projectDir = await createProject({
@@ -47,44 +51,38 @@ export async function serve(dir: string, options: ServeOptions): Promise<void> {
     configPath: options.config,
   });
 
-  console.log(pc.green("✓ Project created"));
+  console.log(pc.green("✓ Project ready"));
   console.log();
 
-  await installDependencies(projectDir, options.clean);
+  const devServer = await dev({
+    root: projectDir,
+    configFile: false,
+    integrations: [
+      barodoc({
+        config: "./barodoc.config.json",
+        theme: docsTheme(),
+      }),
+    ],
+    vite: {
+      resolve: {
+        preserveSymlinks: true,
+      },
+      ssr: {
+        noExternal: [/^@barodoc\//],
+      },
+    },
+    server: {
+      port: options.port,
+      host: options.host ? true : undefined,
+      open: options.open,
+    },
+    ...(config.site ? { site: config.site } : {}),
+    ...(config.base ? { base: config.base } : {}),
+  });
 
-  // Run astro dev in the temporary project
-  await runAstroDev(projectDir, options);
-}
-
-async function runAstroDev(
-  projectDir: string,
-  options: ServeOptions
-): Promise<void> {
-  const args = ["astro", "dev"];
-
-  if (options.port) {
-    args.push("--port", String(options.port));
-  }
-
-  if (options.host) {
-    args.push("--host");
-  }
-
-  if (options.open) {
-    args.push("--open");
-  }
-
-  try {
-    await execa("npx", args, {
-      cwd: projectDir,
-      stdio: "inherit",
-    });
-  } catch (error: any) {
-    if (error.signal === "SIGINT") {
-      console.log();
-      console.log(pc.dim("Shutting down..."));
-    } else {
-      throw error;
-    }
-  }
+  process.on("SIGINT", async () => {
+    console.log();
+    console.log(pc.dim("Shutting down..."));
+    await devServer.stop();
+  });
 }

@@ -76,8 +76,8 @@ function createThemeIntegration(
         });
 
         injectRoute({
-          pattern: "/docs/[...slug]",
-          entrypoint: "@barodoc/theme-docs/pages/docs/[...slug].astro",
+          pattern: "/[section]/[...slug]",
+          entrypoint: "@barodoc/theme-docs/pages/section/[...slug].astro",
         });
 
         if (config?.blog?.enabled !== false) {
@@ -94,6 +94,11 @@ function createThemeIntegration(
         injectRoute({
           pattern: "/changelog",
           entrypoint: "@barodoc/theme-docs/pages/changelog/index.astro",
+        });
+
+        injectRoute({
+          pattern: "/[...page]",
+          entrypoint: "@barodoc/theme-docs/pages/[...page].astro",
         });
 
         updateConfig({

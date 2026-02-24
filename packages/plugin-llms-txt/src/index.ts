@@ -95,7 +95,26 @@ function cleanMarkdownForAI(md: string): string {
 }
 
 /**
- * Scan docs directory and collect page entries
+ * Recursively find all .md/.mdx files under a directory, returning paths
+ * relative to the base.
+ */
+function walkMdFiles(dir: string, base: string = dir): string[] {
+  if (!fs.existsSync(dir)) return [];
+  const results: string[] = [];
+  for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+    const full = path.join(dir, entry.name);
+    if (entry.isDirectory()) {
+      results.push(...walkMdFiles(full, base));
+    } else if (/\.(md|mdx)$/.test(entry.name)) {
+      results.push(path.relative(base, full));
+    }
+  }
+  return results;
+}
+
+/**
+ * Scan docs directory and collect page entries.
+ * Handles both locale-based (docs/en/slug.md) and flat (docs/slug.md) layouts.
  */
 function scanDocs(
   docsDir: string,
@@ -103,9 +122,6 @@ function scanDocs(
   defaultLocale: string,
   navigation: Array<{ pages: string[] }>
 ): PageEntry[] {
-  const pages: PageEntry[] = [];
-
-  // Collect slugs in nav order (default locale)
   const orderedSlugs: string[] = [];
   for (const group of navigation) {
     for (const slug of group.pages ?? []) {
@@ -115,40 +131,61 @@ function scanDocs(
     }
   }
 
-  for (const locale of locales) {
-    const localeDir = path.join(docsDir, locale);
-    if (!fs.existsSync(localeDir)) continue;
+  const seen = new Set<string>();
+  const pages: PageEntry[] = [];
 
-    for (const slug of orderedSlugs) {
-      let filePath = path.join(localeDir, `${slug}.mdx`);
-      if (!fs.existsSync(filePath)) {
-        filePath = path.join(localeDir, `${slug}.md`);
+  function tryReadPage(slug: string, locale: string): boolean {
+    const key = `${locale}:${slug}`;
+    if (seen.has(key)) return false;
+
+    for (const ext of [".mdx", ".md"]) {
+      const locPath = path.join(docsDir, locale, `${slug}${ext}`);
+      if (fs.existsSync(locPath)) {
+        const raw = fs.readFileSync(locPath, "utf-8");
+        pages.push({
+          slug, locale,
+          title: extractTitle(raw) || slug,
+          description: extractFrontmatterField(raw, "description"),
+          content: stripFrontmatter(raw),
+        });
+        seen.add(key);
+        return true;
       }
-      if (!fs.existsSync(filePath)) continue;
 
-      const raw = fs.readFileSync(filePath, "utf-8");
-      const title = extractTitle(raw) || slug;
-      const description = extractFrontmatterField(raw, "description");
-      const body = stripFrontmatter(raw);
-
-      pages.push({ slug, locale, title, description, content: body });
+      const flatPath = path.join(docsDir, `${slug}${ext}`);
+      if (fs.existsSync(flatPath)) {
+        const raw = fs.readFileSync(flatPath, "utf-8");
+        pages.push({
+          slug, locale,
+          title: extractTitle(raw) || slug,
+          description: extractFrontmatterField(raw, "description"),
+          content: stripFrontmatter(raw),
+        });
+        seen.add(key);
+        return true;
+      }
     }
+    return false;
+  }
 
-    // Also pick up any files not in navigation
-    if (fs.existsSync(localeDir)) {
-      const files = fs.readdirSync(localeDir);
-      for (const file of files) {
-        if (!file.match(/\.(md|mdx)$/)) continue;
-        const slug = file.replace(/\.(mdx?)$/, "");
-        if (orderedSlugs.includes(slug)) continue; // already handled
+  for (const slug of orderedSlugs) {
+    tryReadPage(slug, defaultLocale);
+  }
 
-        const filePath = path.join(localeDir, file);
-        const raw = fs.readFileSync(filePath, "utf-8");
-        const title = extractTitle(raw) || slug;
-        const description = extractFrontmatterField(raw, "description");
-        const body = stripFrontmatter(raw);
+  const allFiles = walkMdFiles(docsDir);
+  for (const relPath of allFiles) {
+    const slug = relPath.replace(/\.(mdx?)$/, "").replace(/\\/g, "/");
+    const parts = slug.split("/");
 
-        pages.push({ slug, locale, title, description, content: body });
+    if (locales.includes(parts[0])) {
+      const locale = parts[0];
+      const innerSlug = parts.slice(1).join("/");
+      if (!seen.has(`${locale}:${innerSlug}`)) {
+        tryReadPage(innerSlug, locale);
+      }
+    } else {
+      if (!seen.has(`${defaultLocale}:${slug}`)) {
+        tryReadPage(slug, defaultLocale);
       }
     }
   }

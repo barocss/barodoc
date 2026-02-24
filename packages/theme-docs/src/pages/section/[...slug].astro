@@ -1,5 +1,5 @@
 ---
-import { getCollection } from "astro:content";
+import { getCollection, render } from "astro:content";
 import DocsLayout from "../../layouts/DocsLayout.astro";
 import config from "virtual:barodoc/config";
 import { defaultLocale, locales } from "virtual:barodoc/i18n";
@@ -7,46 +7,64 @@ import { getLocalizedNavGroup } from "@barodoc/core";
 import readingTime from "reading-time";
 
 export async function getStaticPaths() {
-  const docs = await getCollection("docs");
-  
-  return docs.map((doc) => {
-    // Handle locale in slug
-    const slugParts = doc.slug.split("/");
-    const hasLocale = locales.includes(slugParts[0]);
-    
-    let locale = defaultLocale;
-    let cleanSlug = doc.slug;
-    
-    if (hasLocale) {
-      locale = slugParts[0];
-      cleanSlug = slugParts.slice(1).join("/");
+  const sections = [
+    { slug: "docs", label: "Documentation", navigation: config.navigation },
+    ...(config.sections ?? []).map((s: any) => ({
+      slug: s.slug,
+      label: s.label ?? s.slug,
+      navigation: s.navigation,
+    })),
+  ];
+  const paths: any[] = [];
+
+  for (const section of sections) {
+    let docs: any[];
+    try {
+      docs = await getCollection(section.slug as any);
+    } catch {
+      continue;
     }
-    
-    // URL: /docs/introduction (en), /docs/ko/introduction (ko) — locale only inside slug
-    const path = locale === defaultLocale 
-      ? cleanSlug 
-      : `${locale}/${cleanSlug}`;
-    
-    return {
-      params: { slug: path || undefined },
-      props: { doc, locale, cleanSlug },
-    };
-  });
+
+    for (const doc of docs) {
+      const docId = doc.slug ?? doc.id;
+      const slugParts = docId.split("/");
+      const hasLocale = locales.includes(slugParts[0]);
+
+      let locale = defaultLocale;
+      let cleanSlug = docId;
+
+      if (hasLocale) {
+        locale = slugParts[0];
+        cleanSlug = slugParts.slice(1).join("/");
+      }
+
+      const innerPath = locale === defaultLocale
+        ? cleanSlug
+        : `${locale}/${cleanSlug}`;
+
+      paths.push({
+        params: { section: section.slug, slug: innerPath || undefined },
+        props: { doc, locale, cleanSlug, sectionSlug: section.slug, sectionNav: section.navigation },
+      });
+    }
+  }
+  return paths;
 }
 
 interface Props {
-  doc: Awaited<ReturnType<typeof getCollection<"docs">>>[number];
+  doc: any;
   locale: string;
   cleanSlug: string;
+  sectionSlug: string;
+  sectionNav: typeof config.navigation;
 }
 
-const { doc, locale, cleanSlug } = Astro.props;
-const { Content, headings } = await doc.render();
+const { doc, locale, cleanSlug, sectionSlug, sectionNav } = Astro.props;
+const { Content, headings } = await render(doc);
 const readTime = readingTime(doc.body ?? "");
 
-// Find the category (navigation group) for this page
 function findCategory(slug: string): string | null {
-  for (const group of config.navigation) {
+  for (const group of sectionNav) {
     if (group.pages.includes(slug)) {
       return getLocalizedNavGroup(group, locale, defaultLocale);
     }
@@ -54,16 +72,14 @@ function findCategory(slug: string): string | null {
   return null;
 }
 
-// Get all pages in order from navigation
 function getAllPages(): string[] {
   const pages: string[] = [];
-  for (const group of config.navigation) {
+  for (const group of sectionNav) {
     pages.push(...group.pages);
   }
   return pages;
 }
 
-// Get page title from slug
 function getPageTitle(slug: string): string {
   const parts = slug.split('/');
   const name = parts[parts.length - 1];
@@ -73,32 +89,28 @@ function getPageTitle(slug: string): string {
     .join(' ');
 }
 
-// Get page href (always /docs/...; non-default locale is inside slug)
 function getPageHref(slug: string): string {
-  return `/docs/${locale === defaultLocale ? slug : `${locale}/${slug}`}`;
+  return `/${sectionSlug}/${locale === defaultLocale ? slug : `${locale}/${slug}`}`;
 }
 
-// Find prev/next pages
 const allPages = getAllPages();
 const currentIndex = allPages.indexOf(cleanSlug);
 
-const prevPage = currentIndex > 0 
+const prevPage = currentIndex > 0
   ? { title: getPageTitle(allPages[currentIndex - 1]), href: getPageHref(allPages[currentIndex - 1]) }
   : null;
 
-const nextPage = currentIndex < allPages.length - 1 
+const nextPage = currentIndex < allPages.length - 1
   ? { title: getPageTitle(allPages[currentIndex + 1]), href: getPageHref(allPages[currentIndex + 1]) }
   : null;
 
 const category = findCategory(cleanSlug);
 
-// Edit link
 const editBaseUrl = config.editLink?.baseUrl;
 const editUrl = editBaseUrl
   ? `${editBaseUrl.replace(/\/$/, "")}/${doc.id}`
   : null;
 
-// Last updated: use file modification if available
 let lastUpdated: Date | null = null;
 if (config.lastUpdated) {
   const mod = (doc.data as Record<string, unknown>).lastUpdated;
@@ -107,7 +119,6 @@ if (config.lastUpdated) {
   }
 }
 
-// Breadcrumbs: [Group, Page Title]
 const breadcrumbs: { label: string; href?: string }[] = [];
 if (category) {
   breadcrumbs.push({ label: category });
@@ -115,8 +126,8 @@ if (category) {
 breadcrumbs.push({ label: doc.data.title });
 ---
 
-<DocsLayout 
-  title={doc.data.title} 
+<DocsLayout
+  title={doc.data.title}
   description={doc.data.description}
   headings={headings}
   prevPage={prevPage}
@@ -125,7 +136,8 @@ breadcrumbs.push({ label: doc.data.title });
   lastUpdated={lastUpdated}
   breadcrumbs={breadcrumbs}
   readingTime={readTime.text}
-  filePath={`src/content/docs/${doc.id}`}
+  filePath={`src/content/${sectionSlug}/${doc.id}`}
+  sectionSlug={sectionSlug}
 >
   {category && (
     <p class="text-xs font-semibold uppercase tracking-widest text-primary-600 dark:text-primary-400 mb-3">

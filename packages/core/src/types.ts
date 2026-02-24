@@ -36,6 +36,12 @@ export interface BarodocThemeConfig {
   radius?: string;
 }
 
+export interface BarodocSection {
+  slug: string;
+  label?: string;
+  navigation: BarodocNavItem[];
+}
+
 export interface BarodocConfig {
   name: string;
   logo?: string;
@@ -48,6 +54,9 @@ export interface BarodocConfig {
   i18n?: BarodocI18nConfig;
   
   navigation: BarodocNavItem[];
+
+  /** Additional doc sections beyond the default "docs" (e.g. help, guides). */
+  sections?: BarodocSection[];
   
   tabs?: {
     label: string;
