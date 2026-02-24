@@ -7,7 +7,7 @@
     "dev": "pnpm --filter docs dev",
     "dev:docs": "pnpm --filter docs dev",
     "build": "pnpm --filter docs build",
-    "build:packages": "pnpm --filter @barodoc/core --filter barodoc --filter create-barodoc --filter @barodoc/plugin-sitemap --filter @barodoc/plugin-search --filter @barodoc/plugin-analytics --filter @barodoc/plugin-openapi --filter @barodoc/plugin-rss --filter @barodoc/plugin-pwa --filter @barodoc/plugin-llms-txt --filter @barodoc/plugin-og-image --filter @barodoc/plugin-docsearch build",
+    "build:packages": "pnpm --filter @barodoc/core --filter @barodoc/theme-docs --filter barodoc --filter create-barodoc --filter @barodoc/plugin-sitemap --filter @barodoc/plugin-search --filter @barodoc/plugin-analytics --filter @barodoc/plugin-openapi --filter @barodoc/plugin-rss --filter @barodoc/plugin-pwa --filter @barodoc/plugin-llms-txt --filter @barodoc/plugin-og-image --filter @barodoc/plugin-docsearch build",
     "test": "vitest run",
     "test:watch": "vitest",
     "typecheck": "pnpm -r typecheck",
