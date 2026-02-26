@@ -101,6 +101,7 @@
   },
   "lastUpdated": true,
   "plugins": [
+    "@barodoc/plugin-raw-md",
     ["@barodoc/plugin-openapi", {
       "specFile": "openapi.yaml",
       "basePath": "api",

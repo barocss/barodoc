@@ -36,6 +36,9 @@ importers:
       '@barodoc/core':
         specifier: workspace:*
         version: link:../packages/core
+      '@barodoc/plugin-raw-md':
+        specifier: workspace:*
+        version: link:../packages/plugin-raw-md
       '@barodoc/theme-docs':
         specifier: workspace:*
         version: link:../packages/theme-docs
@@ -296,6 +299,21 @@ importers:
       astro:
         specifier: ^5.0.0
         version: 5.17.1(@types/node@22.19.8)(jiti@2.6.1)(lightningcss@1.30.2)(rollup@4.57.1)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.2)
+      tsup:
+        specifier: ^8.3.0
+        version: 8.5.1(jiti@2.6.1)(postcss@8.5.6)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.2)
+      typescript:
+        specifier: ^5.7.0
+        version: 5.9.3
+
+  packages/plugin-raw-md:
+    devDependencies:
+      '@barodoc/core':
+        specifier: workspace:*
+        version: link:../core
+      '@types/node':
+        specifier: ^22.0.0
+        version: 22.19.8
       tsup:
         specifier: ^8.3.0
         version: 8.5.1(jiti@2.6.1)(postcss@8.5.6)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.2)
