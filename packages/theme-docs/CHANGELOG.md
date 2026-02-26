@@ -1,5 +1,15 @@
 # @barodoc/theme-docs
 
+## 8.0.1
+
+### Patch Changes
+
+- 4acf950: fix: ensure dist/theme.js is included in published package
+
+  Added `prepublishOnly` script to guarantee the theme build output is present
+  before publishing. The 8.0.0 release was missing `dist/theme.js` because
+  `theme-docs` was not included in `build:packages` at that time.
+
 ## 8.0.0
 
 ### Minor Changes
