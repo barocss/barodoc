@@ -1,5 +1,14 @@
 # barodoc
 
+## 8.1.1
+
+### Patch Changes
+
+- Updated dependencies [0dc21fc]
+- Updated dependencies [70c2d72]
+  - @barodoc/plugin-rss@8.0.1
+  - @barodoc/theme-docs@8.1.1
+
 ## 8.1.0
 
 ### Patch Changes

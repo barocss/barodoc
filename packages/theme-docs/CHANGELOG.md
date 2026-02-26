@@ -1,5 +1,13 @@
 # @barodoc/theme-docs
 
+## 8.1.1
+
+### Patch Changes
+
+- 70c2d72: fix: satisfy Shiki transformer type by adding addClassToHast to line-numbers transformer
+
+  Resolves TS2352: the line-numbers transformer now includes addClassToHast so it matches the expected Shiki transformer interface. Implemented addClassToHast helper and attached it to the returned object.
+
 ## 8.0.2
 
 ### Patch Changes
