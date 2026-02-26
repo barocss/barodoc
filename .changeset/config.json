@@ -12,7 +12,8 @@
       "@barodoc/plugin-sitemap",
       "@barodoc/plugin-search",
       "@barodoc/plugin-analytics",
-      "@barodoc/plugin-llms-txt"
+      "@barodoc/plugin-llms-txt",
+      "@barodoc/plugin-raw-md"
     ]
   ],
   "access": "public",
