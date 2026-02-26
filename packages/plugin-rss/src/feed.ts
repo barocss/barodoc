@@ -15,7 +15,7 @@ export async function GET(context: APIContext) {
     const { getCollection } = await import("astro:content");
 
     try {
-      const blogs = await getCollection("blog");
+      const blogs = await getCollection<{ title: string; date?: string; description?: string; excerpt?: string }>("blog");
       for (const post of blogs) {
         items.push({
           title: post.data.title,
@@ -27,7 +27,7 @@ export async function GET(context: APIContext) {
     } catch {}
 
     try {
-      const changelogs = await getCollection("changelog");
+      const changelogs = await getCollection<{ version: string; title?: string; date: string }>("changelog");
       for (const entry of changelogs) {
         items.push({
           title: `${entry.data.version}${entry.data.title ? ` - ${entry.data.title}` : ""}`,
