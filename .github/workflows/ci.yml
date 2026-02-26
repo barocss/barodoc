@@ -35,6 +35,9 @@ jobs:
       - name: Build packages
         run: pnpm build:packages
 
+      - name: Generate Astro types (docs)
+        run: pnpm --filter docs exec astro sync
+
       - name: Type check
         run: pnpm -r exec tsc --noEmit
 
