@@ -1,5 +1,15 @@
 # @barodoc/theme-docs
 
+## 8.0.2
+
+### Patch Changes
+
+- 6a05e4f: chore: remove redundant prepublishOnly script
+
+  The release pipeline already runs `build:packages` before `changeset publish`,
+  so per-package prepublishOnly was causing a duplicate build. Removed to align
+  with the convention used by all other packages.
+
 ## 8.0.1
 
 ### Patch Changes

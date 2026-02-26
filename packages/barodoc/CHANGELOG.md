@@ -1,5 +1,12 @@
 # barodoc
 
+## 8.0.2
+
+### Patch Changes
+
+- Updated dependencies [6a05e4f]
+  - @barodoc/theme-docs@8.0.2
+
 ## 8.0.1
 
 ### Patch Changes
