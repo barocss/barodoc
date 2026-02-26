@@ -50,11 +50,21 @@ function createTrimEmptyLinesTransformer() {
   };
 }
 
+function addClassToHast(node: unknown, cls: string): void {
+  const n = node as { properties?: Record<string, unknown> };
+  if (!n.properties) n.properties = {};
+  const c = n.properties.className;
+  if (Array.isArray(c)) c.push(cls);
+  else if (typeof c === "string") n.properties.className = [c, cls];
+  else n.properties.className = [cls];
+}
+
 function createLineNumbersTransformer() {
   return {
     name: "barodoc-line-numbers",
+    addClassToHast,
     pre(node: { properties?: Record<string, unknown> }) {
-      (this as { addClassToHast: (node: unknown, cls: string) => void }).addClassToHast(node, "line-numbers");
+      addClassToHast(node, "line-numbers");
     },
   };
 }
