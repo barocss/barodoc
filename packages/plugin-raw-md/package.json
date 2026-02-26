@@ -1,0 +1,44 @@
+{
+  "name": "@barodoc/plugin-raw-md",
+  "version": "0.1.0",
+  "description": "Serve raw markdown for each page via .md URL suffix — AI agent friendly",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup src/index.ts --format esm --dts --clean",
+    "dev": "tsup src/index.ts --format esm --dts --watch"
+  },
+  "peerDependencies": {
+    "@barodoc/core": "workspace:*"
+  },
+  "devDependencies": {
+    "@barodoc/core": "workspace:*",
+    "@types/node": "^22.0.0",
+    "tsup": "^8.3.0",
+    "typescript": "^5.7.0"
+  },
+  "keywords": [
+    "barodoc",
+    "plugin",
+    "markdown",
+    "raw-md",
+    "ai-agent",
+    "llm"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/barocss/barodoc.git",
+    "directory": "packages/plugin-raw-md"
+  }
+}

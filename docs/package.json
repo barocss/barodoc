@@ -12,6 +12,7 @@
     "@astrojs/mdx": "^4.0.0",
     "@astrojs/react": "^4.0.0",
     "@barodoc/core": "workspace:*",
+    "@barodoc/plugin-raw-md": "workspace:*",
     "@barodoc/theme-docs": "workspace:*",
     "astro": "^5.0.0",
     "react": "^19.0.0",
