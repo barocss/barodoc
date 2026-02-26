@@ -19,7 +19,9 @@ export interface RawMdPluginOptions {
 
   /**
    * Which content collections to generate .md files for.
-   * Defaults to ["docs"] plus any configured sections.
+   * When omitted, all collections are included: in custom mode every directory
+   * under `src/content/`, in quick mode `docs`, `blog`, `changelog`, and any
+   * configured sections that exist on disk.
    */
   collections?: string[];
 }
@@ -122,6 +124,35 @@ function scanCollection(
   return pages;
 }
 
+/**
+ * Resolve which collection slugs to process when `collections` option is not set.
+ * Custom mode: all directories under src/content/.
+ * Quick mode: docs, blog, changelog, and configured sections that exist.
+ */
+function getDefaultCollectionSlugs(
+  root: string,
+  config: { sections?: Array<{ slug: string }> }
+): string[] {
+  const customModeBase = path.join(root, "src", "content");
+  if (fs.existsSync(customModeBase)) {
+    return fs
+      .readdirSync(customModeBase, { withFileTypes: true })
+      .filter((e) => e.isDirectory())
+      .map((e) => e.name);
+  }
+  const quickSlugs = [
+    "docs",
+    "blog",
+    "changelog",
+    ...((config.sections ?? []).map((s) => s.slug) ?? []),
+  ];
+  const unique = [...new Set(quickSlugs)];
+  return unique.filter((slug) => {
+    const dir = path.join(root, slug === "docs" ? "docs" : slug);
+    return fs.existsSync(dir);
+  });
+}
+
 function prepareContent(
   raw: string,
   clean: boolean,
@@ -154,14 +185,8 @@ export default definePlugin<RawMdPluginOptions>((options = {}) => {
         const defaultLocale = (config as any).i18n?.defaultLocale ?? "en";
         const locales: string[] = (config as any).i18n?.locales ?? ["en"];
 
-        const sections = [
-          { slug: "docs" },
-          ...((config as any).sections ?? []).map((s: any) => ({
-            slug: s.slug,
-          })),
-        ];
-
-        const targetSlugs = collections ?? sections.map((s) => s.slug);
+        const targetSlugs =
+          collections ?? getDefaultCollectionSlugs(root, config as any);
 
         const customModeBase = path.join(root, "src", "content");
         const quickModeBase = root;
@@ -208,13 +233,8 @@ export default definePlugin<RawMdPluginOptions>((options = {}) => {
           const defaultLocale = (config as any).i18n?.defaultLocale ?? "en";
           const locales: string[] = (config as any).i18n?.locales ?? ["en"];
 
-          const sections = [
-            { slug: "docs" },
-            ...((config as any).sections ?? []).map((s: any) => ({
-              slug: s.slug,
-            })),
-          ];
-          const targetSlugs = collections ?? sections.map((s) => s.slug);
+          const targetSlugs =
+            collections ?? getDefaultCollectionSlugs(root, config as any);
 
           const customModeBase = path.join(root, "src", "content");
           const quickModeBase = root;
@@ -225,74 +245,84 @@ export default definePlugin<RawMdPluginOptions>((options = {}) => {
               plugins: [
                 {
                   name: "barodoc-raw-md-dev",
+                  enforce: "pre" as const,
                   configureServer(server: any) {
-                    server.middlewares.use(
-                      (
-                        req: IncomingMessage,
-                        res: ServerResponse,
-                        next: () => void
-                      ) => {
-                        const url = req.url;
-                        if (!url || !url.endsWith(".md")) return next();
+                    const rawMdMiddleware = (
+                      req: IncomingMessage,
+                      res: ServerResponse,
+                      next: () => void
+                    ) => {
+                      const rawUrl = req.url ?? "";
+                      const url = rawUrl.replace(/\?[^#]*/, "").replace(/#.*$/, "");
+                      if (!url || !url.endsWith(".md")) return next();
 
-                        const urlPath = url.slice(1, -3); // strip leading / and trailing .md
-                        const parts = urlPath.split("/");
-                        if (parts.length < 2) return next();
+                      const urlPath = url.slice(1, -3);
+                      const parts = urlPath.split("/");
+                      if (parts.length < 2) return next();
 
-                        const sectionSlug = parts[0];
-                        if (!targetSlugs.includes(sectionSlug)) return next();
+                      const sectionSlug = parts[0];
+                      if (!targetSlugs.includes(sectionSlug)) return next();
 
-                        const restPath = parts.slice(1).join("/");
+                      const restPath = parts.slice(1).join("/");
 
-                        const collectionDir = isCustomMode
-                          ? path.join(customModeBase, sectionSlug)
-                          : path.join(
-                              quickModeBase,
-                              sectionSlug === "docs" ? "docs" : sectionSlug
-                            );
-
-                        if (!fs.existsSync(collectionDir)) return next();
-
-                        // Try to find the source file — handle locale prefix
-                        const candidates: string[] = [];
-                        const restParts = restPath.split("/");
-
-                        if (locales.includes(restParts[0]) && restParts[0] !== defaultLocale) {
-                          const locale = restParts[0];
-                          const innerSlug = restParts.slice(1).join("/");
-                          candidates.push(
-                            path.join(collectionDir, locale, `${innerSlug}.mdx`),
-                            path.join(collectionDir, locale, `${innerSlug}.md`)
+                      const collectionDir = isCustomMode
+                        ? path.join(customModeBase, sectionSlug)
+                        : path.join(
+                            quickModeBase,
+                            sectionSlug === "docs" ? "docs" : sectionSlug
                           );
-                        } else {
-                          candidates.push(
-                            path.join(collectionDir, defaultLocale, `${restPath}.mdx`),
-                            path.join(collectionDir, defaultLocale, `${restPath}.md`),
-                            path.join(collectionDir, `${restPath}.mdx`),
-                            path.join(collectionDir, `${restPath}.md`)
-                          );
-                        }
 
-                        for (const filePath of candidates) {
-                          if (fs.existsSync(filePath)) {
-                            const raw = fs.readFileSync(filePath, "utf-8");
-                            const content = prepareContent(
-                              raw,
-                              clean,
-                              includeFrontmatter
-                            );
-                            res.setHeader(
-                              "Content-Type",
-                              "text/markdown; charset=utf-8"
-                            );
-                            res.end(content);
-                            return;
-                          }
-                        }
+                      if (!fs.existsSync(collectionDir)) return next();
 
-                        next();
+                      const candidates: string[] = [];
+                      const restParts = restPath.split("/");
+
+                      if (locales.includes(restParts[0]) && restParts[0] !== defaultLocale) {
+                        const locale = restParts[0];
+                        const innerSlug = restParts.slice(1).join("/");
+                        candidates.push(
+                          path.join(collectionDir, locale, `${innerSlug}.mdx`),
+                          path.join(collectionDir, locale, `${innerSlug}.md`)
+                        );
+                      } else {
+                        candidates.push(
+                          path.join(collectionDir, defaultLocale, `${restPath}.mdx`),
+                          path.join(collectionDir, defaultLocale, `${restPath}.md`),
+                          path.join(collectionDir, `${restPath}.mdx`),
+                          path.join(collectionDir, `${restPath}.md`)
+                        );
                       }
-                    );
+
+                      for (const filePath of candidates) {
+                        if (fs.existsSync(filePath)) {
+                          const raw = fs.readFileSync(filePath, "utf-8");
+                          const content = prepareContent(
+                            raw,
+                            clean,
+                            includeFrontmatter
+                          );
+                          res.setHeader(
+                            "Content-Type",
+                            "text/markdown; charset=utf-8"
+                          );
+                          res.end(content);
+                          return;
+                        }
+                      }
+
+                      next();
+                    };
+
+                    // Run after internal (and Astro) middlewares are installed, then
+                    // prepend our middleware so .md requests are served first.
+                    return () => {
+                      const app = server.middlewares as { stack?: Array<{ route: string; handle: (req: IncomingMessage, res: ServerResponse, next: () => void) => void }> };
+                      if (Array.isArray(app.stack)) {
+                        app.stack.unshift({ route: "", handle: rawMdMiddleware });
+                      } else {
+                        server.middlewares.use(rawMdMiddleware);
+                      }
+                    };
                   },
                 },
               ],

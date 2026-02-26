@@ -41,7 +41,8 @@ export async function serve(dir: string, options: ServeOptions): Promise<void> {
 
   console.log(pc.dim("Quick mode - creating temporary project..."));
 
-  const docsDir = dir || findDocsDir(root);
+  const docsDir =
+    !dir || dir === "." ? findDocsDir(root) : path.resolve(root, dir);
   const { config } = await loadProjectConfig(root, options.config);
 
   const projectDir = await createProject({
