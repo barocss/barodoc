@@ -24,8 +24,7 @@
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch",
-    "typecheck": "tsc --noEmit",
-    "prepublishOnly": "tsup"
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@barodoc/core": "workspace:*",
