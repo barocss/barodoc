@@ -156,3 +156,7 @@ export default definePlugin<Options>((options) => ({
 | `pnpm build:packages` | Build all packages |
 | `pnpm changeset` | Create changeset |
 | `pnpm release` | Publish to npm |
+
+## Development and testing
+
+For **testing with the docs site**, **testing with my-docs (quick mode)**, and **plugin development** (local workflow, testing in docs/my-docs, releasing), see **[DEVELOPMENT.md](./DEVELOPMENT.md)**.
