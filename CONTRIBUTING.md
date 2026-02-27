@@ -142,6 +142,8 @@ pnpm build:packages
 pnpm barodoc --help
 ```
 
+**docs 로컬 실행, my-docs로 퀵 모드 테스트, 플러그인 개발 방법**은 [DEVELOPMENT.md](DEVELOPMENT.md)를 참고하세요.
+
 ### create-barodoc 동작 확인
 
 `create-barodoc`으로 만든 프로젝트가 CLI(`barodoc serve` / `build`)에서 정상 동작하는지 확인할 때:
