@@ -146,6 +146,7 @@ function findCategory(slug: string): string | null {
   return null;
 }
 
+/** Pages from config only. Asset slugs (e.g. for guide.pdf) must be added to barodoc.config.json navigation.pages to appear in sidebar and prev/next. */
 function getAllPages(): string[] {
   const pages: string[] = [];
   for (const group of sectionNav) {
