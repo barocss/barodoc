@@ -43,6 +43,7 @@ Asset files (e.g. `.pdf`, `.html`, `.pptx`, `.tex`, `.csv`, `.rst`, `.epub`, `.o
 - **Sidebar / prev-next**: Add the asset slug to `barodoc.config.json` → `navigation.pages` (e.g. `"guide"` for `guide.pdf`) so it appears in the sidebar and in prev/next links.
 - **Dev**: `/_content/docs/en/guide.pdf` is served by the theme’s dev middleware from `src/content`.
 - **Build**: Asset files are copied to `dist/_content/<section>/<path>`; viewer pages are pre-rendered.
+- **.tex pre-render**: Dev 시작 시와 .tex 파일 저장 시 자동으로 pre-render됩니다. theme-docs를 수정한 뒤 반영하려면 `pnpm dev:fresh`를 사용하세요.
 
 Supported extensions and viewer types are defined in `@barodoc/theme-docs` (see `assetExtensions.ts`).
 
