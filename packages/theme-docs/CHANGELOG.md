@@ -1,5 +1,12 @@
 # @barodoc/theme-docs
 
+## 8.2.0
+
+### Minor Changes
+
+- 4ea292e: - **theme-docs**: Remove LaTeX/.tex support; render RST with rst-compiler (build-time). Dev: 404 for absolute/internal paths, redirect /docs to /docs/introduction.
+  - **barodoc**: Quick mode uses given dir as project root (fix serve/build ../my-docs). Generate content.config.ts with docs, blog, changelog, pages, and sections. Add rst-compiler dependency for quick mode.
+
 ## 8.1.1
 
 ### Patch Changes
