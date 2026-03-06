@@ -1,3 +1,6 @@
+import fs from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 import type { AstroIntegration } from "astro";
 import type { ThemeExport, ResolvedBarodocConfig } from "@barodoc/core";
 import mdx from "@astrojs/mdx";
@@ -5,6 +8,8 @@ import react from "@astrojs/react";
 import tailwindcss from "@tailwindcss/vite";
 import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
+import { ASSET_EXTENSIONS } from "./lib/assetExtensions.js";
+import { scanSectionAssets } from "./lib/scanAssets.js";
 
 export interface DocsThemeOptions {
   customCss?: string[];
@@ -69,6 +74,63 @@ function createLineNumbersTransformer() {
   };
 }
 
+function createAssetContentPlugin(buildOutDir: string) {
+  return {
+    name: "barodoc-asset-content",
+    apply: "build" as const,
+    closeBundle() {
+      const contentDir = path.join(process.cwd(), "src", "content");
+      if (!fs.existsSync(contentDir)) return;
+      const sectionNames = fs.readdirSync(contentDir);
+      for (const section of sectionNames) {
+        const sectionPath = path.join(contentDir, section);
+        if (!fs.statSync(sectionPath).isDirectory()) continue;
+        const entries = scanSectionAssets(sectionPath, section);
+        for (const entry of entries) {
+          const src = path.join(sectionPath, entry.relPath);
+          const dest = path.join(buildOutDir, "_content", section, entry.relPath);
+          const destDir = path.dirname(dest);
+          if (!fs.existsSync(destDir)) fs.mkdirSync(destDir, { recursive: true });
+          fs.copyFileSync(src, dest);
+        }
+      }
+    },
+  };
+}
+
+function createAssetContentDevPlugin() {
+  return {
+    name: "barodoc-asset-content-dev",
+    apply: "serve" as const,
+    configureServer(server: { middlewares: { use: (fn: (req: any, res: any, next: () => void) => void) => void } }) {
+      server.middlewares.use((req: { url?: string }, res: { statusCode: number; end: (s?: string) => void; setHeader: (k: string, v: string) => void }, next: () => void) => {
+        if (!req.url?.startsWith("/_content/")) return next();
+        const rawPath = req.url.slice("/_content/".length).split("?")[0];
+        const contentDir = path.resolve(process.cwd(), "src", "content");
+        const filePath = path.resolve(contentDir, rawPath);
+        if (!filePath.startsWith(contentDir) || rawPath.includes("..")) {
+          res.statusCode = 404;
+          res.end();
+          return;
+        }
+        if (!fs.existsSync(filePath) || !fs.statSync(filePath).isFile()) {
+          res.statusCode = 404;
+          res.end();
+          return;
+        }
+        const ext = path.extname(filePath).toLowerCase();
+        if (!ASSET_EXTENSIONS.includes(ext as any)) {
+          res.statusCode = 404;
+          res.end();
+          return;
+        }
+        res.setHeader("Content-Type", "application/octet-stream");
+        fs.createReadStream(filePath).pipe(res as any);
+      });
+    },
+  };
+}
+
 function createThemeIntegration(
   config: ResolvedBarodocConfig,
   options?: DocsThemeOptions
@@ -77,8 +139,15 @@ function createThemeIntegration(
   return {
     name: "@barodoc/theme-docs",
     hooks: {
-      "astro:config:setup": async ({ updateConfig, injectRoute, logger }) => {
+      "astro:config:setup": async ({ config: astroConfig, updateConfig, injectRoute, logger }) => {
         logger.info("Setting up Barodoc docs theme...");
+        const rawOut = (astroConfig as unknown as { build?: { outDir?: string | URL } }).build;
+        const outDir =
+          typeof rawOut?.outDir === "string"
+            ? rawOut.outDir
+            : rawOut?.outDir instanceof URL
+              ? fileURLToPath(rawOut.outDir)
+              : "dist";
 
         injectRoute({
           pattern: "/",
@@ -120,7 +189,11 @@ function createThemeIntegration(
             react(),
           ],
           vite: {
-            plugins: [tailwindcss()],
+            plugins: [
+              tailwindcss(),
+              createAssetContentPlugin(outDir),
+              createAssetContentDevPlugin(),
+            ],
             optimizeDeps: {
               include: ["mermaid"],
             },
