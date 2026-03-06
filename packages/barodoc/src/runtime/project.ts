@@ -182,6 +182,13 @@ export async function createProject(options: ProjectOptions): Promise<string> {
     console.log(pc.dim("  Copied pages/ directory"));
   }
 
+  // Write content.config.ts so all collections (docs, blog, changelog, pages, sections) exist
+  await fs.writeFile(
+    path.join(contentDir, "config.ts"),
+    generateContentConfig(config),
+    "utf-8"
+  );
+
   // Symlink public directory if exists
   const publicDir = path.join(root, "public");
   const publicLink = path.join(projectDir, "public");
@@ -248,12 +255,7 @@ export default defineConfig({${siteLine}${baseLine}
 `;
 }
 
-function generateContentConfig(): string {
-  return `import { defineCollection, z } from "astro:content";
-
-const docsCollection = defineCollection({
-  type: "content",
-  schema: z.object({
+const contentSchema = `z.object({
     title: z.string().optional(),
     description: z.string().optional(),
     tags: z.array(z.string()).optional(),
@@ -262,10 +264,12 @@ const docsCollection = defineCollection({
     api_reference: z.boolean().optional(),
     difficulty: z.enum(["beginner", "intermediate", "advanced"]).optional(),
     lastUpdated: z.date().optional(),
-  }),
-});
+  })`;
 
-const blogCollection = defineCollection({
+function generateContentConfig(config: BarodocConfig): string {
+  const collections: string[] = [
+    `docs: defineCollection({ type: "content", schema: ${contentSchema} })`,
+    `blog: defineCollection({
   type: "content",
   schema: z.object({
     title: z.string(),
@@ -276,21 +280,27 @@ const blogCollection = defineCollection({
     image: z.string().optional(),
     tags: z.array(z.string()).optional(),
   }),
-});
-
-const changelogCollection = defineCollection({
+})`,
+    `changelog: defineCollection({
   type: "content",
   schema: z.object({
     title: z.string().optional(),
     version: z.string(),
     date: z.coerce.date(),
   }),
-});
+})`,
+    `pages: defineCollection({ type: "content", schema: ${contentSchema} })`,
+  ];
+  const sections = config.sections ?? [];
+  for (const section of sections) {
+    collections.push(
+      `${section.slug}: defineCollection({ type: "content", schema: ${contentSchema} })`
+    );
+  }
+  return `import { defineCollection, z } from "astro:content";
 
 export const collections = {
-  docs: docsCollection,
-  blog: blogCollection,
-  changelog: changelogCollection,
+  ${collections.join(",\n  ")},
 };
 `;
 }

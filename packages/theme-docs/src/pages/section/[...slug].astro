@@ -1,19 +1,18 @@
 ---
 import path from "node:path";
+import fs from "node:fs";
 import { getCollection, render } from "astro:content";
+import { RstToHtmlCompiler } from "rst-compiler";
 import DocsLayout from "../../layouts/DocsLayout.astro";
 import config from "virtual:barodoc/config";
 import { defaultLocale, locales } from "virtual:barodoc/i18n";
 import { getLocalizedNavGroup } from "@barodoc/core";
 import readingTime from "reading-time";
 import { scanSectionAssets, getContentSectionsBasePath } from "../../lib/scanAssets.js";
-import { readTexPreRendered } from "../../lib/texPreRender.js";
-const TEX_PREGEN_PREFIX = "/_tex-generated";
 import { getViewerType } from "../../lib/assetExtensions.js";
 import AssetPdf from "../../components/asset/AssetPdf.astro";
 import AssetHtml from "../../components/asset/AssetHtml.astro";
 import AssetPptx from "../../components/asset/AssetPptx.astro";
-import AssetTex from "../../components/asset/AssetTex.astro";
 import AssetCsv from "../../components/asset/AssetCsv.astro";
 import AssetDownload from "../../components/asset/AssetDownload.astro";
 import AssetViewerJs from "../../components/asset/AssetViewerJs.astro";
@@ -72,7 +71,14 @@ export async function getStaticPaths() {
 
       paths.push({
         params: { section: section.slug, slug: innerPath || undefined },
-        props: { doc, assetEntry: null, locale, cleanSlug, sectionSlug: section.slug, sectionNav: section.navigation },
+        props: {
+          doc,
+          assetEntry: null,
+          locale,
+          cleanSlug,
+          sectionSlug: section.slug,
+          sectionNav: section.navigation,
+        },
       });
     }
 
@@ -90,11 +96,20 @@ export async function getStaticPaths() {
         : asset.slug;
       if (existingInnerPaths.has(innerPath)) continue;
       const viewerType = getViewerType(asset.ext);
-      const hasTexPreRendered =
-        viewerType === "latex" && readTexPreRendered(section.slug, asset.relPath) !== null;
-      const texPreRenderedUrl = hasTexPreRendered
-        ? `${TEX_PREGEN_PREFIX}/${section.slug}/${asset.relPath}.html`
-        : null;
+      let rstRenderedHtml: string | null = null;
+      let rstHeader: string | null = null;
+      if (viewerType === "rst") {
+        try {
+          const rstPath = path.join(sectionContentDir, asset.relPath);
+          const rstContent = fs.readFileSync(rstPath, "utf-8");
+          const compiled = new RstToHtmlCompiler().compile(rstContent);
+          rstRenderedHtml = compiled.body ?? "";
+          rstHeader = compiled.header ?? null;
+        } catch {
+          rstRenderedHtml = null;
+          rstHeader = null;
+        }
+      }
       paths.push({
         params: { section: section.slug, slug: innerPath || undefined },
         props: {
@@ -105,7 +120,8 @@ export async function getStaticPaths() {
             viewerType,
             sectionSlug: section.slug,
           },
-          texPreRenderedUrl,
+          rstRenderedHtml,
+          rstHeader,
           doc: null,
           locale,
           cleanSlug: innerPath,
@@ -127,14 +143,15 @@ interface Props {
     viewerType: string;
     sectionSlug: string;
   } | null;
-  texPreRenderedUrl?: string | null;
+  rstRenderedHtml?: string | null;
+  rstHeader?: string | null;
   locale: string;
   cleanSlug: string;
   sectionSlug: string;
   sectionNav: typeof config.navigation;
 }
 
-const { doc, assetEntry = null, texPreRenderedUrl = null, locale, cleanSlug, sectionSlug, sectionNav } = Astro.props;
+const { doc, assetEntry = null, rstRenderedHtml = null, rstHeader = null, locale, cleanSlug, sectionSlug, sectionNav } = Astro.props;
 const isAsset = !!assetEntry;
 
 let Content: any;
@@ -236,24 +253,21 @@ const assetUrl = isAsset
       {assetEntry!.viewerType === "pdf" && <AssetPdf url={assetUrl} />}
       {assetEntry!.viewerType === "iframe" && <AssetHtml url={assetUrl} />}
       {assetEntry!.viewerType === "pptx" && <AssetPptx url={assetUrl} />}
-      {assetEntry!.viewerType === "latex" && (
-        texPreRenderedUrl ? (
-          <div class="asset-tex-wrapper w-full rounded-lg overflow-hidden border border-[var(--bd-border)]">
-            <iframe src={texPreRenderedUrl} title={pageTitle} class="w-full min-h-[60vh] border-0" />
-          </div>
-        ) : (
-          <AssetTex url={assetUrl} />
-        )
-      )}
       {assetEntry!.viewerType === "csv" && <AssetCsv url={assetUrl} />}
       {["download", "docx", "xlsx"].includes(assetEntry!.viewerType) && (
         <AssetDownload url={assetUrl} title={pageTitle} />
       )}
       {assetEntry!.viewerType === "viewerjs" && <AssetViewerJs url={assetUrl} />}
       {assetEntry!.viewerType === "ipynb" && <AssetIpynb url={assetUrl} />}
-      {assetEntry!.viewerType === "rst" && <AssetRst url={assetUrl} />}
+      {assetEntry!.viewerType === "rst" && (
+        <AssetRst
+          url={assetUrl}
+          renderedHtml={rstRenderedHtml}
+          headerHtml={rstHeader}
+        />
+      )}
       {assetEntry!.viewerType === "epub" && <AssetEpub url={assetUrl} />}
-      {!["pdf", "iframe", "pptx", "latex", "csv", "download", "docx", "xlsx", "viewerjs", "ipynb", "rst", "epub"].includes(assetEntry!.viewerType) && (
+      {!["pdf", "iframe", "pptx", "csv", "download", "docx", "xlsx", "viewerjs", "ipynb", "rst", "epub"].includes(assetEntry!.viewerType) && (
         <div
           id="asset-viewer"
           data-url={assetUrl}

@@ -20,8 +20,11 @@ export interface BuildOptions {
 }
 
 export async function build(dir: string, options: BuildOptions): Promise<void> {
-  const root = path.resolve(process.cwd());
-  const outputDir = path.resolve(process.cwd(), options.output);
+  // When dir is given (e.g. ../my-docs), use it as project root; otherwise cwd
+  const root = !dir || dir === "."
+    ? path.resolve(process.cwd())
+    : path.resolve(process.cwd(), dir);
+  const outputDir = path.resolve(root, options.output);
 
   console.log();
   console.log(pc.bold(pc.cyan("  barodoc build")));
@@ -38,8 +41,7 @@ export async function build(dir: string, options: BuildOptions): Promise<void> {
 
   console.log(pc.dim("Quick mode - creating temporary project..."));
 
-  const docsDir =
-    !dir || dir === "." ? findDocsDir(root) : path.resolve(root, dir);
+  const docsDir = findDocsDir(root);
   const { config } = await loadProjectConfig(root, options.config);
 
   const projectDir = await createProject({

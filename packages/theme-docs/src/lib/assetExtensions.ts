@@ -2,7 +2,6 @@ export const ASSET_EXTENSIONS = [
   ".html",
   ".pdf",
   ".pptx",
-  ".tex",
   ".odt",
   ".ods",
   ".odp",
@@ -20,7 +19,6 @@ export type ViewerType =
   | "iframe" // .html
   | "pdf" // .pdf
   | "pptx" // .pptx
-  | "latex" // .tex
   | "viewerjs" // .odt, .ods, .odp
   | "docx" // .docx (viewer or download)
   | "xlsx" // .xlsx (viewer or download)
@@ -34,7 +32,6 @@ const EXT_TO_VIEWER: Record<string, ViewerType> = {
   ".html": "iframe",
   ".pdf": "pdf",
   ".pptx": "pptx",
-  ".tex": "latex",
   ".odt": "viewerjs",
   ".ods": "viewerjs",
   ".odp": "viewerjs",

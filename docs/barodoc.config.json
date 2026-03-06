@@ -39,7 +39,7 @@
     {
       "group": "Getting Started",
       "group:ko": "시작하기",
-      "pages": ["introduction", "quickstart", "sample", "sample-tex", "sample-tex-overleaf", "sample-csv", "sample-rst", "sample-ipynb"]
+      "pages": ["introduction", "quickstart", "sample", "sample-csv", "sample-rst", "sample-ipynb"]
     },
     {
       "group": "Guides",
