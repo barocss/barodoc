@@ -1,0 +1,33 @@
+---
+interface Props {
+  url: string;
+}
+const { url } = Astro.props;
+---
+<div class="asset-epub-wrapper w-full min-h-[80vh] rounded-lg overflow-hidden border border-[var(--bd-border)]">
+  <div id="epub-viewer-root" class="w-full min-h-[80vh]" data-url={url} />
+</div>
+<script src="https://cdn.jsdelivr.net/npm/epubjs@0.3.88/dist/epub.min.js" />
+<script define:vars={{ url }}>
+  function initEpub() {
+    const root = document.getElementById("epub-viewer-root");
+    if (!root || !url || typeof ePub === "undefined") return;
+    const fullUrl = typeof location !== "undefined" ? location.origin + url : url;
+    try {
+      const book = globalThis.ePub(fullUrl);
+      const rendition = book.renderTo("epub-viewer-root", {
+        method: "continuous",
+        width: "100%",
+        height: "100%",
+      });
+      rendition.display();
+    } catch (e) {
+      root.innerHTML = `<p class="p-4 text-red-600">Failed to load EPUB: ${e.message}</p>`;
+    }
+  }
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initEpub);
+  } else {
+    setTimeout(initEpub, 100);
+  }
+</script>

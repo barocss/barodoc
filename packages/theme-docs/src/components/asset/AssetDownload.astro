@@ -1,0 +1,12 @@
+---
+interface Props {
+  url: string;
+  title?: string;
+}
+const { url, title = "Download" } = Astro.props;
+---
+<div class="asset-download-wrapper flex flex-col gap-4 p-6 rounded-lg border border-[var(--bd-border)]">
+  <a href={url} download class="inline-flex items-center gap-2 px-4 py-2 rounded-md bg-primary-600 text-white hover:bg-primary-700 dark:bg-primary-500 dark:hover:bg-primary-600">
+    {title}
+  </a>
+</div>

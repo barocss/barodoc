@@ -1,0 +1,32 @@
+---
+interface Props {
+  url: string;
+}
+const { url } = Astro.props;
+---
+<div class="asset-pptx-wrapper w-full min-h-[80vh] rounded-lg overflow-hidden border border-[var(--bd-border)]">
+  <div id="pptx-viewer-root" class="w-full min-h-[80vh]" data-url={url} />
+</div>
+<script src="https://cdn.jsdelivr.net/npm/jszip@3/dist/jszip.min.js" />
+<script src="https://cdn.jsdelivr.net/npm/pptxviewjs/dist/PptxViewJS.min.js" />
+<script define:vars={{ url }}>
+  function initPptx() {
+    const el = document.getElementById("pptx-viewer-root");
+    if (!el || !url) return;
+    if (typeof globalThis.PptxViewJS !== "undefined") {
+      try {
+        const viewer = new globalThis.PptxViewJS.Viewer("#pptx-viewer-root");
+        viewer.load(url);
+      } catch (e) {
+        console.error("PptxViewJS load error", e);
+      }
+      return;
+    }
+    setTimeout(initPptx, 50);
+  }
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initPptx);
+  } else {
+    initPptx();
+  }
+</script>

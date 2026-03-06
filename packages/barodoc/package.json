@@ -41,6 +41,7 @@
     "tailwindcss": "^4.0.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "rst-compiler": "^0.5.7",
     "cac": "^6.7.14",
     "chokidar": "^4.0.0",
     "execa": "^9.5.0",

@@ -51,6 +51,9 @@ importers:
       react-dom:
         specifier: ^19.0.0
         version: 19.2.4(react@19.2.4)
+      rst-compiler:
+        specifier: ^0.5.7
+        version: 0.5.7
     devDependencies:
       '@types/react':
         specifier: ^19.0.0
@@ -445,6 +448,9 @@ importers:
       remark-math:
         specifier: ^6.0.0
         version: 6.0.0
+      rst-compiler:
+        specifier: ^0.5.7
+        version: 0.5.7
       tailwind-merge:
         specifier: ^3.4.0
         version: 3.4.0
@@ -3932,6 +3938,9 @@ packages:
 
   roughjs@4.6.6:
     resolution: {integrity: sha512-ZUz/69+SYpFN/g/lUlo2FXcIjRkSu3nDarreVdGGndHEBJ6cXPdKguS8JGxwj5HA5xIbVKSmLgr5b3AWxtRfvQ==}
+
+  rst-compiler@0.5.7:
+    resolution: {integrity: sha512-kVBUcOTEstES7q67s4RgF9KClnarNMwOODUVBPExR3aF00gNZT2TMIDhqLNO1ZPXr0uLdXuwgTNOc+MjEQAf0A==}
 
   run-parallel@1.2.0:
     resolution: {integrity: sha512-5l4VyZR86LZ/lDxZTR6jqL8AFE2S0IFLMP26AbjsLVADxHdhB/c0GUsH+y39UfCi3dzz8OlQuPmnaJOMoDHQBA==}
@@ -8523,6 +8532,11 @@ snapshots:
       path-data-parser: 0.1.0
       points-on-curve: 0.2.0
       points-on-path: 0.2.1
+
+  rst-compiler@0.5.7:
+    dependencies:
+      katex: 0.16.28
+      shiki: 3.22.0
 
   run-parallel@1.2.0:
     dependencies:

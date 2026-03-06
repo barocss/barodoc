@@ -19,7 +19,10 @@ export interface ServeOptions {
 }
 
 export async function serve(dir: string, options: ServeOptions): Promise<void> {
-  const root = path.resolve(process.cwd());
+  // When dir is given (e.g. ../my-docs), use it as project root; otherwise cwd
+  const root = !dir || dir === "."
+    ? path.resolve(process.cwd())
+    : path.resolve(process.cwd(), dir);
 
   console.log();
   console.log(pc.bold(pc.cyan("  barodoc serve")));
@@ -41,8 +44,7 @@ export async function serve(dir: string, options: ServeOptions): Promise<void> {
 
   console.log(pc.dim("Quick mode - creating temporary project..."));
 
-  const docsDir =
-    !dir || dir === "." ? findDocsDir(root) : path.resolve(root, dir);
+  const docsDir = findDocsDir(root);
   const { config } = await loadProjectConfig(root, options.config);
 
   const projectDir = await createProject({

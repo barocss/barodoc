@@ -35,6 +35,17 @@ pnpm build:packages   # Build core, theme-docs, barodoc CLI, and all plugins
 - Docs config: `docs/barodoc.config.json`.
 - To test a plugin, add it to the `plugins` array there (e.g. `"@barodoc/plugin-raw-md"` or with options).
 
+### Asset content (PDF, HTML, PPTX, etc.)
+
+Asset files (e.g. `.pdf`, `.html`, `.pptx`, `.csv`, `.rst`, `.epub`, `.odt`, `.ipynb`) can live in the same content tree as Markdown (e.g. `src/content/docs/en/`). They are served at `/_content/<section>/<path>` and get dedicated viewer pages at `/<section>/<slug>` (same URL shape as docs).
+
+- **Where to put files**: e.g. `docs/src/content/docs/en/guide.pdf` or `docs/src/content/docs/en/report.html`.
+- **Sidebar / prev-next**: Add the asset slug to `barodoc.config.json` → `navigation.pages` (e.g. `"guide"` for `guide.pdf`) so it appears in the sidebar and in prev/next links.
+- **Dev**: `/_content/docs/en/guide.pdf` is served by the theme’s dev middleware from `src/content`.
+- **Build**: Asset files are copied to `dist/_content/<section>/<path>`; viewer pages are pre-rendered.
+
+Supported extensions and viewer types are defined in `@barodoc/theme-docs` (see `assetExtensions.ts`).
+
 ---
 
 ## 2. Testing with my-docs (quick mode)
@@ -80,6 +91,27 @@ node ../barodoc/packages/barodoc/dist/cli.js build . -o dist
 
 - **serve** with no args or `serve .`: uses `findDocsDir(my-docs)` (e.g. `docs`). Temp project: `my-docs/.barodoc/`.
 - **build . -o dist**: same docs dir; build output is copied to `my-docs/dist/`.
+
+### Testing asset viewers (PDF, RST, etc.) in my-docs
+
+To verify asset content (e.g. RST, PDF) in quick mode:
+
+1. In my-docs, add asset files under the docs tree (e.g. `docs/en/sample-rst.rst`, `docs/en/guide.pdf`).
+2. Add the asset slugs to `barodoc.config.json` → `navigation` → `pages` (e.g. `"sample-rst"` for `sample-rst.rst`) so they appear in the sidebar.
+3. From the barodoc repo run:
+
+   ```bash
+   pnpm build:packages
+   pnpm barodoc serve ../my-docs
+   ```
+
+4. Open the asset page (e.g. `http://localhost:4321/docs/sample-rst`). For RST, the page should show compiled HTML; for PDF, the PDF viewer.
+5. Optionally run a production build and preview:
+
+   ```bash
+   pnpm barodoc build ../my-docs -o ../my-docs/dist
+   pnpm barodoc preview ../my-docs
+   ```
 
 ### Running from barodoc repo (against my-docs)
 

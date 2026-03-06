@@ -1,0 +1,27 @@
+---
+interface Props {
+  url: string;
+}
+const { url } = Astro.props;
+---
+<div class="asset-viewerjs-wrapper w-full min-h-[80vh] rounded-lg overflow-hidden border border-[var(--bd-border)]">
+  <iframe
+    id="viewerjs-frame"
+    title="ODF viewer"
+    class="w-full h-[80vh] border-0"
+    data-url={url}
+  />
+</div>
+<script define:vars={{ url }}>
+  function setViewerSrc() {
+    const frame = document.getElementById("viewerjs-frame");
+    if (!frame || !url) return;
+    const fullUrl = typeof location !== "undefined" ? location.origin + url : url;
+    frame.src = `https://viewerjs.org/ViewerJS/#${encodeURIComponent(fullUrl)}`;
+  }
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", setViewerSrc);
+  } else {
+    setViewerSrc();
+  }
+</script>
