@@ -1,0 +1,13 @@
+---
+interface Props {
+  url: string;
+}
+const { url } = Astro.props;
+---
+<div class="asset-pdf-wrapper w-full min-h-[80vh] rounded-lg overflow-hidden border border-[var(--bd-border)]">
+  <iframe
+    src={url}
+    title="PDF viewer"
+    class="w-full h-[80vh] border-0"
+  />
+</div>

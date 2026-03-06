@@ -1,0 +1,32 @@
+---
+interface Props {
+  url: string;
+}
+const { url } = Astro.props;
+---
+<div class="asset-tex-wrapper w-full rounded-lg overflow-hidden border border-[var(--bd-border)] p-6">
+  <div id="tex-viewer-root" class="prose prose-sm dark:prose-invert max-w-none" data-url={url} />
+</div>
+<script define:vars={{ url }}>
+  async function initTex() {
+    const root = document.getElementById("tex-viewer-root");
+    if (!root || !url) return;
+    try {
+      const { LaTeXJSComponent } = await import("https://cdn.jsdelivr.net/npm/latex.js@0.12.1/dist/latex.mjs");
+      customElements.define("latex-js", LaTeXJSComponent);
+      const res = await fetch(url);
+      const tex = await res.text();
+      const el = document.createElement("latex-js");
+      el.setAttribute("baseURL", "https://cdn.jsdelivr.net/npm/latex.js@0.12.1/dist/");
+      el.textContent = tex;
+      root.appendChild(el);
+    } catch (e) {
+      root.innerHTML = `<p class="text-red-600">Failed to load LaTeX: ${e.message}</p>`;
+    }
+  }
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initTex);
+  } else {
+    initTex();
+  }
+</script>

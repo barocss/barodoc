@@ -1,0 +1,35 @@
+---
+interface Props {
+  url: string;
+}
+const { url } = Astro.props;
+---
+<div class="asset-rst-wrapper w-full rounded-lg overflow-hidden border border-[var(--bd-border)] p-6">
+  <div id="rst-viewer-root" class="prose prose-sm dark:prose-invert max-w-none" data-url={url} />
+  <p class="mt-4">
+    <a href={url} download class="text-primary-600 dark:text-primary-400 hover:underline">Download .rst</a>
+  </p>
+</div>
+<script define:vars={{ url }}>
+  async function initRst() {
+    const root = document.getElementById("rst-viewer-root");
+    if (!root || !url) return;
+    try {
+      const res = await fetch(url);
+      const text = await res.text();
+      root.innerHTML = `<pre class="whitespace-pre-wrap text-sm">${escapeHtml(text)}</pre>`;
+    } catch (e) {
+      root.innerHTML = `<p class="text-red-600">Failed to load RST: ${escapeHtml(e.message)}</p>`;
+    }
+  }
+  function escapeHtml(s) {
+    const div = document.createElement("div");
+    div.textContent = s;
+    return div.innerHTML;
+  }
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initRst);
+  } else {
+    initRst();
+  }
+</script>

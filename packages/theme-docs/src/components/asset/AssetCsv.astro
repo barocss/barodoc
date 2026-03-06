@@ -1,0 +1,51 @@
+---
+interface Props {
+  url: string;
+}
+const { url } = Astro.props;
+---
+<div class="asset-csv-wrapper w-full overflow-auto rounded-lg border border-[var(--bd-border)]">
+  <div id="csv-viewer-root" data-url={url} />
+</div>
+<script define:vars={{ url }}>
+  async function initCsv() {
+    const root = document.getElementById("csv-viewer-root");
+    if (!root || !url) return;
+    try {
+      const res = await fetch(url);
+      const text = await res.text();
+      const lines = text.trim().split(/\r?\n/).filter(Boolean);
+      const rows = lines.map((line) =>
+        line.split(",").map((c) => c.replace(/^"|"$/g, "").trim())
+      );
+      let table = "<table class=\"w-full text-left border-collapse\"><thead><tr>";
+      if (rows.length > 0) {
+        for (const cell of rows[0]) {
+          table += `<th class="border border-[var(--bd-border)] px-3 py-2 bg-[var(--bd-bg-secondary)]">${escapeHtml(cell)}</th>`;
+        }
+        table += "</tr></thead><tbody>";
+        for (let i = 1; i < rows.length; i++) {
+          table += "<tr>";
+          for (const cell of rows[i]) {
+            table += `<td class="border border-[var(--bd-border)] px-3 py-2">${escapeHtml(cell)}</td>`;
+          }
+          table += "</tr>";
+        }
+      }
+      table += "</tbody></table>";
+      root.innerHTML = table;
+    } catch (e) {
+      root.innerHTML = `<p class="p-4 text-red-600">Failed to load CSV: ${escapeHtml(e.message)}</p>`;
+    }
+  }
+  function escapeHtml(s) {
+    const div = document.createElement("div");
+    div.textContent = s;
+    return div.innerHTML;
+  }
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initCsv);
+  } else {
+    initCsv();
+  }
+</script>

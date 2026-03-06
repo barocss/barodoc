@@ -8,6 +8,16 @@ import { getLocalizedNavGroup } from "@barodoc/core";
 import readingTime from "reading-time";
 import { scanSectionAssets, getContentSectionsBasePath } from "../../lib/scanAssets.js";
 import { getViewerType } from "../../lib/assetExtensions.js";
+import AssetPdf from "../../components/asset/AssetPdf.astro";
+import AssetHtml from "../../components/asset/AssetHtml.astro";
+import AssetPptx from "../../components/asset/AssetPptx.astro";
+import AssetTex from "../../components/asset/AssetTex.astro";
+import AssetCsv from "../../components/asset/AssetCsv.astro";
+import AssetDownload from "../../components/asset/AssetDownload.astro";
+import AssetViewerJs from "../../components/asset/AssetViewerJs.astro";
+import AssetIpynb from "../../components/asset/AssetIpynb.astro";
+import AssetRst from "../../components/asset/AssetRst.astro";
+import AssetEpub from "../../components/asset/AssetEpub.astro";
 
 export async function getStaticPaths() {
   const sections = [
@@ -118,7 +128,7 @@ const { doc, assetEntry = null, locale, cleanSlug, sectionSlug, sectionNav } = A
 const isAsset = !!assetEntry;
 
 let Content: any;
-let headings: any[];
+let headings: any[] = [];
 let readTime = { text: "" };
 if (!isAsset) {
   const rendered = await render(doc);
@@ -191,6 +201,10 @@ const pageTitle = isAsset
   ? getPageTitle(cleanSlug)
   : doc.data.title;
 breadcrumbs.push({ label: pageTitle });
+
+const assetUrl = isAsset
+  ? `/_content/${sectionSlug}/${assetEntry!.relPath}`
+  : "";
 ---
 
 <DocsLayout
@@ -207,7 +221,27 @@ breadcrumbs.push({ label: pageTitle });
   sectionSlug={sectionSlug}
 >
   {isAsset ? (
-    <p>Asset: {assetEntry!.slug}</p>
+    <div class="asset-viewer-wrapper">
+      {assetEntry!.viewerType === "pdf" && <AssetPdf url={assetUrl} />}
+      {assetEntry!.viewerType === "iframe" && <AssetHtml url={assetUrl} />}
+      {assetEntry!.viewerType === "pptx" && <AssetPptx url={assetUrl} />}
+      {assetEntry!.viewerType === "latex" && <AssetTex url={assetUrl} />}
+      {assetEntry!.viewerType === "csv" && <AssetCsv url={assetUrl} />}
+      {["download", "docx", "xlsx"].includes(assetEntry!.viewerType) && (
+        <AssetDownload url={assetUrl} title={pageTitle} />
+      )}
+      {assetEntry!.viewerType === "viewerjs" && <AssetViewerJs url={assetUrl} />}
+      {assetEntry!.viewerType === "ipynb" && <AssetIpynb url={assetUrl} />}
+      {assetEntry!.viewerType === "rst" && <AssetRst url={assetUrl} />}
+      {assetEntry!.viewerType === "epub" && <AssetEpub url={assetUrl} />}
+      {!["pdf", "iframe", "pptx", "latex", "csv", "download", "docx", "xlsx", "viewerjs", "ipynb", "rst", "epub"].includes(assetEntry!.viewerType) && (
+        <div
+          id="asset-viewer"
+          data-url={assetUrl}
+          data-type={assetEntry!.viewerType}
+        />
+      )}
+    </div>
   ) : (
     <>
       {category && (
