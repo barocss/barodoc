@@ -32,6 +32,9 @@ pnpm-debug.log*
 public/pagefind/
 docs/public/pagefind/
 
+# Git worktrees
+.worktrees/
+
 # Generated outputs (barodoc manifest / barodoc schema)
 docs-manifest.json
 docs-manifest-chunks.jsonl
