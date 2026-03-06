@@ -16,7 +16,8 @@
     "@barodoc/theme-docs": "workspace:*",
     "astro": "^5.0.0",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "rst-compiler": "^0.5.7"
   },
   "devDependencies": {
     "@types/react": "^19.0.0",
