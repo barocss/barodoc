@@ -1,0 +1,162 @@
+---
+interface Props {
+  url: string;
+}
+const { url } = Astro.props;
+---
+<div class="asset-rst-wrapper w-full rounded-lg overflow-hidden border border-[var(--bd-border)] p-6">
+  <div id="rst-viewer-root" class="prose prose-sm dark:prose-invert max-w-none" data-url={url} />
+  <div class="mt-4 flex gap-4 text-sm">
+    <button id="rst-toggle-source" class="text-primary-600 dark:text-primary-400 hover:underline">Show source</button>
+    <a href={url} download class="text-primary-600 dark:text-primary-400 hover:underline">Download .rst</a>
+  </div>
+</div>
+<script define:vars={{ url }}>
+  async function initRst() {
+    const root = document.getElementById("rst-viewer-root");
+    const toggleBtn = document.getElementById("rst-toggle-source");
+    if (!root || !url) return;
+    let rstText = "";
+    let renderedHtml = "";
+    let showingSource = false;
+    try {
+      const res = await fetch(url);
+      rstText = await res.text();
+      // Try to use restructured parser (if available via CDN) or basic RST→HTML
+      try {
+        // Load restructured from CDN (if available)
+        const { parse } = await import("https://cdn.jsdelivr.net/npm/restructured@0.3.0/dist/restructured.esm.js").catch(() => null);
+        if (parse) {
+          const ast = parse(rstText);
+          renderedHtml = renderRstAst(ast);
+        } else {
+          // Fallback: basic RST→HTML (sections, paragraphs, lists)
+          renderedHtml = renderRstBasic(rstText);
+        }
+      } catch (e) {
+        // Fallback: basic RST→HTML
+        renderedHtml = renderRstBasic(rstText);
+      }
+      root.innerHTML = renderedHtml;
+      if (toggleBtn) {
+        toggleBtn.addEventListener("click", () => {
+          showingSource = !showingSource;
+          root.innerHTML = showingSource
+            ? `<pre class="whitespace-pre-wrap text-sm">${escapeHtml(rstText)}</pre>`
+            : renderedHtml;
+          toggleBtn.textContent = showingSource ? "Show rendered" : "Show source";
+        });
+      }
+    } catch (e) {
+      root.innerHTML = `<p class="text-red-600">Failed to load RST: ${escapeHtml(e.message)}</p>`;
+    }
+  }
+  function renderRstBasic(text) {
+    // Basic RST→HTML: sections, paragraphs, lists, code blocks
+    let html = "";
+    const lines = text.split(/\r?\n/);
+    let inCodeBlock = false;
+    let codeBlockLang = "";
+    let codeBlockContent = [];
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i];
+      if (line.match(/^\.\.\s+code-block::|^::\s*$/)) {
+        if (inCodeBlock && codeBlockContent.length) {
+          html += `<pre><code>${escapeHtml(codeBlockContent.join("\n"))}</code></pre>`;
+          codeBlockContent = [];
+        }
+        inCodeBlock = true;
+        const match = line.match(/code-block::\s*(\w+)/);
+        codeBlockLang = match ? match[1] : "";
+        continue;
+      }
+      if (inCodeBlock) {
+        if (line.trim() === "" && codeBlockContent.length > 0) {
+          html += `<pre><code${codeBlockLang ? ` class="language-${codeBlockLang}"` : ""}>${escapeHtml(codeBlockContent.join("\n"))}</code></pre>`;
+          codeBlockContent = [];
+          inCodeBlock = false;
+        } else {
+          codeBlockContent.push(line);
+        }
+        continue;
+      }
+      if (line.match(/^=+$|^-+$|^~+$/)) {
+        const prev = lines[i - 1];
+        if (prev) {
+          const level = line[0] === "=" ? 1 : line[0] === "-" ? 2 : 3;
+          html += `<h${level}>${escapeHtml(prev)}</h${level}>`;
+          i++;
+        }
+        continue;
+      }
+      if (line.trim() === "") {
+        if (html && !html.endsWith("</p>") && !html.endsWith("</ul>") && !html.endsWith("</ol>")) {
+          html += "</p>";
+        }
+        continue;
+      }
+      if (line.match(/^[-*]\s+|^\d+\.\s+/)) {
+        const tag = line.match(/^\d+\./) ? "ol" : "ul";
+        if (!html.endsWith(`<${tag}>`)) {
+          html += `<${tag}><li>${escapeHtml(line.replace(/^[-*]\s+|^\d+\.\s+/, ""))}</li>`;
+        } else {
+          html += `<li>${escapeHtml(line.replace(/^[-*]\s+|^\d+\.\s+/, ""))}</li>`;
+        }
+        if (i === lines.length - 1 || !lines[i + 1].match(/^[-*]\s+|^\d+\.\s+/)) {
+          html += `</${tag}>`;
+        }
+        continue;
+      }
+      if (!html.endsWith("<p>")) {
+        html += "<p>";
+      }
+      html += escapeHtml(line) + " ";
+    }
+    if (html && !html.endsWith("</p>") && !html.endsWith("</ul>") && !html.endsWith("</ol>")) {
+      html += "</p>";
+    }
+    if (inCodeBlock && codeBlockContent.length) {
+      html += `<pre><code>${escapeHtml(codeBlockContent.join("\n"))}</code></pre>`;
+    }
+    return html || `<p>${escapeHtml(text)}</p>`;
+  }
+  function renderRstAst(ast) {
+    // Simple AST→HTML renderer for restructured AST
+    if (!ast || !ast.children) return "";
+    let html = "";
+    for (const node of ast.children) {
+      if (node.type === "section") {
+        const title = node.children?.find(c => c.type === "title")?.children?.[0]?.value || "";
+        const level = node.depth || 1;
+        html += `<h${level}>${escapeHtml(title)}</h${level}>`;
+        html += renderRstAst({ children: node.children?.filter(c => c.type !== "title") || [] });
+      } else if (node.type === "paragraph") {
+        html += `<p>${renderRstAst({ children: node.children || [] })}</p>`;
+      } else if (node.type === "text") {
+        html += escapeHtml(node.value || "");
+      } else if (node.type === "list") {
+        const tag = node.ordered ? "ol" : "ul";
+        html += `<${tag}>`;
+        for (const item of node.children || []) {
+          html += `<li>${renderRstAst({ children: item.children || [] })}</li>`;
+        }
+        html += `</${tag}>`;
+      } else if (node.type === "literal_block") {
+        html += `<pre><code>${escapeHtml(node.value || "")}</code></pre>`;
+      } else if (node.children) {
+        html += renderRstAst({ children: node.children });
+      }
+    }
+    return html;
+  }
+  function escapeHtml(s) {
+    const div = document.createElement("div");
+    div.textContent = s;
+    return div.innerHTML;
+  }
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initRst);
+  } else {
+    initRst();
+  }
+</script>

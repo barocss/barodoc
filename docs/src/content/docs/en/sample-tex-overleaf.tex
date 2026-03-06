@@ -1,0 +1,60 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[english]{babel}
+\usepackage{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+
+\geometry{margin=2.5cm}
+
+\title{Overleaf-style LaTeX Sample}
+\author{Barodoc Team}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+This sample uses full LaTeX packages (babel, geometry, amsmath, table, figure). It is rendered at \textbf{build time} with the LaTeX.js CLI, so you see the same result as in Overleaf. Run \texttt{pnpm build} or \texttt{pnpm dev} to generate the HTML.
+\end{abstract}
+
+\section{Introduction}
+
+Overleaf compiles your document with a full TeX distribution. In Barodoc we achieve a similar result by pre-rendering \texttt{.tex} files at build time with the LaTeX.js CLI (Node), which supports packages and environments that the in-browser LaTeX.js viewer does not.
+
+\section{Math}
+
+With \texttt{amsmath} you can write:
+
+\begin{equation}
+  E = mc^2, \qquad
+  \int_0^\infty e^{-x^2}\,dx = \frac{\sqrt{\pi}}{2}.
+\end{equation}
+
+Inline math: \(\sum_{n=1}^\infty \frac{1}{n^2} = \frac{\pi^2}{6}\).
+
+\section{Tables}
+
+The \texttt{table} environment with caption is supported in pre-rendered output:
+
+\begin{table}[htbp]
+  \centering
+  \caption{Comparison of viewers}
+  \begin{tabular}{lll}
+    \toprule
+    Format & Browser viewer & Build-time \\
+    \midrule
+    .tex   & Basic only     & Full LaTeX \\
+    .csv   & Table          & --- \\
+    .rst   & Rendered HTML  & --- \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\section{Conclusion}
+
+If you see this page with correct math, tables, and formatting, the build-time LaTeX pre-render is working. For the best Overleaf-like experience, use \texttt{pnpm build} or \texttt{pnpm dev} so \texttt{.tex} files are converted before pages are generated.
+
+\end{document}
