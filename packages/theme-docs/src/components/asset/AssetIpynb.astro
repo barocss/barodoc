@@ -16,18 +16,72 @@ const { url } = Astro.props;
       const nb = await res.json();
       const cells = nb.cells || [];
       let html = "";
+      // Load marked for markdown rendering if available
+      let marked = null;
+      try {
+        marked = (await import("https://cdn.jsdelivr.net/npm/marked@11.1.1/marked.esm.js")).marked;
+      } catch (e) {
+        // Fallback: no markdown rendering
+      }
       for (const cell of cells) {
         const source = (cell.source || []).join("");
         if (cell.cell_type === "code") {
-          html += `<pre class="bg-[var(--bd-bg-secondary)] p-4 rounded overflow-x-auto my-2"><code>${escapeHtml(source)}</code></pre>`;
+          html += `<div class="notebook-cell-code my-4"><pre class="bg-[var(--bd-bg-secondary)] p-4 rounded overflow-x-auto"><code>${escapeHtml(source)}</code></pre>`;
           if (cell.outputs?.length) {
+            html += `<div class="notebook-cell-output pl-4 mt-2">`;
             for (const out of cell.outputs) {
-              const text = out.text ? (Array.isArray(out.text) ? out.text.join("") : out.text) : out.data?.["text/plain"] ?? "";
-              if (text) html += `<pre class="text-sm text-[var(--bd-text-secondary)] pl-4 my-1">${escapeHtml(text)}</pre>`;
+              // Handle different output types
+              if (out.output_type === "stream") {
+                const text = Array.isArray(out.text) ? out.text.join("") : (out.text || "");
+                if (text) html += `<pre class="text-sm text-[var(--bd-text-secondary)] my-1 font-mono">${escapeHtml(text)}</pre>`;
+              } else if (out.output_type === "display_data" || out.output_type === "execute_result") {
+                // HTML output
+                if (out.data?.["text/html"]) {
+                  const htmlContent = Array.isArray(out.data["text/html"]) ? out.data["text/html"].join("") : out.data["text/html"];
+                  html += `<div class="notebook-output-html my-2 border-l-2 border-primary-500 pl-4">${htmlContent}</div>`;
+                }
+                // Image output (PNG, JPEG, SVG)
+                if (out.data?.["image/png"]) {
+                  const imgData = out.data["image/png"];
+                  const imgSrc = Array.isArray(imgData) ? imgData.join("") : imgData;
+                  html += `<div class="notebook-output-image my-2"><img src="data:image/png;base64,${imgSrc}" alt="Output" class="max-w-full rounded border border-[var(--bd-border)]" /></div>`;
+                } else if (out.data?.["image/jpeg"]) {
+                  const imgData = out.data["image/jpeg"];
+                  const imgSrc = Array.isArray(imgData) ? imgData.join("") : imgData;
+                  html += `<div class="notebook-output-image my-2"><img src="data:image/jpeg;base64,${imgSrc}" alt="Output" class="max-w-full rounded border border-[var(--bd-border)]" /></div>`;
+                } else if (out.data?.["image/svg+xml"]) {
+                  const svgContent = Array.isArray(out.data["image/svg+xml"]) ? out.data["image/svg+xml"].join("") : out.data["image/svg+xml"];
+                  html += `<div class="notebook-output-image my-2">${svgContent}</div>`;
+                }
+                // Plain text fallback
+                if (out.data?.["text/plain"] && !out.data?.["text/html"] && !out.data?.["image/png"] && !out.data?.["image/jpeg"] && !out.data?.["image/svg+xml"]) {
+                  const text = Array.isArray(out.data["text/plain"]) ? out.data["text/plain"].join("") : out.data["text/plain"];
+                  html += `<pre class="text-sm text-[var(--bd-text-secondary)] my-1 font-mono">${escapeHtml(text)}</pre>`;
+                }
+              } else if (out.output_type === "error") {
+                const traceback = out.traceback ? (Array.isArray(out.traceback) ? out.traceback.join("\n") : out.traceback) : "";
+                const errorName = out.ename || "Error";
+                const errorMsg = out.evalue || "";
+                html += `<div class="notebook-output-error my-2 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded"><pre class="text-sm text-red-700 dark:text-red-400 font-mono"><strong>${escapeHtml(errorName)}</strong>: ${escapeHtml(errorMsg)}${traceback ? "\n" + escapeHtml(traceback) : ""}</pre></div>`;
+              }
             }
+            html += `</div>`;
+          }
+          html += `</div>`;
+        } else if (cell.cell_type === "markdown") {
+          // Render markdown cells as HTML
+          if (marked) {
+            try {
+              html += `<div class="notebook-cell-markdown my-4 prose prose-sm dark:prose-invert max-w-none">${marked.parse(source)}</div>`;
+            } catch (e) {
+              html += `<div class="notebook-cell-markdown my-4">${escapeHtml(source)}</div>`;
+            }
+          } else {
+            html += `<div class="notebook-cell-markdown my-4 prose prose-sm dark:prose-invert max-w-none">${escapeHtml(source)}</div>`;
           }
         } else {
-          html += `<div class="my-2">${escapeHtml(source)}</div>`;
+          // Raw cells
+          html += `<div class="notebook-cell-raw my-2"><pre class="text-sm">${escapeHtml(source)}</pre></div>`;
         }
       }
       root.innerHTML = html || "<p>No cells</p>";

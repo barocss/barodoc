@@ -1,0 +1,50 @@
+\documentclass{article}
+\begin{document}
+
+\title{Asset Viewer: LaTeX Sample}
+\author{Barodoc Team}
+\maketitle
+
+\section{Introduction}
+
+This sample is written for the \textbf{LaTeX.js} viewer in the browser. It uses only the default \texttt{article} class and no extra packages (\verb|\usepackage|). Packages like \texttt{babel}, \texttt{geometry}, or \texttt{amsmath} are loaded by LaTeX.js with \texttt{require()}, which is not available in the browser, so they are omitted here.
+
+\section{Structure}
+
+\subsection{Sections and text}
+
+You can use \textbf{bold}, \emph{emphasis}, and \texttt{code} style. Sections and subsections are rendered as headings.
+
+\subsection{List}
+
+\begin{itemize}
+  \item First item.
+  \item Second item.
+\end{itemize}
+
+\begin{enumerate}
+  \item First numbered item.
+  \item Second numbered item.
+\end{enumerate}
+
+\subsection{Table}
+
+Browser LaTeX.js does not support the \texttt{table} environment; use \texttt{tabular} only. Example:
+
+\begin{center}
+  \begin{tabular}{|l|l|}
+    \hline
+    Format & Viewer \\
+    \hline
+    .tex & LaTeX.js \\
+    .csv & Table \\
+    .rst & RST parser \\
+    \hline
+  \end{tabular}
+\end{center}
+
+\section{Conclusion}
+
+If you see this as formatted text with title, sections, list, and table, the LaTeX viewer is working. For documents that need \texttt{amsmath}, \texttt{babel}, or \texttt{geometry}, use a build-time conversion (e.g. \texttt{pdflatex} or LaTeX.js CLI) and serve the generated HTML or PDF instead.
+
+\end{document}

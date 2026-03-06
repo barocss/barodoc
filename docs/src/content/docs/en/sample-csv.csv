@@ -1,0 +1,11 @@
+Asset Type,Extension,Viewer,Notes,Priority
+HTML,.html,iframe,Embedded in page,1
+PDF,.pdf,PDF.js or native embed,Scrollable viewer,1
+LaTeX,.tex,LaTeX.js,Compile to HTML in browser,2
+CSV,.csv,Inline table,This file – no iframe,1
+RST,.rst,RST→HTML,ReStructuredText parser,2
+Jupyter,.ipynb,Notebook viewer,Code + outputs (text/HTML/images),1
+ODT/ODS/ODP,.odt/.ods/.odp,ViewerJS,WebODF-based,2
+EPUB,.epub,EPUB.js,Book reader,2
+DOCX/XLSX,.docx/.xlsx,Download or SheetJS,Optional viewer,3
+"Note","Quoted, comma",Supported,"Headers, numbers, quoted fields",-
