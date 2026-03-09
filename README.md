@@ -45,6 +45,70 @@ npx barodoc preview
 
 When you omit the `[dir]` argument, Barodoc auto-detects the content directory (`docs/`, `content/`, or `src/content/docs/` in that order).
 
+## Quick mode setup
+
+### Option A: New project (recommended)
+
+```bash
+barodoc create my-docs
+cd my-docs
+npx barodoc serve
+```
+
+This creates `my-docs/` with `docs/en/`, `public/`, `barodoc.config.json`, sample pages, and `.gitignore`. No install in the project; run `npx barodoc serve` or `npx barodoc build` from inside `my-docs/`.
+
+### Option B: Existing folder
+
+From an empty or existing directory:
+
+```bash
+cd my-docs
+barodoc init
+npx barodoc serve
+```
+
+`barodoc init` adds `barodoc.config.json`, `docs/en/introduction.md`, and updates `.gitignore` if present (it does not overwrite existing config).
+
+### Minimal template (by hand)
+
+To set up Quick mode without the CLI, create this structure:
+
+**1. `barodoc.config.json`** (project root):
+
+```json
+{
+  "name": "My Docs",
+  "navigation": [
+    { "group": "Getting Started", "pages": ["introduction"] }
+  ],
+  "i18n": { "defaultLocale": "en", "locales": ["en"] }
+}
+```
+
+**2. `docs/en/introduction.md`**:
+
+```md
+# Introduction
+
+Welcome to your documentation. Add more `.md` or `.mdx` files under `docs/en/` and register their slugs in `barodoc.config.json` under `navigation`.
+```
+
+**3. `.gitignore`** (optional):
+
+```
+.barodoc/
+dist/
+node_modules/
+```
+
+Then run from the project root:
+
+```bash
+npx barodoc serve
+```
+
+Optional: add a `public/` folder for `logo.svg`, favicon, and other static assets; add more pages to `navigation.pages` (slug = path without locale and extension, e.g. `guides/setup` for `docs/en/guides/setup.md`).
+
 ## Project Structure
 
 **Quick mode (minimal):**
