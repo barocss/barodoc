@@ -28,7 +28,7 @@
   "devDependencies": {
     "@barodoc/core": "workspace:*",
     "@types/node": "^22.0.0",
-    "astro": "^5.0.0",
+    "astro": "^5.18.0",
     "tsup": "^8.3.0",
     "typescript": "^5.7.0"
   },

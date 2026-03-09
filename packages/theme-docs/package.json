@@ -43,9 +43,9 @@
     "medium-zoom": "^1.1.0",
     "mermaid": "^11.12.2",
     "reading-time": "^1.5.0",
-    "rst-compiler": "^0.5.7",
     "rehype-katex": "^7.0.1",
     "remark-math": "^6.0.0",
+    "rst-compiler": "^0.5.7",
     "tailwind-merge": "^3.4.0"
   },
   "peerDependencies": {
@@ -54,17 +54,18 @@
     "react-dom": "^19.0.0"
   },
   "devDependencies": {
-    "@astrojs/mdx": "^4.0.0",
-    "@astrojs/react": "^4.0.0",
+    "@astrojs/mdx": "^4.3.13",
+    "@astrojs/react": "^4.4.2",
     "@tailwindcss/typography": "^0.5.19",
     "@tailwindcss/vite": "^4.0.0",
     "@types/node": "^22.0.0",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
-    "astro": "^5.0.0",
+    "astro": "^5.18.0",
     "tailwindcss": "^4.0.0",
     "tsup": "^8.3.0",
-    "typescript": "^5.7.0"
+    "typescript": "^5.7.0",
+    "vite": "^6.4.1"
   },
   "keywords": [
     "astro",

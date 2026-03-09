@@ -147,6 +147,24 @@ Define the sidebar navigation structure. Use `group` for the default locale and 
 }
 ```
 
+### sections
+
+Add additional documentation sections (e.g. Help Center, Guides) with their own URL prefix and sidebar. The top-level `navigation` always applies to `/docs/`. Each entry in `sections` needs `slug` (URL prefix and content directory name), optional `label` (breadcrumb name), and `navigation` (same shape as top-level `navigation`).
+
+```json
+{
+  "sections": [
+    {
+      "slug": "help",
+      "label": "Help Center",
+      "navigation": [{ "group": "FAQ", "pages": ["general", "billing"] }]
+    }
+  ]
+}
+```
+
+See [Multiple Sections](/docs/guides/sections) for directory layout and tabs setup.
+
 ### topbar
 
 Add links to the top navigation:
@@ -170,6 +188,31 @@ Enable or disable full-text search (Pagefind):
   "search": {
     "enabled": true
   }
+}
+```
+
+### blog
+
+Enable or disable the blog content type. When `enabled` is `true` (default when blog content exists), the blog index and posts are available at `/blog` and `/blog/[slug]`. Set to `false` to hide blog routes.
+
+```json
+{
+  "blog": {
+    "enabled": true
+  }
+}
+```
+
+### versions
+
+Configure a version switcher in the sidebar (e.g. for multiple doc versions). Each item has `label` (e.g. `"v2"`) and `path` (URL segment, e.g. `"v2"` for `/docs/v2/...`). The switcher is hidden when there is only one version.
+
+```json
+{
+  "versions": [
+    { "label": "v2", "path": "v2" },
+    { "label": "v1", "path": "v1" }
+  ]
 }
 ```
 
@@ -268,3 +311,31 @@ Load Barodoc plugins (sitemap, analytics, etc.). In full custom (Astro) mode, in
   ]
 }
 ```
+
+## Config reference
+
+Quick reference for all supported keys. Optional keys can be omitted.
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| `name` | `string` | — | **Required.** Site name in the header. |
+| `logo` | `string` | — | Path to logo in `public/` (e.g. `"/logo.svg"`). |
+| `favicon` | `string` | — | Path to favicon in `public/`. |
+| `site` | `string` | — | Full site URL for canonicals and OG tags. |
+| `base` | `string` | `"/"` | Base path for subdirectory deploys (e.g. `"/docs"`). |
+| `theme` | `object` | — | `colors` (accent, gray, light/dark), `fonts` (heading, body, code), `radius`. |
+| `i18n` | `object` | — | `defaultLocale`, `locales`, optional `labels`. |
+| `navigation` | `array` | — | **Required.** Sidebar groups and pages for `/docs/`. |
+| `sections` | `array` | — | Extra sections (slug, label, navigation) e.g. Help, Guides. |
+| `tabs` | `array` | — | Header tabs: `{ label, href }` for Docs, Blog, Changelog, etc. |
+| `topbar` | `object` | — | `github`, `discord`, `twitter` URLs. |
+| `search` | `object` | — | `enabled` (boolean). Pagefind search. |
+| `blog` | `object` | — | `enabled` (boolean). Blog content type. |
+| `versions` | `array` | — | `{ label, path }[]` for version switcher. |
+| `lineNumbers` | `boolean` | — | Show line numbers in code blocks. |
+| `editLink` | `object` | — | `baseUrl` for "Edit this page" link. |
+| `lastUpdated` | `boolean` | — | Show last updated from Git. |
+| `announcement` | `object` | — | `text`, optional `link`, `dismissible`. |
+| `feedback` | `object` | — | `enabled`, optional `endpoint` for "Was this helpful?". |
+| `plugins` | `array` | — | Plugin names or `[name, options]` tuples. |
+| `customCss` | `string[]` | — | Paths to extra CSS files. |

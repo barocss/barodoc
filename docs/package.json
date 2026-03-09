@@ -9,12 +9,12 @@
     "preview": "astro preview"
   },
   "dependencies": {
-    "@astrojs/mdx": "^4.0.0",
-    "@astrojs/react": "^4.0.0",
+    "@astrojs/mdx": "^4.3.13",
+    "@astrojs/react": "^4.4.2",
     "@barodoc/core": "workspace:*",
     "@barodoc/plugin-raw-md": "workspace:*",
     "@barodoc/theme-docs": "workspace:*",
-    "astro": "^5.0.0",
+    "astro": "^5.18.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "rst-compiler": "^0.5.7"

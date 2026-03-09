@@ -1,6 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import type { ViteDevServer } from "vite";
 import type { AstroIntegration } from "astro";
 import type { ThemeExport, ResolvedBarodocConfig } from "@barodoc/core";
 import mdx from "@astrojs/mdx";
@@ -160,13 +161,16 @@ function createAssetContentDevPlugin(contentDir: string) {
   return {
     name: "barodoc-asset-content-dev",
     apply: "serve" as const,
-    configureServer(server: { middlewares: { use: (fn: (req: any, res: any, next: () => void) => void) => void; stack?: { route: string; handle: (req: any, res: any, next: () => void) => void }[] } }) {
+    configureServer(server: ViteDevServer) {
       // Prepend so we run before Astro's catch-all router (which would 404 /_content/)
-      const app = server.middlewares as { stack?: { route: string; handle: (req: any, res: any, next: () => void) => void }[] };
-      if (Array.isArray(app.stack)) {
-        app.stack.unshift({ route: "", handle: assetMiddleware });
+      const middlewares = server.middlewares as {
+        use: (fn: (req: any, res: any, next: () => void) => void) => void;
+        stack?: Array<{ route: string; handle: (req: any, res: any, next: () => void) => void }>;
+      };
+      if (Array.isArray(middlewares.stack)) {
+        middlewares.stack.unshift({ route: "", handle: assetMiddleware });
       } else {
-        server.middlewares.use(assetMiddleware);
+        middlewares.use(assetMiddleware);
       }
     },
   };
