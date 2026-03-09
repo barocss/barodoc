@@ -1,5 +1,14 @@
 # @barodoc/theme-docs
 
+## 8.2.1
+
+### Patch Changes
+
+- 90d6081: - Fix `configureServer` type to use Vite's `ViteDevServer` for PluginOption compatibility
+  - Add `vite` ^6.4.1 as devDependency for type resolution
+  - Docs: Configuration guide — add missing options (sections, blog, versions) and Config reference table
+  - README: Quick mode setup (create/init/minimal template), plugin usage guides
+
 ## 8.2.0
 
 ### Minor Changes
