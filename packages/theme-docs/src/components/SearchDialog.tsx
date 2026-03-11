@@ -10,9 +10,21 @@ import { cn } from "../lib/utils";
 
 interface SearchDialogProps {
   className?: string;
+  searchPlaceholder?: string;
+  noResults?: string;
+  searchIndexNotAvailable?: string;
 }
 
-export function SearchDialog({ className }: SearchDialogProps) {
+const DEFAULT_PLACEHOLDER = "Search documentation...";
+const DEFAULT_NO_RESULTS = "No results found";
+const DEFAULT_INDEX_UNAVAILABLE = "Search index not available";
+
+export function SearchDialog({
+  className,
+  searchPlaceholder = DEFAULT_PLACEHOLDER,
+  noResults = DEFAULT_NO_RESULTS,
+  searchIndexNotAvailable = DEFAULT_INDEX_UNAVAILABLE,
+}: SearchDialogProps) {
   const [open, setOpen] = React.useState(false);
   const [query, setQuery] = React.useState("");
 
@@ -44,12 +56,12 @@ export function SearchDialog({ className }: SearchDialogProps) {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent className={cn("sm:max-w-2xl p-0 gap-0", className)}>
         <DialogHeader className="px-4 py-3 border-b border-[var(--bd-border)]">
-          <DialogTitle className="sr-only">Search documentation</DialogTitle>
+          <DialogTitle className="sr-only">{searchPlaceholder}</DialogTitle>
           <div className="flex items-center gap-3">
             <SearchIcon className="h-5 w-5 text-[var(--bd-text-muted)]" />
             <input
               type="text"
-              placeholder="Search documentation..."
+              placeholder={searchPlaceholder}
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               className="flex-1 bg-transparent text-base outline-none placeholder:text-[var(--bd-text-muted)]"

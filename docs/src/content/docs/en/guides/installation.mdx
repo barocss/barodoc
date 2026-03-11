@@ -1,31 +1,58 @@
 ---
 title: Installation
-description: "Install Barodoc: CLI (zero-config) or manual Astro setup"
+description: "Install Barodoc: prerequisites, CLI (zero-config), existing folder, or manual Astro setup"
 tags: [setup, cli, astro]
-related: [quickstart, guides/configuration]
+related: [quickstart, guides/configuration, guides/plugins/recommended]
 difficulty: beginner
 ---
 
 Two ways to use Barodoc: **CLI (zero-config)** for a docs-only project, or **Manual (Astro)** for a full Astro app.
 
+## Prerequisites
+
+- **Node.js** 20 or higher (`node -v`)
+- **Package manager**: pnpm (recommended), npm, or yarn
+
+Optional: install the CLI globally so you can run `barodoc` without `npx`:
+
+```bash
+npm install -g barodoc
+# or
+pnpm add -g barodoc
+```
+
+Then use `barodoc serve`, `barodoc build`, etc. from any directory. Without a global install, use `npx barodoc` from the project folder.
+
 ## CLI (zero-config, recommended for new docs)
 
 No `package.json` or Astro config in your repo. You only have `docs/`, `public/`, and `barodoc.config.json`.
 
-### Create project
+### Option A: Create a new project
 
 ```bash
 pnpm create barodoc my-docs
 cd my-docs
 ```
 
-### Structure created
+### Option B: Use an existing folder
+
+If you already have a repo (e.g. only Markdown files), initialize Barodoc in place:
+
+```bash
+cd my-existing-repo
+barodoc init
+# or: npx barodoc init
+```
+
+This adds `barodoc.config.json`, a default `docs/en/introduction.md`, and updates `.gitignore`. It does **not** overwrite an existing config. Put your content under `docs/<locale>/` and add slugs to `navigation` in the config.
+
+### Structure (after create or init)
 
 | Path | Purpose |
 |------|--------|
 | `docs/en/` | Markdown/MDX files for the default locale. Add `docs/ko/`, etc. for i18n. |
 | `public/` | Static assets (logo, favicon). |
-| `barodoc.config.json` | Site name, `navigation`, `theme`, `i18n`, `topbar`, etc. |
+| `barodoc.config.json` | Site name, `navigation`, `theme`, `i18n`, `topbar`, `plugins`, etc. |
 | `.gitignore` | Ignores `.barodoc/`, `dist/`, `node_modules/`. |
 
 No `src/` or `astro.config.mjs` in the project. The CLI generates a temporary Astro project under `.barodoc/` when you run commands.
@@ -33,11 +60,12 @@ No `src/` or `astro.config.mjs` in the project. The CLI generates a temporary As
 ### Commands
 
 ```bash
-# Development
+# Development (default port 4321)
 npx barodoc serve
 
-# Optional: custom port or config
+# Custom port, host, or config
 npx barodoc serve --port 3000
+npx barodoc serve --host
 npx barodoc serve --config custom.config.json
 
 # Production build (output: dist/)
@@ -47,7 +75,14 @@ npx barodoc build
 npx barodoc preview
 ```
 
-Install is not required in the project; `npx barodoc` runs the CLI.
+You do not need to run `npm install` or `pnpm install` inside the project in Quick mode; `npx barodoc` uses the bundled CLI and plugins.
+
+### Troubleshooting (CLI)
+
+- **Port in use**: use `--port` to pick another port, or stop the process using the port.
+- **Stale cache / weird build**: run with `--clean` to force reinstall of the temporary project:  
+  `npx barodoc serve --clean` or `npx barodoc build --clean`.
+- **Config not found**: pass the path explicitly: `npx barodoc serve --config ./barodoc.config.json`.
 
 ---
 
@@ -131,3 +166,22 @@ pnpm build
 ```
 
 Content structure and URL rules are the same as in CLI mode; only the directory is `src/content/docs/` instead of `docs/`.
+
+### Plugins in manual mode
+
+Install plugin packages in the project, then list them in `barodoc.config.json`:
+
+```bash
+pnpm add @barodoc/plugin-sitemap @barodoc/plugin-search
+```
+
+See [Recommended plugins](/docs/guides/plugins/recommended) and [Plugins](/docs/guides/plugins/openapi) for options.
+
+---
+
+## Next steps
+
+- [Quick Start](/docs/quickstart) — Run the dev server and add pages
+- [Configuration](/docs/guides/configuration) — Theme, search, i18n, `site` URL
+- [Recommended plugins](/docs/guides/plugins/recommended) — Which plugins to add by use case
+- [Deployment](/docs/guides/deployment) — Build and deploy to static hosts

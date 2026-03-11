@@ -9,6 +9,10 @@ export const i18nConfigSchema = z.object({
   defaultLocale: z.string(),
   locales: z.array(z.string()),
   labels: z.record(z.string()).optional(),
+  /** Per-locale UI string overrides. */
+  translations: z.record(z.string(), z.record(z.string(), z.string())).optional(),
+  /** Per-locale text direction (e.g. { ar: "rtl", he: "rtl" }). */
+  dir: z.record(z.string(), z.enum(["ltr", "rtl"])).optional(),
 }).optional();
 
 export const grayPresets = [
@@ -101,13 +105,13 @@ export const versionsSchema = z.array(versionConfigSchema).optional();
 export const tabSchema = z.object({
   label: z.string(),
   href: z.string(),
-});
+}).passthrough(); // Allow label:ko, label:ja, etc. for tab labels
 
 export const sectionSchema = z.object({
   slug: z.string(),
   label: z.string().optional(),
   navigation: z.array(navItemSchema),
-});
+}).passthrough(); // Allow label:ko, label:ja, etc.
 
 export const barodocConfigSchema = z.object({
   name: z.string(),

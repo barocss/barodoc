@@ -8,6 +8,7 @@ export {
   getLocalizedPath,
   getLocalizedNavGroup,
   getLocaleLabel,
+  getLocalizedSectionLabel,
 } from "./i18n/index.js";
 
 // Theme utilities

@@ -1,0 +1,69 @@
+---
+title: Toast
+description: Action-triggered feedback message in a fixed position
+---
+import { Toast, ToastIcon, ToastDemo, ParamField, ParamFieldGroup } from "@barodoc/theme-docs";
+
+Use `Toast` to show short feedback **after a user action** (e.g. "Copied", "Saved"). Toasts should appear in a **fixed corner** (e.g. bottom-right), not inline in the flow. Use the `position` prop so the toast floats in place.
+
+## Show on action
+
+Click the button to see a toast appear in the bottom-right corner:
+
+<ToastDemo client:load variant="success" message="Copied to clipboard!" buttonLabel="Show toast" />
+
+```mdx
+<ToastDemo client:load variant="success" message="Copied!" buttonLabel="Show toast" />
+```
+
+## Variants
+
+Use `position="bottom-right"` (or `top-right`, `bottom-left`, `top-left`) so the toast appears in a corner. Click each button to see that variant in the bottom-right:
+
+<div class="flex flex-wrap gap-2 not-prose mb-4">
+  <ToastDemo client:load variant="default" message="Default message" buttonLabel="Default" />
+  <ToastDemo client:load variant="success" message="Copied to clipboard!" buttonLabel="Success" />
+  <ToastDemo client:load variant="warning" message="This may take a moment" buttonLabel="Warning" />
+  <ToastDemo client:load variant="error" message="Something went wrong" buttonLabel="Error" />
+</div>
+
+## Props
+
+### Toast
+
+<ParamFieldGroup>
+  <ParamField name="variant" type="'default' | 'success' | 'warning' | 'error'" default="'default'">
+    Visual style
+  </ParamField>
+  <ParamField name="position" type="'inline' | 'bottom-right' | 'bottom-left' | 'top-right' | 'top-left'" default="'inline'">
+    When not <code>inline</code>, the toast is rendered in a fixed corner. Use for action-triggered feedback.
+  </ParamField>
+  <ParamField name="className" type="string">
+    Additional CSS classes
+  </ParamField>
+</ParamFieldGroup>
+
+### ToastDemo (docs)
+
+<ParamFieldGroup>
+  <ParamField name="variant" type="'default' | 'success' | 'warning' | 'error'" default="'success'">
+    Toast style
+  </ParamField>
+  <ParamField name="message" type="string" default="'Copied!'">
+    Text shown in the toast
+  </ParamField>
+  <ParamField name="buttonLabel" type="string" default="'Show toast'">
+    Button label
+  </ParamField>
+</ParamFieldGroup>
+
+### ToastIcon
+
+<ParamFieldGroup>
+  <ParamField name="variant" type="'default' | 'success' | 'warning' | 'error'" default="'default'">
+    Icon style (success shows check, warning shows triangle, error shows X)
+  </ParamField>
+  <ParamField name="className" type="string">
+    Additional CSS classes
+  </ParamField>
+</ParamFieldGroup>

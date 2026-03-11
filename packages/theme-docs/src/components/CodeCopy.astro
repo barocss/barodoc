@@ -1,9 +1,16 @@
 ---
 // This component adds copy functionality and filename display to code blocks
+interface Props {
+  copyCode?: string;
+  copied?: string;
+}
+const { copyCode = "Copy code", copied = "Copied" } = Astro.props;
 ---
 
-<script>
+<script define:vars={{ copyCode, copied }}>
   function initCodeCopy() {
+    const copyLabel = (copyCode || 'Copy code').replace(/\s*code\s*$/i, '').trim() || 'Copy';
+    const copiedLabel = copied || 'Copied';
     document.querySelectorAll('pre').forEach((pre) => {
       // Skip if already processed
       if (pre.closest('.code-block-wrapper')) return;
@@ -40,7 +47,7 @@
       const button = document.createElement('button');
       button.className = 'copy-button';
       button.innerHTML = `
-        <span class="copy-text">Copy</span>
+        <span class="copy-text">${copyLabel}</span>
         <svg class="copy-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
           <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
@@ -49,7 +56,7 @@
           <polyline points="20 6 9 17 4 12"></polyline>
         </svg>
       `;
-      button.setAttribute('aria-label', 'Copy code');
+      button.setAttribute('aria-label', copyCode || 'Copy code');
       
       // Add click handler
       button.addEventListener('click', async () => {
@@ -59,11 +66,11 @@
           // Show check state
           button.classList.add('copied');
           const copyText = button.querySelector('.copy-text');
-          if (copyText) copyText.textContent = 'Copied!';
+          if (copyText) copyText.textContent = copiedLabel;
           
           setTimeout(() => {
             button.classList.remove('copied');
-            if (copyText) copyText.textContent = 'Copy';
+            if (copyText) copyText.textContent = copyLabel;
           }, 2000);
         } catch (err) {
           console.error('Failed to copy:', err);

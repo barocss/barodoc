@@ -1,0 +1,98 @@
+---
+title: AI and Agent Support
+description: "Make your Barodoc site friendly to AI assistants and agents: llms.txt, manifest, chat, and RAG"
+tags: [ai, agents, llms, rag, search]
+related: [guides/plugins/llms-txt, guides/plugins/recommended]
+difficulty: intermediate
+---
+
+You can make a Barodoc documentation site consumable by AI assistants and agentic tools in several ways: built-in artifacts, third-party chat widgets, and custom RAG or APIs.
+
+## Built-in: llms.txt and docs manifest
+
+### llms.txt (plugin)
+
+The [LLMs.txt plugin](/docs/guides/plugins/llms-txt) generates [llms.txt](https://llmstxt.org) files at build time:
+
+- **`/llms.txt`** — Summary with page titles, descriptions, and links (spec-compliant).
+- **`/llms-full.txt`** — Full text of all docs when `full: true` (optional).
+
+Many AI tools and crawlers can use these URLs to understand and cite your docs. Enable the plugin in `barodoc.config.json`:
+
+```json
+{
+  "plugins": ["@barodoc/plugin-llms-txt"]
+}
+```
+
+### docs-manifest.json (CLI)
+
+The `barodoc manifest` command generates a structured JSON file (e.g. for CI or tooling) with metadata and optional content chunks:
+
+```bash
+barodoc manifest
+# Output: docs-manifest.json (default)
+
+barodoc manifest --output manifest.json --chunks
+# With --chunks: includes section-level content for RAG or indexing
+```
+
+Use this to feed custom pipelines, MCP servers, or internal agent tools. The manifest is not deployed by default; you run the command and use the file where needed.
+
+---
+
+## Adding a chat or “ask docs” widget
+
+Barodoc does not ship a built-in chat UI. You can add one in two ways:
+
+### 1. Third-party embed
+
+Services like [Inline](https://inline.so), [Mintlify](https://mintlify.com), or provider-specific “docs chat” widgets can be embedded in your layout. Typically you:
+
+- Sign up and get a snippet or script URL.
+- In **Full custom mode**, add the script or component to your layout (e.g. in `@barodoc/theme-docs` overrides or a custom layout).
+- In **Quick mode**, use [overrides](/docs/guides/overrides) to inject a custom layout or component that includes the widget.
+
+The provider usually handles indexing your public docs (often by crawling or using an API) and serves the chat backend.
+
+### 2. Custom widget + your backend
+
+You can build your own “Ask docs” UI and backend:
+
+- **Frontend**: Add a React (or Astro) component that talks to your API (e.g. “send question → get answer”). Mount it via overrides or a custom layout in Full mode.
+- **Backend**: Implement a RAG or LLM API that uses your docs (e.g. content from `llms-full.txt`, `barodoc manifest --chunks`, or your own index). Host this separately (serverless or server).
+
+Barodoc stays a static site; the chat backend is your service.
+
+---
+
+## RAG and custom APIs
+
+To power RAG (retrieval-augmented generation) or an API that answers questions from your docs:
+
+1. **Content source**  
+   Use one or more of:
+   - **`llms-full.txt`** — Single flat file with full text (good for simple ingestion).
+   - **`barodoc manifest --chunks`** — Structured chunks with metadata (slug, section, locale, tags).
+   - **Crawling** — Crawl the deployed site (HTML or raw Markdown if you use a raw-MD endpoint).
+
+2. **Indexing**  
+   Ingest that content into your vector store or search engine (e.g. OpenAI embeddings, Pinecone, Algolia, or a simple keyword index).
+
+3. **API**  
+   Expose an endpoint that accepts a question, retrieves relevant chunks, and returns an answer (e.g. via an LLM). Your Barodoc site can then call this API from a custom chat component.
+
+This is all outside Barodoc’s scope; Barodoc only provides the content and optional artifacts (llms.txt, manifest).
+
+---
+
+## Summary
+
+| Need | What to use |
+|------|-------------|
+| AI/LLMs can read your docs | `@barodoc/plugin-llms-txt` → `/llms.txt`, `/llms-full.txt` |
+| Structured metadata for tools | `barodoc manifest` (optionally `--chunks`) |
+| “Ask docs” chat on the site | Third-party embed or custom widget + your RAG/LLM backend |
+| RAG pipeline | Ingest `llms-full.txt` or manifest chunks; build your own index and API |
+
+For plugin setup, see [LLMs.txt plugin](/docs/guides/plugins/llms-txt) and [Recommended plugins](/docs/guides/plugins/recommended).

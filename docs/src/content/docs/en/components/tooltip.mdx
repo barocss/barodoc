@@ -4,7 +4,7 @@ description: Add contextual help with hover tooltips
 ---
 import { Tooltip, ParamField, ParamFieldGroup } from "@barodoc/theme-docs";
 
-Tooltips provide additional context when users hover over terms or elements.
+Tooltips provide additional context **only when the user hovers or focuses** the trigger (the wrapped element). The tip content is hidden until that action—never shown as static body text.
 
 ## Basic Usage
 
@@ -28,10 +28,10 @@ Learn about <Tooltip client:load tip="Static Site Generation">SSG</Tooltip>,
 
 <ParamFieldGroup>
   <ParamField name="tip" type="string" required>
-    Tooltip content text shown on hover
+    Tooltip content; shown only on hover/focus (user action).
   </ParamField>
   <ParamField name="children" type="ReactNode" required>
-    The text or element to hover over
+    The trigger element (e.g. a term); user hovers/focuses this to see the tip.
   </ParamField>
   <ParamField name="client:load" type="directive" required>
     Required Astro directive for client-side interactivity

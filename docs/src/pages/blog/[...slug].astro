@@ -1,20 +1,14 @@
 ---
 import { getCollection, render } from "astro:content";
-import BlogLayout from "../../layouts/BlogLayout.astro";
+import BlogLayout from "@barodoc/theme-docs/layouts/BlogLayout.astro";
 import readingTime from "reading-time";
 
 export async function getStaticPaths() {
-  let posts: Awaited<ReturnType<typeof getCollection<"blog">>> = [];
-  try {
-    posts = await getCollection("blog");
-  } catch {
-    return [];
-  }
-
-  return posts.map((post) => ({
-    params: { slug: (post.data as { urlSlug?: string; slug?: string }).urlSlug ?? (post.data as { slug?: string }).slug ?? post.id.replace(/\.(mdx?|md)$/, "") },
-    props: { post },
-  }));
+  const posts = await getCollection("blog");
+  return posts.map((post) => {
+    const slug = post.data.urlSlug ?? post.id.replace(/\.(mdx?|md)$/, "");
+    return { params: { slug }, props: { post } };
+  });
 }
 
 interface Props {

@@ -40,3 +40,6 @@ export { VersionSwitcher } from "./VersionSwitcher.tsx";
 // Legacy exports for backwards compatibility
 export { Tabs, Tab } from "./mdx/Tabs.tsx";
 export { Accordion, AccordionGroup } from "./mdx/Accordion.tsx";
+export { Table, TableHeader, TableBody, TableRow, TableCell } from "./mdx/Table.tsx";
+export { Comparison, ComparisonItem } from "./mdx/Comparison.tsx";
+export { Toast, ToastIcon, ToastDemo } from "./mdx/Toast.tsx";

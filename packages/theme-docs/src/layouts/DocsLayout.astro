@@ -3,13 +3,12 @@ import BaseLayout from "./BaseLayout.astro";
 import Header from "../components/Header.astro";
 import Sidebar from "../components/Sidebar.astro";
 import TableOfContents from "../components/TableOfContents.astro";
-import MobileNav from "../components/MobileNav.astro";
 import CodeCopy from "../components/CodeCopy.astro";
 import Breadcrumb from "../components/Breadcrumb.astro";
 import Banner from "../components/Banner.astro";
 import KeyboardShortcuts from "../components/KeyboardShortcuts.astro";
 import Contributors from "../components/Contributors.astro";
-import { defaultLocale } from "virtual:barodoc/i18n";
+import { defaultLocale, locales, uiStrings, dirByLocale } from "virtual:barodoc/i18n";
 import { getLocaleFromPath } from "@barodoc/core";
 import config from "virtual:barodoc/config";
 
@@ -40,20 +39,21 @@ interface Props {
 const { title, description, headings = [], prevPage, nextPage, editUrl, lastUpdated, breadcrumbs = [], readingTime, filePath, sectionSlug } = Astro.props;
 const currentPath = Astro.url.pathname;
 
-// Get locale from path
-const i18nConfig = { defaultLocale, locales: [defaultLocale] };
+const i18nConfig = { defaultLocale, locales };
 const currentLocale = getLocaleFromPath(currentPath, i18nConfig);
+const t = uiStrings[currentLocale] ?? uiStrings[defaultLocale] ?? {};
+const dir = dirByLocale[currentLocale] ?? dirByLocale[defaultLocale] ?? "ltr";
 
 const hasFeedback = config.feedback?.enabled === true;
 const feedbackEndpoint = config.feedback?.endpoint;
 ---
 
-<BaseLayout title={title} description={description}>
+<BaseLayout title={title} description={description} dir={dir} lang={currentLocale} uiStrings={t}>
   <Banner />
-  <Header currentLocale={currentLocale} currentPath={currentPath} />
+  <Header currentLocale={currentLocale} currentPath={currentPath} sectionSlug={sectionSlug} uiStrings={t} />
   
   <!-- Centered container for docs layout -->
-  <div class="w-full min-w-0 min-h-[calc(100vh-3.5rem)] flex justify-center overflow-x-clip">
+  <div class="w-full min-w-0 min-h-[calc(100vh-3.5rem)] flex justify-center overflow-x-clip" dir={dir}>
     <div class="flex w-full max-w-[1280px] min-w-0">
       <!-- Desktop Sidebar -->
       <aside class="hidden lg:block w-[240px] shrink-0 border-r border-[var(--bd-border)]">
@@ -92,7 +92,7 @@ const feedbackEndpoint = config.feedback?.endpoint;
                         <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
                         </svg>
-                        Previous
+                        {t.previous ?? "Previous"}
                       </span>
                       <span class="text-sm font-medium text-[var(--bd-text)] group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
                         {prevPage.title}
@@ -107,7 +107,7 @@ const feedbackEndpoint = config.feedback?.endpoint;
                       class="group flex flex-col gap-1.5 p-4 rounded-lg border border-[var(--bd-border)] hover:border-primary-400/50 dark:hover:border-primary-500/40 hover:shadow-[var(--bd-shadow-sm)] transition-all text-right"
                     >
                       <span class="text-xs font-medium text-[var(--bd-text-muted)] flex items-center gap-1 justify-end">
-                        Next
+                        {t.next ?? "Next"}
                         <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                         </svg>
@@ -128,8 +128,8 @@ const feedbackEndpoint = config.feedback?.endpoint;
             <div class="flex flex-wrap items-center justify-between gap-2 text-[13px] text-[var(--bd-text-muted)]">
               {lastUpdated && (
                 <span>
-                  Last updated: <time datetime={lastUpdated.toISOString()}>
-                    {lastUpdated.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" })}
+                  {t.lastUpdated ?? "Last updated"}: <time datetime={lastUpdated.toISOString()}>
+                    {lastUpdated.toLocaleDateString(currentLocale, { year: "numeric", month: "short", day: "numeric" })}
                   </time>
                 </span>
               )}
@@ -143,17 +143,17 @@ const feedbackEndpoint = config.feedback?.endpoint;
                   <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                   </svg>
-                  Edit this page
+                  {t.editPage ?? "Edit this page"}
                 </a>
               )}
             </div>
             {hasFeedback && (
               <div class="doc-feedback flex items-center gap-3 text-sm text-[var(--bd-text-muted)]" data-endpoint={feedbackEndpoint}>
-                <span>Was this page helpful?</span>
-                <button type="button" class="feedback-btn inline-flex items-center gap-1 px-2 py-1 rounded border border-[var(--bd-border)] hover:bg-[var(--bd-bg-subtle)] transition-colors" data-value="yes" aria-label="Yes">
+                <span>{t.wasThisHelpful ?? "Was this helpful?"}</span>
+                <button type="button" class="feedback-btn inline-flex items-center gap-1 px-2 py-1 rounded border border-[var(--bd-border)] hover:bg-[var(--bd-bg-subtle)] transition-colors" data-value="yes" aria-label={t.yes ?? "Yes"}>
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 9V5a3 3 0 00-3-3l-4 9v11h11.28a2 2 0 002-1.7l1.38-9a2 2 0 00-2-2.3H14z" /></svg>
                 </button>
-                <button type="button" class="feedback-btn inline-flex items-center gap-1 px-2 py-1 rounded border border-[var(--bd-border)] hover:bg-[var(--bd-bg-subtle)] transition-colors" data-value="no" aria-label="No">
+                <button type="button" class="feedback-btn inline-flex items-center gap-1 px-2 py-1 rounded border border-[var(--bd-border)] hover:bg-[var(--bd-bg-subtle)] transition-colors" data-value="no" aria-label={t.no ?? "No"}>
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 15v3.586a1 1 0 01-.293.707l-2 2A1 1 0 016 20.586V15m4 0h5.17a2 2 0 001.98-1.742l1.08-7.56A1 1 0 0017.242 4.5H10m0 10.5V4.5m0 0H7.5A2.5 2.5 0 005 7v3" /></svg>
                 </button>
                 <span class="feedback-thanks hidden text-green-600 dark:text-green-400">Thanks for your feedback!</span>
@@ -167,21 +167,18 @@ const feedbackEndpoint = config.feedback?.endpoint;
       {headings.length > 0 && (
         <aside class="hidden xl:block w-[220px] shrink-0">
           <div class="sticky top-14 h-[calc(100vh-3.5rem)] overflow-y-auto py-10 pl-8">
-            <TableOfContents headings={headings} />
+            <TableOfContents headings={headings} onThisPageLabel={t.onThisPage ?? "On this page"} />
           </div>
         </aside>
       )}
     </div>
   </div>
 
-  <!-- Mobile Navigation -->
-  <MobileNav currentPath={currentPath} currentLocale={currentLocale} sectionSlug={sectionSlug} />
-  
   <!-- Code copy functionality -->
-  <CodeCopy />
+  <CodeCopy copyCode={t.copyCode} copied={t.copied} />
 
   <!-- Keyboard shortcuts -->
-  <KeyboardShortcuts />
+  <KeyboardShortcuts searchLabel={t.searchDocumentation} previousPageLabel={t.previousPage} nextPageLabel={t.nextPage} showShortcutsLabel={t.showShortcuts} />
 
   <!-- Image zoom for all prose images -->
   <script>

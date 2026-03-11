@@ -11,6 +11,7 @@ import {
 } from "./plugins/loader.js";
 import type { BarodocOptions, ResolvedBarodocConfig } from "./types.js";
 import type { PluginContext, ResolvedPlugin } from "./plugins/types.js";
+import { getUIStringsForLocale, getDirForLocale } from "./i18n/utils.js";
 
 const VIRTUAL_CONFIG_ID = "virtual:barodoc/config";
 const VIRTUAL_I18N_ID = "virtual:barodoc/i18n";
@@ -41,10 +42,20 @@ function createVirtualModulesPlugin(
         return `export default ${JSON.stringify(config)};`;
       }
       if (id === resolveVirtualId(VIRTUAL_I18N_ID)) {
+        const locales = config.i18n?.locales ?? ["en"];
+        const defaultLocale = config.i18n?.defaultLocale ?? "en";
+        const uiStrings: Record<string, Record<string, string>> = {};
+        const dirByLocale: Record<string, "ltr" | "rtl"> = {};
+        for (const locale of locales) {
+          uiStrings[locale] = getUIStringsForLocale(locale, config.i18n);
+          dirByLocale[locale] = getDirForLocale(locale, config.i18n);
+        }
         return `
           export const i18n = ${JSON.stringify(config.i18n)};
-          export const defaultLocale = "${config.i18n?.defaultLocale || "en"}";
-          export const locales = ${JSON.stringify(config.i18n?.locales || ["en"])};
+          export const defaultLocale = ${JSON.stringify(defaultLocale)};
+          export const locales = ${JSON.stringify(locales)};
+          export const uiStrings = ${JSON.stringify(uiStrings)};
+          export const dirByLocale = ${JSON.stringify(dirByLocale)};
         `;
       }
       return undefined;

@@ -2,6 +2,8 @@
 
 This document describes how to test Barodoc locally (docs site and my-docs quick mode) and how to develop plugins. It is intended for contributors and AI agents working on the repo.
 
+**AI / Cursor:** To use [Everything Claude Code](https://github.com/affaan-m/everything-claude-code) (ECC) with Cursor in this repo, run `./scripts/setup-ecc-cursor.sh` once. See [docs/ai-setup.md](docs/ai-setup.md).
+
 ---
 
 ## 1. Testing with the docs site (monorepo)
@@ -29,6 +31,14 @@ pnpm build:packages   # Build core, theme-docs, barodoc CLI, and all plugins
 - **Homepage**: Open `http://localhost:4321/` (or the port shown).
 - **Docs pages**: e.g. `http://localhost:4321/docs/introduction`.
 - **Raw .md (if using plugin-raw-md)**: e.g. `http://localhost:4321/docs/introduction.md` should return raw markdown with `Content-Type: text/markdown`.
+
+**Full behavior (including mobile menu)**: In the monorepo, `pnpm dev` can fail to load theme-docs React islands (e.g. mobile hamburger menu) because of how dev-only `/@fs/` requests are handled. For local testing of the full site (navigation, mobile menu, etc.), use **build + preview** instead:
+
+```bash
+pnpm build:packages && pnpm build && pnpm preview
+```
+
+See `docs/plans/2026-03-09-mobile-menu-analysis.md` for details.
 
 ### Config
 
@@ -192,6 +202,7 @@ See `AGENTS.md` (Plugin System) and `.cursor/skills/barodoc-plugins/SKILL.md` fo
 
 | Goal | Command / location |
 |------|--------------------|
+| ECC + Cursor setup | `./scripts/setup-ecc-cursor.sh` (once) — see [docs/ai-setup.md](docs/ai-setup.md) |
 | Dev server (docs) | `pnpm dev` (from barodoc root) |
 | Build docs | `pnpm build` |
 | Dev server (my-docs) | From my-docs: `node ../barodoc/packages/barodoc/dist/cli.js serve` |

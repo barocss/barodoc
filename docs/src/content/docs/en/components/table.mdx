@@ -1,0 +1,90 @@
+---
+title: Table
+description: Semantic table components for structured data
+---
+import { Table, TableHeader, TableBody, TableRow, TableCell, ParamField, ParamFieldGroup } from "@barodoc/theme-docs";
+
+Use `Table`, `TableHeader`, `TableBody`, `TableRow`, and `TableCell` to build accessible, styled tables in docs.
+
+## Basic usage
+
+<Table>
+  <TableHeader>
+    <TableRow>
+      <TableCell header>Feature</TableCell>
+      <TableCell header>Status</TableCell>
+    </TableRow>
+  </TableHeader>
+  <TableBody>
+    <TableRow>
+      <TableCell>i18n</TableCell>
+      <TableCell>Supported</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>RTL</TableCell>
+      <TableCell>Supported</TableCell>
+    </TableRow>
+  </TableBody>
+</Table>
+
+```mdx
+<Table>
+  <TableHeader>
+    <TableRow>
+      <TableCell header>Feature</TableCell>
+      <TableCell header>Status</TableCell>
+    </TableRow>
+  </TableHeader>
+  <TableBody>
+    <TableRow>
+      <TableCell>i18n</TableCell>
+      <TableCell>Supported</TableCell>
+    </TableRow>
+  </TableBody>
+</Table>
+```
+
+## Cell alignment
+
+Use the `align` prop on `TableCell` for left (default), center, or right alignment.
+
+<Table>
+  <TableHeader>
+    <TableRow>
+      <TableCell header>Name</TableCell>
+      <TableCell header align="center">Count</TableCell>
+      <TableCell header align="right">Value</TableCell>
+    </TableRow>
+  </TableHeader>
+  <TableBody>
+    <TableRow>
+      <TableCell>Item A</TableCell>
+      <TableCell align="center">1</TableCell>
+      <TableCell align="right">$10</TableCell>
+    </TableRow>
+  </TableBody>
+</Table>
+
+## Props
+
+### Table
+
+<ParamFieldGroup>
+  <ParamField name="className" type="string">
+    Additional CSS classes for the table element
+  </ParamField>
+</ParamFieldGroup>
+
+### TableCell
+
+<ParamFieldGroup>
+  <ParamField name="header" type="boolean" default="false">
+    Render as a header cell (<code>&lt;th&gt;</code>)
+  </ParamField>
+  <ParamField name="align" type="'left' | 'center' | 'right'" default="'left'">
+    Text alignment
+  </ParamField>
+  <ParamField name="className" type="string">
+    Additional CSS classes
+  </ParamField>
+</ParamFieldGroup>

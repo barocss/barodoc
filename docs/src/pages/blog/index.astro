@@ -1,9 +1,9 @@
 ---
 import { getCollection } from "astro:content";
-import BaseLayout from "../../layouts/BaseLayout.astro";
-import StaticNav from "../../components/StaticNav.astro";
-import MobileNav from "../../components/MobileNav.astro";
-import Banner from "../../components/Banner.astro";
+import BaseLayout from "@barodoc/theme-docs/layouts/BaseLayout.astro";
+import StaticNav from "@barodoc/theme-docs/components/StaticNav.astro";
+import MobileNav from "@barodoc/theme-docs/components/MobileNav.astro";
+import Banner from "@barodoc/theme-docs/components/Banner.astro";
 import { defaultLocale } from "virtual:barodoc/i18n";
 import { getLocaleFromPath } from "@barodoc/core";
 import config from "virtual:barodoc/config";
@@ -12,13 +12,7 @@ const currentPath = Astro.url.pathname;
 const i18nConfig = { defaultLocale, locales: [defaultLocale] };
 const currentLocale = getLocaleFromPath(currentPath, i18nConfig);
 
-let posts: Awaited<ReturnType<typeof getCollection<"blog">>> = [];
-try {
-  posts = await getCollection("blog");
-} catch {
-  // blog collection may not exist
-}
-
+const posts = await getCollection("blog");
 const sortedPosts = posts.sort((a, b) => {
   const dateA = a.data.date ? new Date(a.data.date).getTime() : 0;
   const dateB = b.data.date ? new Date(b.data.date).getTime() : 0;
@@ -43,7 +37,7 @@ const sortedPosts = posts.sort((a, b) => {
       ) : (
         <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {sortedPosts.map((post) => {
-            const slug = post.data.urlSlug ?? (post.data as { slug?: string }).slug ?? post.id.replace(/\.(mdx?|md)$/, "");
+            const slug = post.data.urlSlug ?? post.id.replace(/\.(mdx?|md)$/, "");
             return (
             <a
               href={`/blog/${slug}`}

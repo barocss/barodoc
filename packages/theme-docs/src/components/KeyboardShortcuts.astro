@@ -1,8 +1,20 @@
 ---
 // Keyboard shortcuts: Cmd/Ctrl+K → search, ←/→ → prev/next, ? → help modal
+interface Props {
+  searchLabel?: string;
+  previousPageLabel?: string;
+  nextPageLabel?: string;
+  showShortcutsLabel?: string;
+}
+const {
+  searchLabel = "Search",
+  previousPageLabel = "Previous page",
+  nextPageLabel = "Next page",
+  showShortcutsLabel = "Show shortcuts",
+} = Astro.props;
 ---
 
-<script>
+<script define:vars={{ searchLabel, previousPageLabel, nextPageLabel, showShortcutsLabel }}>
   function initKeyboardShortcuts() {
     if (window.__bdShortcutsInit) return;
     window.__bdShortcutsInit = true;
@@ -30,19 +42,19 @@
         <div class="bd-shortcuts-modal">
           <h3>Keyboard Shortcuts</h3>
           <div class="bd-shortcut-row">
-            <span class="bd-shortcut-desc">Search</span>
+            <span class="bd-shortcut-desc">${searchLabel}</span>
             <span class="bd-shortcut-keys"><kbd class="bd-kbd">${modLabel}</kbd><kbd class="bd-kbd">K</kbd></span>
           </div>
           <div class="bd-shortcut-row">
-            <span class="bd-shortcut-desc">Previous page</span>
+            <span class="bd-shortcut-desc">${previousPageLabel}</span>
             <span class="bd-shortcut-keys"><kbd class="bd-kbd">←</kbd></span>
           </div>
           <div class="bd-shortcut-row">
-            <span class="bd-shortcut-desc">Next page</span>
+            <span class="bd-shortcut-desc">${nextPageLabel}</span>
             <span class="bd-shortcut-keys"><kbd class="bd-kbd">→</kbd></span>
           </div>
           <div class="bd-shortcut-row">
-            <span class="bd-shortcut-desc">Show shortcuts</span>
+            <span class="bd-shortcut-desc">${showShortcutsLabel}</span>
             <span class="bd-shortcut-keys"><kbd class="bd-kbd">?</kbd></span>
           </div>
         </div>

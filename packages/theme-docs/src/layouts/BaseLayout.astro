@@ -1,7 +1,6 @@
 ---
 import ThemeScript from "../components/ThemeScript.astro";
 import { SearchDialog } from "../components/SearchDialog";
-import { ClientRouter } from "astro:transitions";
 import config from "virtual:barodoc/config";
 import { generateThemeCSS } from "@barodoc/core";
 import "@barodoc/theme-docs/styles/global.css";
@@ -10,9 +9,15 @@ interface Props {
   title: string;
   description?: string;
   ogImage?: string;
+  /** Text direction for RTL locales (e.g. "rtl" for ar, he). */
+  dir?: "ltr" | "rtl";
+  /** Optional lang for html (e.g. current locale). */
+  lang?: string;
+  /** UI strings for search dialog (optional, used by doc pages). */
+  uiStrings?: Record<string, string>;
 }
 
-const { title, description = "Documentation", ogImage } = Astro.props;
+const { title, description = "Documentation", ogImage, dir, lang, uiStrings } = Astro.props;
 const siteName = config.name;
 const canonicalUrl = config.site ? new URL(Astro.url.pathname, config.site).href : Astro.url.href;
 const ogImageUrl = ogImage
@@ -23,7 +28,7 @@ const themeCSS = config.theme?.colors ? generateThemeCSS(config.theme.colors) : 
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang={lang ?? "en"} dir={dir}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -50,11 +55,10 @@ const themeCSS = config.theme?.colors ? generateThemeCSS(config.theme.colors) : 
 
     <title>{title}</title>
     <ThemeScript />
-    <ClientRouter />
     {themeCSS && <style set:html={themeCSS} />}
   </head>
   <body class="min-h-screen bg-[var(--bd-bg)] text-[var(--bd-text)] antialiased">
     <slot />
-    <SearchDialog client:load />
+    <SearchDialog client:load searchPlaceholder={uiStrings?.searchPlaceholder} noResults={uiStrings?.noResults} searchIndexNotAvailable={uiStrings?.searchIndexNotAvailable} />
   </body>
 </html>
