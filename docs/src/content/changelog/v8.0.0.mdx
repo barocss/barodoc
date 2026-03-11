@@ -1,0 +1,21 @@
+---
+version: "8.0.0"
+date: 2026-03-01
+title: "Major version 8 — Blog, routing, and theme updates"
+---
+
+### New Features
+
+- **Blog custom URLs** — Use `urlSlug` in blog post frontmatter for custom URLs (e.g. `urlSlug: "guide-writing"` → `/blog/guide-writing`). Astro reserves the `slug` field, so we use `urlSlug` in the blog collection schema.
+- **Blog and changelog in docs project** — When using the full Astro setup (e.g. `docs/`), you can add `src/pages/blog/index.astro` and `src/pages/blog/[...slug].astro` so blog posts are served from your project’s content collection. The theme still provides the layout and UI.
+
+### Improvements
+
+- **Faster page navigation** — View Transitions (ClientRouter) are disabled by default so navigation uses the browser’s default behavior and feels snappier.
+- **Mobile hamburger menu** — The mobile nav sheet is now included in the header on all pages (home, blog, changelog, docs), so the menu button works everywhere, not only on docs pages.
+- **Content structure docs** — Documentation updated for blog `urlSlug` and directory layout examples.
+
+### Bug Fixes
+
+- Fixed blog post pages returning 404 when using theme-injected routes; docs project now uses local blog pages so `getCollection("blog")` runs in the correct context.
+- Fixed `/blog` returning 404 when only `blog/[...slug].astro` existed; added `blog/index.astro` so the index route is handled correctly.

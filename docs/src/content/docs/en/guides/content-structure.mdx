@@ -152,8 +152,10 @@ Blog posts live in `src/content/blog/` (no locale subfolders). They are date-sor
 src/content/blog/
 ├── introducing-barodoc.mdx    → /blog/introducing-barodoc
 ├── v6-release.mdx             → /blog/v6-release
-└── writing-great-docs.mdx     → /blog/writing-great-docs
+└── writing-great-docs.mdx     → /blog/guide-writing   (with urlSlug in frontmatter)
 ```
+
+By default the URL slug is the file name without extension. To use a custom URL, add `urlSlug` in frontmatter (e.g. `urlSlug: "guide-writing"`).
 
 ### Creating a blog post
 
@@ -186,6 +188,7 @@ Your blog content here. You can use all the same MDX components
 | `avatar` | `string` | Author avatar image URL. Shown next to the author name on the index and post pages. |
 | `image` | `string` | Cover image path (shown on index card and post page). |
 | `tags` | `string[]` | Tags shown as badges on the card and post header. |
+| `urlSlug` | `string` | Custom URL slug. If omitted, the file name (without extension) is used. Example: `urlSlug: "guide-writing"` → `/blog/guide-writing`. |
 
 <Callout type="tip">
 The blog index page at `/blog` is generated automatically. You don't need to create it — just add posts to `src/content/blog/` and they appear.

@@ -1,24 +1,75 @@
 ---
 import { DocHeader } from "./DocHeader";
+import { MobileNavSheet } from "./MobileNavSheet";
 import config from "virtual:barodoc/config";
 import { locales, defaultLocale } from "virtual:barodoc/i18n";
+import { getLocalizedNavGroup, getLocalizedSectionLabel } from "@barodoc/core";
 
 interface Props {
   currentLocale?: string;
   currentPath?: string;
+  sectionSlug?: string;
+  /** UI strings for current locale (from virtual:barodoc/i18n uiStrings). */
+  uiStrings?: Record<string, string>;
 }
 
-const { currentLocale = defaultLocale, currentPath = "" } = Astro.props;
+const { currentLocale = defaultLocale, currentPath = "", sectionSlug = "docs", uiStrings = {} } = Astro.props;
 const hasMultipleLocales = locales.length > 1;
 
 const localeLabels: Record<string, string> = config.i18n?.labels || {};
+
+const tabs = (config.tabs ?? []).map((tab: { label: string; href: string; [k: string]: unknown }) => ({
+  label: getLocalizedSectionLabel(tab as any, currentLocale, defaultLocale),
+  href: tab.href,
+}));
+
+const currentSection = sectionSlug ?? "docs";
+const sectionNav =
+  currentSection === "docs"
+    ? config.navigation
+    : (config.sections?.find((s: any) => s.slug === currentSection)?.navigation ?? config.navigation);
+
+function normalizePath(path: string) {
+  return path.replace(/\/$/, "").replace(/^\//, "");
+}
+function isActive(page: string) {
+  const normalized = normalizePath(currentPath);
+  const pagePath = normalizePath(page);
+  return (
+    normalized === `${currentSection}/${pagePath}` ||
+    normalized === `${currentSection}/${currentLocale}/${pagePath}`
+  );
+}
+function getPageHref(page: string) {
+  return currentLocale === defaultLocale
+    ? `/${currentSection}/${page}`
+    : `/${currentSection}/${currentLocale}/${page}`;
+}
+function getPageTitle(page: string) {
+  const parts = page.split("/");
+  const name = parts[parts.length - 1];
+  return name
+    .split("-")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
+}
+
+const mobileNavGroups = sectionNav.map((group: any) => ({
+  title: getLocalizedNavGroup(group, currentLocale, defaultLocale),
+  defaultOpen: true,
+  items: group.pages.map((page: string) => ({
+    title: getPageTitle(page),
+    href: getPageHref(page),
+    isActive: isActive(page),
+  })),
+}));
 ---
 
 <DocHeader 
   client:load
   siteName={config.name}
   logo={config.logo}
-  tabs={config.tabs}
+  tabs={tabs}
   githubUrl={config.topbar?.github}
   hasMultipleLocales={hasMultipleLocales}
   currentLocale={currentLocale}
@@ -26,4 +77,13 @@ const localeLabels: Record<string, string> = config.i18n?.labels || {};
   currentPath={currentPath}
   locales={locales}
   defaultLocale={defaultLocale}
+  uiStrings={uiStrings}
+/>
+<MobileNavSheet
+  client:load
+  groups={mobileNavGroups}
+  siteName={config.name}
+  logo={config.logo}
+  tabs={tabs}
+  currentPath={currentPath}
 />

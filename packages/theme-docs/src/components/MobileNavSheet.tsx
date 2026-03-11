@@ -38,9 +38,9 @@ export function MobileNavSheet({ groups, siteName, logo, tabs = [], currentPath 
   const [open, setOpen] = React.useState(false);
 
   React.useEffect(() => {
-    const handleToggle = () => setOpen((prev) => !prev);
-    document.addEventListener("toggle-mobile-nav", handleToggle);
-    return () => document.removeEventListener("toggle-mobile-nav", handleToggle);
+    const onToggle = () => setOpen((prev) => !prev);
+    document.addEventListener("toggle-mobile-nav", onToggle);
+    return () => document.removeEventListener("toggle-mobile-nav", onToggle);
   }, []);
 
   // Close on navigation

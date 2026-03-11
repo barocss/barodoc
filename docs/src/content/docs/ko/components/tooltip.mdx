@@ -4,7 +4,7 @@ description: 호버 시 컨텍스트 정보를 표시하는 툴팁
 ---
 import { Tooltip, ParamField, ParamFieldGroup } from "@barodoc/theme-docs";
 
-툴팁은 사용자가 용어나 요소 위에 마우스를 올렸을 때 추가 컨텍스트를 제공합니다.
+툴팁은 **사용자가 트리거(감싼 요소)에 마우스를 올리거나 포커스할 때만** 추가 설명을 표시합니다. 툴팁 내용은 그 전에는 보이지 않으며, 본문에 고정된 텍스트처럼 두지 않습니다.
 
 ## 기본 사용법
 
@@ -28,10 +28,10 @@ import { Tooltip, ParamField, ParamFieldGroup } from "@barodoc/theme-docs";
 
 <ParamFieldGroup>
   <ParamField name="tip" type="string" required>
-    호버 시 표시되는 툴팁 콘텐츠 텍스트
+    툴팁 내용; 호버/포커스(사용자 액션) 시에만 표시됩니다.
   </ParamField>
   <ParamField name="children" type="ReactNode" required>
-    마우스를 올릴 텍스트 또는 요소
+    트리거 요소(예: 용어); 사용자가 여기에 호버/포커스하면 툴팁이 보입니다.
   </ParamField>
   <ParamField name="client:load" type="directive" required>
     클라이언트 사이드 인터랙티브에 필요한 Astro 디렉티브

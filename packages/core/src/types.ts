@@ -13,6 +13,10 @@ export interface BarodocI18nConfig {
   defaultLocale: string;
   locales: string[];
   labels?: Record<string, string>;
+  /** Per-locale UI string overrides (key → value). Merged over default strings. */
+  translations?: Record<string, Record<string, string>>;
+  /** Per-locale text direction (e.g. { ar: "rtl", he: "rtl" }). */
+  dir?: Record<string, "ltr" | "rtl">;
 }
 
 export interface BarodocThemeColors {
@@ -39,6 +43,9 @@ export interface BarodocThemeConfig {
 export interface BarodocSection {
   slug: string;
   label?: string;
+  "label:ko"?: string;
+  "label:ja"?: string;
+  [key: `label:${string}`]: string | undefined;
   navigation: BarodocNavItem[];
 }
 

@@ -1,0 +1,155 @@
+---
+title: Recommended Plugins
+description: "Which Barodoc plugins to use by scenario: SEO, AI, analytics, API docs, and more"
+tags: [plugins, seo, analytics, ai]
+related: [guides/plugins/sitemap, guides/plugins/search, guides/plugins/llms-txt, guides/ai-and-agents]
+difficulty: beginner
+---
+
+Barodoc ships with several official plugins. This page recommends **which ones to add** depending on your goals.
+
+## Quick reference
+
+| Goal | Plugins to add |
+|------|----------------|
+| **Every production site** | `plugin-sitemap`, (search is default) |
+| **SEO & social sharing** | `plugin-sitemap`, `plugin-og-image` |
+| **AI / agents** | `plugin-llms-txt` |
+| **Blog or changelog** | `plugin-rss` |
+| **Analytics** | `plugin-analytics` |
+| **API documentation** | `plugin-openapi` |
+| **Offline / installable** | `plugin-pwa` |
+| **Algolia search** | `plugin-docsearch` |
+| **Raw Markdown** | `plugin-raw-md` (e.g. for tools that consume .md) |
+
+---
+
+## Every production site
+
+- **`@barodoc/plugin-sitemap`** — Generates `sitemap.xml` so search engines can discover all pages. Requires `site` in config (your site URL).
+- **Search** — Full-text search is built in (Pagefind). No plugin needed unless you switch to Algolia via `@barodoc/plugin-docsearch`.
+
+```json
+{
+  "site": "https://docs.example.com",
+  "plugins": ["@barodoc/plugin-sitemap"]
+}
+```
+
+---
+
+## SEO and social sharing
+
+- **`@barodoc/plugin-og-image`** — Generates Open Graph images per page for rich previews when sharing links (Twitter, Slack, etc.). Also needs `site` in config.
+
+```json
+{
+  "site": "https://docs.example.com",
+  "plugins": [
+    "@barodoc/plugin-sitemap",
+    "@barodoc/plugin-og-image"
+  ]
+}
+```
+
+---
+
+## AI and agents
+
+- **`@barodoc/plugin-llms-txt`** — Builds `llms.txt` and optionally `llms-full.txt` ([llmstxt.org](https://llmstxt.org)) so AI assistants and LLMs can consume your docs. Use this if you want your documentation to be easily readable by agents or RAG pipelines.
+
+For more (manifest, chat widgets, RAG), see [AI and agent support](/docs/guides/ai-and-agents).
+
+```json
+{
+  "plugins": [
+    "@barodoc/plugin-llms-txt"
+  ]
+}
+```
+
+---
+
+## Blog or changelog
+
+- **`@barodoc/plugin-rss`** — Exposes RSS feeds for blog and/or changelog. Helps readers subscribe and improves discoverability.
+
+```json
+{
+  "plugins": [
+    ["@barodoc/plugin-rss", { "collections": ["blog", "changelog"] }]
+  ]
+}
+```
+
+---
+
+## Analytics
+
+- **`@barodoc/plugin-analytics`** — Adds Google Analytics, Plausible, or Umami. Configure with your provider and ID.
+
+```json
+{
+  "plugins": [
+    ["@barodoc/plugin-analytics", { "provider": "google", "id": "G-XXXXXXXX" }]
+  ]
+}
+```
+
+---
+
+## API documentation
+
+- **`@barodoc/plugin-openapi`** — Turns an OpenAPI (Swagger) spec into doc pages and an interactive API playground. Use when you document REST APIs.
+
+```json
+{
+  "plugins": [
+    ["@barodoc/plugin-openapi", {
+      "specFile": "openapi.yaml",
+      "basePath": "api",
+      "playground": true
+    }]
+  ]
+}
+```
+
+---
+
+## Offline / installable (PWA)
+
+- **`@barodoc/plugin-pwa`** — Adds a web app manifest and service worker so the site can be installed and used offline.
+
+```json
+{
+  "plugins": ["@barodoc/plugin-pwa"]
+}
+```
+
+---
+
+## Algolia DocSearch
+
+- **`@barodoc/plugin-docsearch`** — Replaces the default Pagefind search with Algolia DocSearch (good for very large docs or when you already use Algolia). Requires an Algolia app ID and API key.
+
+---
+
+## Typical production setup
+
+A common combination for a public docs site:
+
+```json
+{
+  "site": "https://docs.example.com",
+  "plugins": [
+    "@barodoc/plugin-sitemap",
+    "@barodoc/plugin-search",
+    "@barodoc/plugin-og-image",
+    "@barodoc/plugin-llms-txt",
+    ["@barodoc/plugin-rss", { "collections": ["blog", "changelog"] }],
+    ["@barodoc/plugin-analytics", { "provider": "google", "id": "G-XXXXX" }]
+  ]
+}
+```
+
+Order can matter: place content-modifying plugins before Search so the index reflects final content. See [Plugins](/docs/guides/plugins/openapi) for full options per plugin.

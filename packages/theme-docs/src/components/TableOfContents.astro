@@ -7,9 +7,10 @@ interface Heading {
 
 interface Props {
   headings: Heading[];
+  onThisPageLabel?: string;
 }
 
-const { headings } = Astro.props;
+const { headings, onThisPageLabel = "On this page" } = Astro.props;
 
 // Filter to only show h2 and h3
 const filteredHeadings = headings.filter(h => h.depth >= 2 && h.depth <= 3);
@@ -18,7 +19,7 @@ const filteredHeadings = headings.filter(h => h.depth >= 2 && h.depth <= 3);
 {filteredHeadings.length > 0 && (
   <div class="toc-container">
     <h4 class="text-[11px] font-semibold uppercase tracking-widest text-[var(--bd-text-muted)] mb-3">
-      On this page
+      {onThisPageLabel}
     </h4>
     <nav class="relative">
       <div class="absolute left-0 top-0 bottom-0 w-px bg-[var(--bd-border)]"></div>

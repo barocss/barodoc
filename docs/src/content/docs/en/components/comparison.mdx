@@ -1,0 +1,50 @@
+---
+title: Comparison
+description: Two-column Before/After or A vs B layout
+---
+import { Comparison, ParamField, ParamFieldGroup } from "@barodoc/theme-docs";
+
+Use `Comparison` to show two options side by side with optional labels (e.g. Before/After, Option A vs B).
+
+## Before and After
+
+<Comparison leftLabel="Before" rightLabel="After">
+  <div>
+    Old configuration used a single JSON file with no i18n support.
+  </div>
+  <div>
+    New config supports <code>i18n.translations</code> and <code>i18n.dir</code> for RTL.
+  </div>
+</Comparison>
+
+```mdx
+<Comparison leftLabel="Before" rightLabel="After">
+  <div>Old approach...</div>
+  <div>New approach...</div>
+</Comparison>
+```
+
+## Custom labels
+
+<Comparison leftLabel="Option A" rightLabel="Option B">
+  <div>Content for the first option.</div>
+  <div>Content for the second option.</div>
+</Comparison>
+
+## Props
+
+### Comparison
+
+<ParamFieldGroup>
+  <ParamField name="leftLabel" type="string" default="'Before'">
+    Label for the left column
+  </ParamField>
+  <ParamField name="rightLabel" type="string" default="'After'">
+    Label for the right column
+  </ParamField>
+  <ParamField name="className" type="string">
+    Additional CSS classes
+  </ParamField>
+</ParamFieldGroup>
+
+`Comparison` expects exactly two children: the first is the left column content, the second is the right column content.

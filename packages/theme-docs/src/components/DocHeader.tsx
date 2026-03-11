@@ -26,6 +26,8 @@ interface DocHeaderProps {
   currentPath?: string;
   locales?: string[];
   defaultLocale?: string;
+  /** UI strings for current locale (menu, search, toggleTheme, etc.). */
+  uiStrings?: Record<string, string>;
 }
 
 function getLocalizedUrl(
@@ -60,7 +62,9 @@ export function DocHeader({
   currentPath = "",
   locales = [],
   defaultLocale = "en",
+  uiStrings: uiStringsProp = {},
 }: DocHeaderProps) {
+  const t = (key: string, fallback: string) => uiStringsProp[key] ?? fallback;
   const [theme, setTheme] = React.useState<"light" | "dark">("light");
   const [langOpen, setLangOpen] = React.useState(false);
   const langRef = React.useRef<HTMLDivElement>(null);
@@ -92,15 +96,26 @@ export function DocHeader({
   };
 
   const openMobileNav = () => {
-    document.dispatchEvent(new CustomEvent("toggle-mobile-nav"));
+    document.dispatchEvent(new CustomEvent("toggle-mobile-nav", { bubbles: true }));
   };
 
   return (
     <TooltipProvider>
       <header className="sticky top-0 z-50 w-full min-w-0 border-b border-[var(--bd-border)] bg-[var(--bd-bg)]/95 backdrop-blur-md supports-[backdrop-filter]:bg-[var(--bd-bg)]/80">
         <div className="flex h-14 items-center justify-between gap-2 px-4 sm:px-6 max-w-[1280px] mx-auto min-w-0">
-          {/* Logo + Tabs */}
-          <div className="flex items-center gap-6 min-w-0 shrink">
+          {/* Left: hamburger (mobile) + logo + tabs */}
+          <div className="flex items-center gap-3 md:gap-6 min-w-0 shrink">
+            {/* Mobile menu — left so it matches sheet sliding from left */}
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              className="xl:hidden h-9 w-9 -ml-1 shrink-0 text-[var(--bd-text-secondary)] hover:text-[var(--bd-text)] hover:bg-[var(--bd-bg-subtle)]"
+              onClick={openMobileNav}
+              aria-label={t("menu", "Menu")}
+            >
+              <Menu className="h-5 w-5" />
+            </Button>
             <a
               href="/"
               className="flex items-center gap-2.5 min-w-0 shrink overflow-hidden font-semibold text-[var(--bd-text-heading)] hover:opacity-80 transition-opacity"
@@ -109,7 +124,7 @@ export function DocHeader({
               <span className="text-[15px] tracking-tight truncate">{siteName}</span>
             </a>
             {tabs.length > 0 && (
-              <nav className="hidden md:flex items-center gap-1">
+              <nav className="hidden xl:flex items-center gap-1">
                 {tabs.map((tab) => {
                   const isActive = currentPath === tab.href || currentPath.startsWith(tab.href + "/");
                   return (
@@ -136,36 +151,36 @@ export function DocHeader({
             {/* Search button */}
             <Button
               variant="outline"
-              className="hidden md:flex items-center gap-3 px-3 py-1.5 h-9 min-w-[220px] justify-start rounded-lg border-[var(--bd-border)]"
+              className="hidden xl:flex items-center gap-3 px-3 py-1.5 h-9 min-w-[220px] justify-start rounded-lg border-[var(--bd-border)]"
               onClick={openSearch}
             >
               <Search className="h-4 w-4 shrink-0 text-[var(--bd-text-muted)]" />
               <span className="flex-1 text-left text-sm text-[var(--bd-text-muted)]">
-                Search...
+                {t("searchPlaceholder", "Search...")}
               </span>
-              <kbd className="hidden lg:inline-flex items-center gap-0.5 px-1.5 py-0.5 text-[10px] font-medium bg-[var(--bd-bg-subtle)] border border-[var(--bd-border)] rounded text-[var(--bd-text-muted)]">
+              <kbd className="hidden xl:inline-flex items-center gap-0.5 px-1.5 py-0.5 text-[10px] font-medium bg-[var(--bd-bg-subtle)] border border-[var(--bd-border)] rounded text-[var(--bd-text-muted)]">
                 <span>⌘</span>K
               </kbd>
             </Button>
 
-            {/* Mobile search button */}
+            {/* Mobile search button (shown below xl so header stays uncluttered) */}
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="md:hidden"
+                  className="xl:hidden"
                   onClick={openSearch}
                 >
                   <Search className="h-5 w-5" />
-                  <span className="sr-only">Search</span>
+                  <span className="sr-only">{t("search", "Search")}</span>
                 </Button>
               </TooltipTrigger>
-              <TooltipContent>Search</TooltipContent>
+              <TooltipContent>{t("search", "Search")}</TooltipContent>
             </Tooltip>
 
             {/* Divider */}
-            <Separator orientation="vertical" className="hidden md:block h-5 mx-1.5" />
+            <Separator orientation="vertical" className="hidden xl:block h-5 mx-1.5" />
 
             {/* GitHub link */}
             {githubUrl && (
@@ -194,7 +209,7 @@ export function DocHeader({
             {/* Language switcher */}
             {hasMultipleLocales && locales.length > 0 && (
               <>
-                <Separator orientation="vertical" className="hidden md:block h-5 mx-1" />
+                <Separator orientation="vertical" className="hidden xl:block h-5 mx-1" />
                 <div className="relative" ref={langRef}>
                   <Tooltip>
                     <TooltipTrigger asChild>
@@ -211,7 +226,7 @@ export function DocHeader({
                           {localeLabels[currentLocale] ?? currentLocale}
                         </span>
                         <ChevronDown className="h-3 w-3" />
-                        <span className="sr-only">Language</span>
+                        <span className="sr-only">{t("language", "Language")}</span>
                       </Button>
                     </TooltipTrigger>
                     <TooltipContent>Language</TooltipContent>
@@ -256,24 +271,14 @@ export function DocHeader({
                   ) : (
                     <Sun className="h-[18px] w-[18px]" />
                   )}
-                  <span className="sr-only">Toggle theme</span>
+                  <span className="sr-only">{t("toggleTheme", "Toggle theme")}</span>
                 </Button>
               </TooltipTrigger>
               <TooltipContent>
-                {theme === "light" ? "Dark mode" : "Light mode"}
+                {theme === "light" ? (t("toggleTheme", "Toggle theme") + " (dark)") : (t("toggleTheme", "Toggle theme") + " (light)")}
               </TooltipContent>
             </Tooltip>
 
-            {/* Mobile menu button */}
-            <Button
-              variant="ghost"
-              size="icon"
-              className="lg:hidden h-8 w-8 text-[var(--bd-text-secondary)] hover:text-[var(--bd-text)]"
-              onClick={openMobileNav}
-            >
-              <Menu className="h-5 w-5" />
-              <span className="sr-only">Menu</span>
-            </Button>
           </div>
         </div>
       </header>

@@ -44,7 +44,7 @@
     {
       "group": "Guides",
       "group:ko": "가이드",
-      "pages": ["guides/installation", "guides/configuration", "guides/content-structure", "guides/sections", "guides/standalone-pages", "guides/cli", "guides/overrides", "guides/deployment", "guides/i18n", "guides/migration", "guides/troubleshooting"]
+      "pages": ["guides/installation", "guides/configuration", "guides/content-structure", "guides/sections", "guides/standalone-pages", "guides/cli", "guides/overrides", "guides/deployment", "guides/i18n", "guides/migration", "guides/troubleshooting", "guides/ai-and-agents"]
     },
     {
       "group": "Components",
@@ -57,6 +57,7 @@
         "components/card",
         "components/code-group",
         "components/columns",
+        "components/comparison",
         "components/expandable",
         "components/file-tree",
         "components/frame",
@@ -66,7 +67,9 @@
         "components/param-field",
         "components/response-field",
         "components/steps",
+        "components/table",
         "components/tabs",
+        "components/toast",
         "components/tooltip",
         "components/video"
       ]
@@ -75,6 +78,7 @@
       "group": "Plugins",
       "group:ko": "플러그인",
       "pages": [
+        "guides/plugins/recommended",
         "guides/plugins/openapi",
         "guides/plugins/search",
         "guides/plugins/analytics",

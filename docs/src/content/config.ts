@@ -25,6 +25,8 @@ const blogCollection = defineCollection({
     avatar: z.string().optional(),
     image: z.string().optional(),
     tags: z.array(z.string()).optional(),
+    /** Custom URL slug (Astro reserves `slug` for internal use). Use in frontmatter as `urlSlug`. */
+    urlSlug: z.string().optional(),
   }),
 });
 

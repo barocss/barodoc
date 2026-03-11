@@ -1,6 +1,14 @@
 import { defineConfig } from "astro/config";
+import { fileURLToPath } from "node:url";
+import { resolve } from "node:path";
 import barodoc from "@barodoc/core";
 import docsTheme from "@barodoc/theme-docs/theme";
+import { serveAtFsPlugin } from "./vite-plugin-serve-at-fs.mjs";
+
+const root = resolve(fileURLToPath(import.meta.url), "..");
+const monorepoRoot = resolve(root, "..");
+const themeDocsPath = resolve(monorepoRoot, "packages/theme-docs");
+const fsAllow = [root, monorepoRoot, themeDocsPath];
 
 export default defineConfig({
   site: "https://barodoc.dev",
@@ -19,13 +27,16 @@ export default defineConfig({
     }),
   ],
   vite: {
+    plugins: [serveAtFsPlugin(fsAllow)],
+    server: {
+      fs: { allow: fsAllow },
+    },
     optimizeDeps: {
       include: ["mermaid"],
       exclude: [
         "fsevents",
         "lightningcss",
         "@tailwindcss/oxide",
-        "@barodoc/theme-docs",
         "@barodoc/core",
       ],
     },
