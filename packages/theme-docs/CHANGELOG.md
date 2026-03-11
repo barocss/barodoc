@@ -1,5 +1,17 @@
 # @barodoc/theme-docs
 
+## 9.0.0
+
+### Minor Changes
+
+- c5233ab: - **core**: i18n default strings, config schema updates, integration and type exports
+  - **theme-docs**: layout and component updates (Header, DocHeader, MobileNavSheet, SearchDialog, TableOfContents, CodeCopy, KeyboardShortcuts), new StaticNav and MDX components (Comparison, Table, Toast), BaseLayout/DocsLayout/BlogLayout and changelog page updates, global styles
+
+### Patch Changes
+
+- Updated dependencies [c5233ab]
+  - @barodoc/core@9.0.0
+
 ## 8.2.1
 
 ### Patch Changes

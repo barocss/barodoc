@@ -1,5 +1,12 @@
 # @barodoc/plugin-raw-md
 
+## 9.0.0
+
+### Patch Changes
+
+- Updated dependencies [c5233ab]
+  - @barodoc/core@9.0.0
+
 ## 8.1.0
 
 ### Minor Changes

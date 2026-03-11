@@ -1,5 +1,12 @@
 # @barodoc/plugin-rss
 
+## 9.0.0
+
+### Patch Changes
+
+- Updated dependencies [c5233ab]
+  - @barodoc/core@9.0.0
+
 ## 8.0.1
 
 ### Patch Changes

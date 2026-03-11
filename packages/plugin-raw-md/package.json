@@ -1,6 +1,6 @@
 {
   "name": "@barodoc/plugin-raw-md",
-  "version": "8.1.0",
+  "version": "9.0.0",
   "description": "Serve raw markdown for each page via .md URL suffix — AI agent friendly",
   "type": "module",
   "main": "./dist/index.js",
