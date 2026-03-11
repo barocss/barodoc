@@ -1,6 +1,6 @@
 {
   "name": "@barodoc/plugin-pwa",
-  "version": "8.0.0",
+  "version": "9.0.0",
   "description": "PWA and offline support plugin for Barodoc",
   "type": "module",
   "main": "./dist/index.js",

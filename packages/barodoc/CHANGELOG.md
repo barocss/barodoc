@@ -1,5 +1,22 @@
 # barodoc
 
+## 9.0.0
+
+### Patch Changes
+
+- Updated dependencies [c5233ab]
+  - @barodoc/core@9.0.0
+  - @barodoc/theme-docs@9.0.0
+  - @barodoc/plugin-analytics@9.0.0
+  - @barodoc/plugin-docsearch@9.0.0
+  - @barodoc/plugin-llms-txt@9.0.0
+  - @barodoc/plugin-og-image@8.0.0
+  - @barodoc/plugin-openapi@9.0.0
+  - @barodoc/plugin-pwa@9.0.0
+  - @barodoc/plugin-rss@9.0.0
+  - @barodoc/plugin-search@9.0.0
+  - @barodoc/plugin-sitemap@9.0.0
+
 ## 8.2.1
 
 ### Patch Changes
