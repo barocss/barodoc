@@ -1,12 +1,17 @@
 import type { AstroIntegration } from "astro";
 import type { PluginConfig } from "./plugins/types.js";
 
+/** A single page path or an expandable sidebar group with label and child pages. */
+export type BarodocNavPageEntry =
+  | string
+  | { label: string; "label:ko"?: string; "label:ja"?: string; [key: `label:${string}`]: string | undefined; pages: string[] };
+
 export interface BarodocNavItem {
   group: string;
   "group:ko"?: string;
   "group:ja"?: string;
   [key: `group:${string}`]: string | undefined;
-  pages: string[];
+  pages: BarodocNavPageEntry[];
 }
 
 export interface BarodocI18nConfig {

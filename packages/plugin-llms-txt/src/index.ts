@@ -120,13 +120,14 @@ function scanDocs(
   docsDir: string,
   locales: string[],
   defaultLocale: string,
-  navigation: Array<{ pages: string[] }>
+  navigation: Array<{ pages: Array<string | { pages: string[] }> }>
 ): PageEntry[] {
   const orderedSlugs: string[] = [];
   for (const group of navigation) {
-    for (const slug of group.pages ?? []) {
-      if (!orderedSlugs.includes(slug)) {
-        orderedSlugs.push(slug);
+    for (const entry of group.pages ?? []) {
+      const slugs: string[] = typeof entry === "string" ? [entry] : entry.pages;
+      for (const slug of slugs) {
+        if (!orderedSlugs.includes(slug)) orderedSlugs.push(slug);
       }
     }
   }

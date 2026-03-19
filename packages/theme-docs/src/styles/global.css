@@ -70,7 +70,7 @@
     --bd-shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.07), 0 2px 4px -2px rgb(0 0 0 / 0.05);
     --bd-shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.08), 0 4px 6px -4px rgb(0 0 0 / 0.04);
 
-    --bd-sidebar-active-bg:     var(--color-primary-50);
+    --bd-sidebar-active-bg:     var(--color-primary-100);
     --bd-sidebar-active-border: var(--color-primary-500);
     --bd-sidebar-active-text:   var(--color-primary-600);
 
@@ -108,7 +108,7 @@
     --bd-shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.5), 0 2px 4px -2px rgb(0 0 0 / 0.4);
     --bd-shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.5), 0 4px 6px -4px rgb(0 0 0 / 0.4);
 
-    --bd-sidebar-active-bg:     var(--color-primary-950);
+    --bd-sidebar-active-bg:     var(--color-primary-900);
     --bd-sidebar-active-border: var(--color-primary-400);
     --bd-sidebar-active-text:   var(--color-primary-400);
   }

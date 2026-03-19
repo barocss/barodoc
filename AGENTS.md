@@ -91,7 +91,7 @@ interface BarodocConfig {
   navigation: Array<{
     group: string;
     "group:ko"?: string;
-    pages: string[];
+    pages: Array<string | { label: string; "label:ko"?: string; pages: string[] }>;
   }>;
   
   plugins?: Array<string | [string, object]>;

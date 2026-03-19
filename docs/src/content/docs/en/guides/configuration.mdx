@@ -133,7 +133,9 @@ See [Content Structure](/docs/guides/content-structure) for details on how tabs 
 
 ### navigation
 
-Define the sidebar navigation structure. Use `group` for the default locale and `group:LOCALE` for translated group names (see [I18n](/docs/guides/i18n)):
+Define the sidebar navigation structure. Use `group` for the default locale and `group:LOCALE` for translated group names (see [I18n](/docs/guides/i18n)).
+
+**Flat list** — each entry in `pages` is a page slug:
 
 ```json
 {
@@ -146,6 +148,27 @@ Define the sidebar navigation structure. Use `group` for the default locale and 
   ]
 }
 ```
+
+**Sidebar hierarchy** — an entry in `pages` can be an object with `label` and `pages` to show an expandable group in the sidebar (Mintlify-style). Use `label:LOCALE` for translated labels:
+
+```json
+{
+  "navigation": [
+    {
+      "group": "Guides",
+      "group:ko": "가이드",
+      "pages": [
+        { "label": "Setup", "label:ko": "설정", "pages": ["guides/installation", "guides/configuration"] },
+        "guides/deployment",
+        "guides/i18n"
+      ]
+    }
+  ]
+}
+```
+
+- **Page slugs** map to files: `introduction` → `docs/en/introduction.md`, `guides/installation` → `docs/en/guides/installation.md`.
+- **Expandable item**: `{ "label": "Setup", "pages": ["guides/installation", "guides/configuration"] }` renders as a collapsible row "Setup" with two child links. The first child’s URL is used when the row is clicked.
 
 ### sections
 
@@ -325,7 +348,7 @@ Quick reference for all supported keys. Optional keys can be omitted.
 | `base` | `string` | `"/"` | Base path for subdirectory deploys (e.g. `"/docs"`). |
 | `theme` | `object` | — | `colors` (accent, gray, light/dark), `fonts` (heading, body, code), `radius`. |
 | `i18n` | `object` | — | `defaultLocale`, `locales`, optional `labels`. |
-| `navigation` | `array` | — | **Required.** Sidebar groups and pages for `/docs/`. |
+| `navigation` | `array` | — | **Required.** Sidebar groups and pages for `/docs/`. Each group has `group`, `group:ko` (optional), and `pages` (slugs or `{ label, pages }` for expandable rows). |
 | `sections` | `array` | — | Extra sections (slug, label, navigation) e.g. Help, Guides. |
 | `tabs` | `array` | — | Header tabs: `{ label, href }` for Docs, Blog, Changelog, etc. |
 | `topbar` | `object` | — | `github`, `discord`, `twitter` URLs. |

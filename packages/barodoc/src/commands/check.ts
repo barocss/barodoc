@@ -76,9 +76,12 @@ function getNavSlugs(config: any): Map<string, Set<string>> {
   }
 
   for (const group of config.navigation ?? []) {
-    for (const page of group.pages ?? []) {
-      for (const locale of locales) {
-        result.get(locale)!.add(page);
+    for (const entry of group.pages ?? []) {
+      const slugs = typeof entry === "string" ? [entry] : entry.pages;
+      for (const page of slugs) {
+        for (const locale of locales) {
+          result.get(locale)!.add(page);
+        }
       }
     }
   }

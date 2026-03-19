@@ -218,9 +218,18 @@ function countWords(content: string): number {
   return stripped.split(/\s+/).filter((w) => w.length > 0).length;
 }
 
-function findCategory(slug: string, navigation: Array<{ group: string; pages: string[] }>): string | null {
+function flatPages(pages: Array<string | { pages: string[] }>): string[] {
+  const out: string[] = [];
+  for (const entry of pages) {
+    if (typeof entry === "string") out.push(entry);
+    else out.push(...entry.pages);
+  }
+  return out;
+}
+
+function findCategory(slug: string, navigation: Array<{ group: string; pages: Array<string | { pages: string[] }> }>): string | null {
   for (const group of navigation) {
-    if (group.pages.includes(slug)) return group.group;
+    if (flatPages(group.pages).includes(slug)) return group.group;
   }
   return null;
 }
