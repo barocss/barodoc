@@ -1,0 +1,16 @@
+---
+version: "10.0.1"
+date: 2026-03-19
+title: "Docs updates and Deploy Docs fix"
+---
+
+### Fixes
+
+- **MobileNav.astro** — Flatten nested nav entries when building mobile nav groups so `getPageTitle` never receives an object. Fixes Deploy Docs workflow failing with `page.split is not a function` when `navigation.pages` contains `{ label, pages }` objects.
+
+### Documentation
+
+- Changelog v9.1.0 and v10.0.0 added to the docs site; removed Mintlify-style wording from docs and code comments.
+- DESIGN-PLAN.md: layout/sidebar specs; DEVELOPMENT.md: docs site deployment (GitHub Pages, changelog content).
+- About, roadmap, quickstart, content-structure, introduction (en/ko) updated for sidebar hierarchy.
+- Changeset guidelines: prefer patch, add docs changelog when adding a changeset (`.changeset/README.md`, DEVELOPMENT.md).

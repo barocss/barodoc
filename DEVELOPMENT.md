@@ -199,11 +199,19 @@ See `AGENTS.md` (Plugin System) and `.cursor/skills/barodoc-plugins/SKILL.md` fo
    pnpm -r exec tsc --noEmit
    ```
 
+### Adding a changeset (and releasing)
+
+1. **Prefer patch:** Use `patch` for the affected packages in the changeset (avoid unnecessary major/minor). Use `minor` only for new features, `major` only for breaking changes. See [.changeset/README.md](.changeset/README.md).
+2. Add a changeset file under `.changeset/` (e.g. `fix-something.md`) with the package(s) and summary.
+3. **Add a docs changelog entry:** Create `docs/src/content/changelog/vX.Y.Z.mdx` with the **next** patch version (e.g. if current is 10.0.1, use 10.0.2), `date`, `title`, and a body that matches the changeset. Commit it in the same PR as the changeset so the [site Changelog](https://barodoc.barocss.com/changelog/) stays in sync.
+4. Merge to `main`; the release workflow will create a "Version packages" PR. Merging that publishes to npm.
+
 ### Releasing a new plugin
 
 1. Add the package to the changeset **linked** array in `.changeset/config.json` if it should version with the rest of the stack.
-2. Add a changeset under `.changeset/` (e.g. `feat: add @barodoc/plugin-raw-md`).
-3. Merge to `main`; the release workflow will create a “Version packages” PR. Merging that publishes to npm.
+2. Add a changeset under `.changeset/` (e.g. `feat: add @barodoc/plugin-raw-md`). Prefer `patch` unless it's a new feature (`minor`).
+3. Add `docs/src/content/changelog/vX.Y.Z.mdx` for the release (see above).
+4. Merge to `main`; the release workflow will create a “Version packages” PR. Merging that publishes to npm.
 
 ---
 
@@ -217,7 +225,8 @@ See `AGENTS.md` (Plugin System) and `.cursor/skills/barodoc-plugins/SKILL.md` fo
 | Dev server (my-docs) | From my-docs: `node ../barodoc/packages/barodoc/dist/cli.js serve` |
 | Build my-docs | From my-docs: `node ../barodoc/packages/barodoc/dist/cli.js build . -o dist` |
 | Docs site deploy | Push to `main` → [.github/workflows/docs.yml](.github/workflows/docs.yml) builds `docs/dist` and deploys to GitHub Pages |
-| Changelog content | `docs/src/content/changelog/vX.Y.Z.mdx` (version, date, title + body); push to main to publish |
+| Changelog content | `docs/src/content/changelog/vX.Y.Z.mdx` (version, date, title + body); add when adding a changeset; push to main to publish |
+| Changeset | Prefer **patch**; add `.changeset/*.md` and **docs changelog** in same PR — see [.changeset/README.md](.changeset/README.md) |
 | Build all packages | `pnpm build:packages` |
 | Type-check | `pnpm --filter docs exec astro sync` then `pnpm -r exec tsc --noEmit` |
 | Plugin config (docs) | `docs/barodoc.config.json` → `plugins` |
