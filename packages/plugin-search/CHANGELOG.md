@@ -1,5 +1,12 @@
 # @barodoc/plugin-search
 
+## 10.0.0
+
+### Patch Changes
+
+- Updated dependencies [aceb877]
+  - @barodoc/core@10.0.0
+
 ## 9.0.0
 
 ### Patch Changes
