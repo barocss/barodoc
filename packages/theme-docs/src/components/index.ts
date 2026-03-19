@@ -11,7 +11,7 @@ export { DocCallout } from "./mdx/DocCallout.tsx";
 export { DocTabs } from "./mdx/DocTabs.tsx";
 export { DocAccordion, SimpleAccordion } from "./mdx/DocAccordion.tsx";
 
-// New MDX Components (Mintlify-style)
+// New MDX Components
 export { Callout } from "./mdx/Callout.tsx";
 export { CodeGroup } from "./mdx/CodeGroup.tsx";
 export { Badge } from "./mdx/Badge.tsx";

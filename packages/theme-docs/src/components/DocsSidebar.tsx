@@ -11,7 +11,7 @@ interface NavItem {
   title: string;
   href: string;
   isActive?: boolean;
-  /** Nested items (Mintlify-style: only these expand/collapse, not the group) */
+  /** Nested items (only these expand/collapse, not the group) */
   children?: NavItem[];
 }
 
@@ -36,7 +36,7 @@ export function DocsSidebar({ groups, className }: DocsSidebarProps) {
   );
 }
 
-/** Mintlify-style: group is always visible (no collapse). Only items with children expand/collapse. */
+/** Group is always visible (no collapse). Only items with children expand/collapse. */
 function SidebarGroup({ group }: { group: NavGroup }) {
   return (
     <div>

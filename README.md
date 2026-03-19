@@ -210,7 +210,7 @@ Configure your site via `barodoc.config.json` at the project root:
 }
 ```
 
-**Sidebar hierarchy:** In `navigation[].pages`, you can use `{ "label": "Group name", "pages": ["slug1", "slug2"] }` to create an expandable sidebar section (Mintlify-style). Use `label:ko` etc. for localized labels.
+**Sidebar hierarchy:** In `navigation[].pages`, you can use `{ "label": "Group name", "pages": ["slug1", "slug2"] }` to create an expandable sidebar section. Use `label:ko` etc. for localized labels.
 
 See the documentation in the repo's `docs/` folder for all options.
 

@@ -56,6 +56,15 @@ Asset files (e.g. `.pdf`, `.html`, `.pptx`, `.csv`, `.rst`, `.epub`, `.odt`, `.i
 
 Supported extensions and viewer types are defined in `@barodoc/theme-docs` (see `assetExtensions.ts`).
 
+### Deploying the Barodoc docs site
+
+The public docs site (e.g. [barodoc.barocss.com](https://barodoc.barocss.com)) is deployed via **GitHub Pages** and **GitHub Actions**:
+
+- **Workflow:** [.github/workflows/docs.yml](.github/workflows/docs.yml) runs on every push to `main`.
+- **Steps:** Checkout → `pnpm install` → `pnpm build:packages` → `pnpm build` (builds the `docs` workspace) → upload `./docs/dist` as a Pages artifact → deploy with `actions/deploy-pages@v4`.
+- **Repo settings:** In **Settings → Pages**, the source must be **GitHub Actions** (not “Deploy from a branch”). The workflow uses the `github-pages` environment.
+- **Changelog:** To add a release to the [Changelog](https://barodoc.barocss.com/changelog/) page, add a new file under `docs/src/content/changelog/` (e.g. `v9.1.0.mdx`) with frontmatter `version`, `date`, and `title`, then push to `main`. The next docs deploy will include it.
+
 ---
 
 ## 2. Testing with my-docs (quick mode)
@@ -207,6 +216,8 @@ See `AGENTS.md` (Plugin System) and `.cursor/skills/barodoc-plugins/SKILL.md` fo
 | Build docs | `pnpm build` |
 | Dev server (my-docs) | From my-docs: `node ../barodoc/packages/barodoc/dist/cli.js serve` |
 | Build my-docs | From my-docs: `node ../barodoc/packages/barodoc/dist/cli.js build . -o dist` |
+| Docs site deploy | Push to `main` → [.github/workflows/docs.yml](.github/workflows/docs.yml) builds `docs/dist` and deploys to GitHub Pages |
+| Changelog content | `docs/src/content/changelog/vX.Y.Z.mdx` (version, date, title + body); push to main to publish |
 | Build all packages | `pnpm build:packages` |
 | Type-check | `pnpm --filter docs exec astro sync` then `pnpm -r exec tsc --noEmit` |
 | Plugin config (docs) | `docs/barodoc.config.json` → `plugins` |

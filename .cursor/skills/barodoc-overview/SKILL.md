@@ -5,7 +5,7 @@ description: Barodoc documentation framework overview. Use when working with Bar
 
 # Barodoc Overview
 
-Barodoc is a Mintlify-style documentation framework built on Astro with MDX support.
+Barodoc is a documentation framework built on Astro with MDX support.
 
 ## Architecture
 

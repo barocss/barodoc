@@ -306,6 +306,13 @@ title: "헤더 탭 & 블로그 개선"
       "pages": ["introduction", "quickstart"]
     },
     {
+      "group": "Guides",
+      "pages": [
+        { "label": "Setup", "label:ko": "설정", "pages": ["guides/installation", "guides/configuration"] },
+        "guides/deployment"
+      ]
+    },
+    {
       "group": "API Reference",
       "pages": ["api/overview", "api/users", "api/auth"]
     }
@@ -317,6 +324,8 @@ title: "헤더 탭 & 블로그 개선"
   ]
 }
 ```
+
+`Guides` 그룹은 **사이드바 계층** 예시입니다. `{ "label": "Setup", "pages": [...] }` 형태로 접을 수 있는 행을 만들 수 있습니다. 자세한 내용은 [설정 → 네비게이션](/ko/docs/guides/configuration#navigation)을 참고하세요.
 
 ```
 my-project/

@@ -1,0 +1,23 @@
+---
+version: "9.1.0"
+date: 2026-03-19
+title: "Sidebar hierarchy and full-width docs layout"
+---
+
+### New Features
+
+- **Sidebar hierarchy** — `navigation[].pages` in `barodoc.config.json` now supports nested entries. Use `{ "label": "Setup", "pages": ["guides/installation", "guides/configuration"] }` for expandable sidebar groups. Use `label:ko` (or `label:ja`, etc.) for localized labels.
+- **Full-width docs layout** — Docs layout uses the full viewport: sidebar and main content area span edge-to-edge; article content remains centered with a readable max-width.
+
+### Improvements
+
+- **Sidebar UX** — Item-level collapse for entries with children (chevron on the right); group titles are always visible. Active item uses a rounded background highlight. Reduced indent for nested items.
+- **Header** — Header and nav bar span full width to match the new layout.
+- **Mobile nav** — Hamburger menu supports nested navigation items with the same hierarchy as the sidebar.
+- **Prev/next and category** — Correctly computed when using nested nav (flattened slug list).
+- **Plugins** — `@barodoc/plugin-og-image` and `@barodoc/plugin-llms-txt` now flatten nested `pages` when scanning. CLI `check` and `manifest` commands handle the new config shape.
+
+### Documentation
+
+- Configuration guide updated with flat list vs sidebar hierarchy examples (EN/KO).
+- README and AGENTS.md updated with `navigation.pages` type and hierarchy example.

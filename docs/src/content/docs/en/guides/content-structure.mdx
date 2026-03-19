@@ -309,17 +309,25 @@ A typical Barodoc site with all content types configured:
       "pages": ["introduction", "quickstart"]
     },
     {
+      "group": "Guides",
+      "pages": [
+        { "label": "Setup", "pages": ["guides/installation", "guides/configuration"] },
+        "guides/deployment"
+      ]
+    },
+    {
       "group": "API Reference",
       "pages": ["api/overview", "api/users", "api/auth"]
     }
   ],
-
   "plugins": [
     "@barodoc/plugin-sitemap",
     ["@barodoc/plugin-openapi", { "specFile": "openapi.yaml", "basePath": "api" }]
   ]
 }
 ```
+
+The `Guides` group shows **sidebar hierarchy**: `{ "label": "Setup", "pages": [...] }` renders as an expandable row. See [Configuration](/docs/guides/configuration#navigation) for details.
 
 ```
 my-project/
