@@ -1,5 +1,31 @@
 # barodoc
 
+## 10.0.0
+
+### Minor Changes
+
+- aceb877: feat: sidebar hierarchy (nested nav) in barodoc.config.json
+
+  - `navigation[].pages` supports `{ label, pages }` for expandable sidebar groups (Mintlify-style)
+  - Use `label:ko` etc. for localized labels
+  - Sidebar: item-level collapse, full-width docs layout; prev/next and category use flattened slugs
+  - Header.astro mobile nav and plugins/CLI updated for nested config. Closes #128
+
+### Patch Changes
+
+- Updated dependencies [aceb877]
+  - @barodoc/core@10.0.0
+  - @barodoc/theme-docs@10.0.0
+  - @barodoc/plugin-og-image@9.0.0
+  - @barodoc/plugin-llms-txt@10.0.0
+  - @barodoc/plugin-analytics@10.0.0
+  - @barodoc/plugin-docsearch@10.0.0
+  - @barodoc/plugin-openapi@10.0.0
+  - @barodoc/plugin-pwa@10.0.0
+  - @barodoc/plugin-rss@10.0.0
+  - @barodoc/plugin-search@10.0.0
+  - @barodoc/plugin-sitemap@10.0.0
+
 ## 9.0.0
 
 ### Patch Changes
