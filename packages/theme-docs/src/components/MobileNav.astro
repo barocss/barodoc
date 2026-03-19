@@ -48,14 +48,35 @@ function getPageTitle(page: string): string {
     .join(' ');
 }
 
+function getLocalizedLabel(entry: { label: string; [key: string]: unknown }, locale: string, defaultLocale: string): string {
+  if (locale !== defaultLocale && entry[`label:${locale}`]) return entry[`label:${locale}`] as string;
+  return entry.label;
+}
+
+type PageEntry = string | { label: string; pages: string[]; [key: string]: unknown };
+function buildNavItems(pages: PageEntry[]): { title: string; href: string; isActive: boolean; children?: { title: string; href: string; isActive: boolean }[] }[] {
+  return pages.map((entry) => {
+    if (typeof entry === "string") {
+      return { title: getPageTitle(entry), href: getPageHref(entry), isActive: isActive(entry) };
+    }
+    const firstPage = entry.pages[0];
+    return {
+      title: getLocalizedLabel(entry, currentLocale, defaultLocale),
+      href: firstPage ? getPageHref(firstPage) : "#",
+      isActive: entry.pages.some((p: string) => isActive(p)),
+      children: entry.pages.map((p: string) => ({
+        title: getPageTitle(p),
+        href: getPageHref(p),
+        isActive: isActive(p),
+      })),
+    };
+  });
+}
+
 const groups = sectionNav.map((group: any) => ({
   title: getLocalizedNavGroup(group, currentLocale, defaultLocale),
   defaultOpen: true,
-  items: group.pages.map((page: string) => ({
-    title: getPageTitle(page),
-    href: getPageHref(page),
-    isActive: isActive(page),
-  })),
+  items: buildNavItems(group.pages),
 }));
 ---
 
