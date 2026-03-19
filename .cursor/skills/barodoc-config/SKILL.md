@@ -171,7 +171,7 @@ See [barodoc-i18n skill](../barodoc-i18n/SKILL.md) for detailed documentation.
 Defines sidebar structure. Each group has `group` (and optional `group:ko` etc.) and `pages`. **Pages** can be a mix of:
 
 - **string** — page slug (flat link)
-- **object** — `{ label, pages }` for an expandable sidebar row (Mintlify-style hierarchy)
+- **object** — `{ label, pages }` for an expandable sidebar row
 
 ```json
 {

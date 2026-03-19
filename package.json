@@ -2,7 +2,7 @@
   "name": "barodoc-monorepo",
   "version": "0.0.0",
   "private": true,
-  "description": "Mintlify-style documentation framework built with Astro",
+  "description": "Documentation framework built with Astro and MDX",
   "scripts": {
     "dev": "pnpm --filter docs dev",
     "dev:docs": "pnpm --filter docs dev",
