@@ -1,5 +1,12 @@
 # barodoc
 
+## 10.0.1
+
+### Patch Changes
+
+- Updated dependencies [f6f21dd]
+  - @barodoc/theme-docs@10.0.1
+
 ## 10.0.0
 
 ### Minor Changes

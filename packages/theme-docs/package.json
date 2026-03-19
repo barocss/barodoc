@@ -1,6 +1,6 @@
 {
   "name": "@barodoc/theme-docs",
-  "version": "10.0.0",
+  "version": "10.0.1",
   "description": "Documentation theme for Barodoc",
   "type": "module",
   "sideEffects": false,
