@@ -94,7 +94,7 @@ difficulty: intermediate
 
 ## 네비게이션
 
-사이드바 구조를 정의합니다:
+사이드바 구조를 정의합니다. `pages`에는 페이지 슬러그 문자열 또는 `{ "label": "이름", "pages": ["slug1", "slug2"] }` 형태의 접기 항목을 넣을 수 있습니다 (Mintlify 스타일 계층). `label:en` 등으로 다국어 라벨 지원.
 
 ```json
 {
@@ -107,7 +107,10 @@ difficulty: intermediate
     {
       "group": "가이드",
       "group:en": "Guides",
-      "pages": ["guides/installation", "guides/configuration"]
+      "pages": [
+        { "label": "설정", "label:en": "Setup", "pages": ["guides/installation", "guides/configuration"] },
+        "guides/deployment"
+      ]
     }
   ]
 }

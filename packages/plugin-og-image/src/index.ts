@@ -141,7 +141,12 @@ export default definePlugin<OgImagePluginOptions>((options = {}) => {
 
         let count = 0;
         for (const group of config.navigation) {
-          for (const page of group.pages) {
+          const pageSlugs: string[] = [];
+          for (const entry of group.pages) {
+            if (typeof entry === "string") pageSlugs.push(entry);
+            else pageSlugs.push(...entry.pages);
+          }
+          for (const page of pageSlugs) {
             const slug = page.replace(/\//g, "-");
             const title = page
               .split("/")

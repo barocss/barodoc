@@ -1,8 +1,17 @@
 import { z } from "zod";
 
+/** A single page path, or an expandable group with label and child pages (sidebar hierarchy). */
+export const navPageEntrySchema = z.union([
+  z.string(),
+  z.object({
+    label: z.string(),
+    pages: z.array(z.string()),
+  }).passthrough(), // Allow label:ko, label:ja, etc.
+]);
+
 export const navItemSchema = z.object({
   group: z.string(),
-  pages: z.array(z.string()),
+  pages: z.array(navPageEntrySchema),
 }).passthrough(); // Allow group:ko, group:ja, etc.
 
 export const i18nConfigSchema = z.object({

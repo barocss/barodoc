@@ -35,6 +35,9 @@ docs/public/pagefind/
 # Git worktrees
 .worktrees/
 
+# Quick mode temporary project (barodoc serve from external dir)
+.barodoc/
+
 # Generated outputs (barodoc manifest / barodoc schema)
 docs-manifest.json
 docs-manifest-chunks.jsonl

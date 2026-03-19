@@ -168,7 +168,10 @@ See [barodoc-i18n skill](../barodoc-i18n/SKILL.md) for detailed documentation.
 
 ### navigation
 
-Defines sidebar structure:
+Defines sidebar structure. Each group has `group` (and optional `group:ko` etc.) and `pages`. **Pages** can be a mix of:
+
+- **string** — page slug (flat link)
+- **object** — `{ label, pages }` for an expandable sidebar row (Mintlify-style hierarchy)
 
 ```json
 {
@@ -182,8 +185,8 @@ Defines sidebar structure:
       "group": "Guides",
       "group:ko": "가이드",
       "pages": [
-        "guides/installation",
-        "guides/configuration",
+        { "label": "Setup", "label:ko": "설정", "pages": ["guides/installation", "guides/configuration"] },
+        "guides/content-structure",
         "guides/deployment"
       ]
     }
@@ -195,11 +198,13 @@ Defines sidebar structure:
 |-------|------|-------------|
 | `group` | string | Group name (default locale) |
 | `group:LOCALE` | string | Localized group name |
-| `pages` | string[] | Page slugs (without locale prefix) |
+| `pages` | (string \| object)[] | Page slugs, or `{ label, label:ko?, pages: string[] }` for expandable rows |
 
 Page slugs map to files:
 - `introduction` → `docs/en/introduction.md`
 - `guides/installation` → `docs/en/guides/installation.md`
+
+Expandable entry: `{ "label": "Setup", "pages": ["guides/installation", "guides/configuration"] }` renders as a collapsible sidebar item with child links.
 
 ### topbar
 

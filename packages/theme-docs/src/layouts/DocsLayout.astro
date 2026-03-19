@@ -52,19 +52,19 @@ const feedbackEndpoint = config.feedback?.endpoint;
   <Banner />
   <Header currentLocale={currentLocale} currentPath={currentPath} sectionSlug={sectionSlug} uiStrings={t} />
   
-  <!-- Centered container for docs layout -->
-  <div class="w-full min-w-0 min-h-[calc(100vh-3.5rem)] flex justify-center overflow-x-clip" dir={dir}>
-    <div class="flex w-full max-w-[1280px] min-w-0">
-      <!-- Desktop Sidebar -->
-      <aside class="hidden lg:block w-[240px] shrink-0 border-r border-[var(--bd-border)]">
-        <div class="sticky top-14 h-[calc(100vh-3.5rem)] overflow-y-auto overscroll-contain pt-2 pb-8 px-4 sidebar-scroll">
+  <!-- Full-width docs layout: sidebar + content + TOC use full viewport -->
+  <div class="w-full min-w-0 min-h-[calc(100vh-3.5rem)] flex overflow-x-clip" dir={dir}>
+    <div class="flex w-full min-w-0">
+      <!-- Desktop Sidebar (Mintlify-style: no vertical line, indent + bold section, active = text only) -->
+      <aside class="hidden lg:block w-[280px] shrink-0 border-r border-[var(--bd-border)] bg-[var(--bd-bg)]">
+        <div class="sticky top-14 h-[calc(100vh-3.5rem)] overflow-y-auto overscroll-contain py-6 px-5 pb-8 sidebar-scroll">
           <Sidebar currentPath={currentPath} currentLocale={currentLocale} sectionSlug={sectionSlug} />
         </div>
       </aside>
 
-      <!-- Main Content -->
-      <main class="flex-1 min-w-0 max-w-[768px]">
-        <div class="px-4 py-8 sm:px-6 sm:py-10 lg:px-10 lg:py-10">
+      <!-- Main Content: flex-1 uses full space between sidebar and TOC; inner wrapper caps width and centers -->
+      <main class="flex-1 min-w-0 flex justify-center">
+        <div class="w-full max-w-[768px] px-4 py-8 sm:px-6 sm:py-10 lg:px-10 lg:py-10">
           {breadcrumbs.length > 0 && <Breadcrumb items={breadcrumbs} sectionSlug={sectionSlug} />}
           {readingTime && (
             <div class="bd-reading-time mb-4">

@@ -44,7 +44,19 @@
     {
       "group": "Guides",
       "group:ko": "가이드",
-      "pages": ["guides/installation", "guides/configuration", "guides/content-structure", "guides/sections", "guides/standalone-pages", "guides/cli", "guides/overrides", "guides/deployment", "guides/i18n", "guides/migration", "guides/troubleshooting", "guides/ai-and-agents"]
+      "pages": [
+        { "label": "Setup", "label:ko": "설정", "pages": ["guides/installation", "guides/configuration"] },
+        "guides/content-structure",
+        "guides/sections",
+        "guides/standalone-pages",
+        "guides/cli",
+        "guides/overrides",
+        "guides/deployment",
+        "guides/i18n",
+        "guides/migration",
+        "guides/troubleshooting",
+        "guides/ai-and-agents"
+      ]
     },
     {
       "group": "Components",

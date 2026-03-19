@@ -164,9 +164,19 @@ if (!isAsset) {
   readTime = readingTime(doc.body ?? "");
 }
 
+/** Flatten navigation entries to string slugs (handles nested { label, pages }). */
+function flatPages(pages: Array<string | { pages: string[] }>): string[] {
+  const out: string[] = [];
+  for (const entry of pages) {
+    if (typeof entry === "string") out.push(entry);
+    else out.push(...entry.pages);
+  }
+  return out;
+}
+
 function findCategory(slug: string): string | null {
   for (const group of sectionNav) {
-    if (group.pages.includes(slug)) {
+    if (flatPages(group.pages).includes(slug)) {
       return getLocalizedNavGroup(group, locale, defaultLocale);
     }
   }
@@ -177,7 +187,7 @@ function findCategory(slug: string): string | null {
 function getAllPages(): string[] {
   const pages: string[] = [];
   for (const group of sectionNav) {
-    pages.push(...group.pages);
+    pages.push(...flatPages(group.pages));
   }
   return pages;
 }

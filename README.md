@@ -190,7 +190,8 @@ Configure your site via `barodoc.config.json` at the project root:
     { "slug": "help", "label": "Help Center", "navigation": [{ "group": "Support", "pages": ["faq", "contact"] }] }
   ],
   "navigation": [
-    { "group": "Getting Started", "group:ko": "시작하기", "pages": ["introduction", "quickstart"] }
+    { "group": "Getting Started", "group:ko": "시작하기", "pages": ["introduction", "quickstart"] },
+    { "group": "Guides", "pages": [{ "label": "Setup", "pages": ["guides/installation", "guides/configuration"] }, "guides/deployment"] }
   ],
   "topbar": { "github": "https://github.com/user/repo", "discord": "https://discord.gg/...", "twitter": "https://twitter.com/..." },
   "search": { "enabled": true },
@@ -208,6 +209,8 @@ Configure your site via `barodoc.config.json` at the project root:
   ]
 }
 ```
+
+**Sidebar hierarchy:** In `navigation[].pages`, you can use `{ "label": "Group name", "pages": ["slug1", "slug2"] }` to create an expandable sidebar section (Mintlify-style). Use `label:ko` etc. for localized labels.
 
 See the documentation in the repo's `docs/` folder for all options.
 
