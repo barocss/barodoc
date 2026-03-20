@@ -1,5 +1,13 @@
 # @barodoc/theme-docs
 
+## 10.0.4
+
+### Patch Changes
+
+- 2e7ab4d: fix: Changelog sort by version first (newest on top), correct compareVersion order
+
+  - Use compareVersion(a, b) so newer version is placed first; sort by version desc then date desc. Closes #141
+
 ## 10.0.3
 
 ### Patch Changes
