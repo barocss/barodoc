@@ -1,0 +1,100 @@
+---
+title: 컴포넌트 갤러리
+description: Barodoc 콘텐츠 컴포넌트 개요와 사용 시점
+tags: [components, callout, card, steps, tabs, code, api]
+related: [components/callout, components/card, components/steps, components/tabs, components/code-group, components/api-reference]
+difficulty: beginner
+---
+import { Callout, Card, CardGroup, Steps, Step } from "@barodoc/theme-docs";
+import CodeGroup from "@barodoc/theme-docs/components/mdx/CodeGroup.astro";
+import CodeItem from "@barodoc/theme-docs/components/mdx/CodeItem.astro";
+import { ApiEndpoint, ApiParams, ApiParam, ApiResponse } from "@barodoc/theme-docs";
+import { Tabs } from "@barodoc/theme-docs";
+
+한 페이지에서 주요 콘텐츠 컴포넌트를 모아 둡니다. 여기서 적절한 컴포넌트를 고른 뒤, 링크된 페이지에서 전체 props와 예제를 확인하세요.
+
+## Callout
+
+**사용 시점:** 본문 안의 참고, 팁, 경고, 위험 블록.
+
+<Callout type="tip" title="팁">
+  액센트 색은 하나로 통일하고, 필요한 곳만 콜아웃으로 강조하세요.
+</Callout>
+
+→ [Callout](/docs/components/callout)
+
+## Card & CardGroup
+
+**사용 시점:** 기능 하이라이트, 다음 단계 링크, 관련 페이지 그리드.
+
+<CardGroup cols={2}>
+  <Card title="설치" icon="📦" href="/docs/guides/installation">
+    프로젝트에 Barodoc 설치하기.
+  </Card>
+  <Card title="설정" icon="⚙️" href="/docs/guides/configuration">
+    이름, 테마, 네비게이션 설정.
+  </Card>
+</CardGroup>
+
+→ [Card](/docs/components/card)
+
+## Steps
+
+**사용 시점:** 번호가 붙은 how-to 가이드(설치 → 설정 → 실행).
+
+<Steps client:load>
+  <Step title="첫 단계">먼저 이것부터 하세요.</Step>
+  <Step title="두 번째 단계">그다음 이것을 하세요.</Step>
+  <Step title="세 번째 단계">마지막으로 확인하세요.</Step>
+</Steps>
+
+→ [Steps](/docs/components/steps)
+
+## Tabs
+
+**사용 시점:** 패키지 매니저, 언어, 코드 변형 전환.
+
+<Tabs client:load items={[
+  { label: "npm", value: "npm", children: "npm install barodoc" },
+  { label: "pnpm", value: "pnpm", children: "pnpm add barodoc" },
+  { label: "yarn", value: "yarn", children: "yarn add barodoc" }
+]} />
+
+→ [Tabs](/docs/components/tabs)
+
+## Code group
+
+**사용 시점:** 여러 코드 예제(같은 예제를 JS, Python, Go 등으로).
+
+<CodeGroup>
+  <CodeItem title="JavaScript">
+
+```javascript
+console.log("Hello");
+```
+
+  </CodeItem>
+  <CodeItem title="Python">
+
+```python
+print("Hello")
+```
+
+  </CodeItem>
+</CodeGroup>
+
+→ [Code Group](/docs/components/code-group)
+
+## API reference
+
+**사용 시점:** REST 엔드포인트 문서화(메서드, 경로, 파라미터, 응답).
+
+<ApiEndpoint method="GET" path="/api/health" description="헬스 체크.">
+  <ApiResponse status={200} description="OK">
+    <ApiParams title="Body">
+      <ApiParam name="status" type="string" description="ok" />
+    </ApiParams>
+  </ApiResponse>
+</ApiEndpoint>
+
+→ [API Reference](/docs/components/api-reference)

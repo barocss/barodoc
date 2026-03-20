@@ -1,0 +1,24 @@
+---
+version: "10.0.5"
+date: 2026-03-19
+title: "CLI, theme, and plugin docs update"
+---
+
+### CLI (barodoc)
+
+- **`barodoc check --production`** — New flag to check production readiness: warns when `site` is missing, when deploying to GitHub Pages project site without `base`, and when favicon is missing.
+- **`barodoc create --with-github-pages`** — Creates `.github/workflows/deploy.yml` for Quick mode (Node 20, `pnpm add barodoc`, `barodoc build . -o dist`, deploy-pages). New projects also get a README with recommended config (site, base, editLink, lastUpdated, plugins).
+
+### Theme (@barodoc/theme-docs)
+
+- **Reading time** — Frontmatter `readingTime: false` hides the reading time block on that page.
+- **Full-width asset layout** — PDF, CSV, HTML, pptx, ipynb, rst, epub, and other asset viewers now use the full content area next to the sidebar instead of the 768px column. `DocsLayout` accepts an optional `fullWidth` prop.
+
+### Plugins
+
+- **@barodoc/plugin-openapi** — README added. Docs: Limitations (version dropdown, playground CORS) and Roadmap.
+- **@barodoc/plugin-llms-txt** — README added. Docs: output path (site root), robots.txt, MCP/AI tools usage.
+
+### Docs site
+
+- New guides: callouts, versioning, component gallery; configuration: Reading time, On this page (ToC), editLink = Suggest edit; deployment: `create --with-github-pages`; OpenAPI/llms-txt limitations and roadmap; feedback webhook spec in `docs/plans/`.

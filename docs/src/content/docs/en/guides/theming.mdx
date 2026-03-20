@@ -1,0 +1,123 @@
+---
+title: Theming and customization
+description: Customize colors, fonts, dark mode, and code blocks in Barodoc
+tags: [theme, customization, colors, dark-mode]
+related: [guides/configuration]
+difficulty: beginner
+---
+
+The default theme uses a primary (accent) palette and a neutral gray scale. You can override both via `barodoc.config.json` and, in full custom mode, with CSS variables.
+
+## Colors
+
+### Accent (primary)
+
+Set a single hex color; the theme generates a full OKLCH palette (50–950) for links, buttons, and active states:
+
+```json
+{
+  "theme": {
+    "colors": {
+      "accent": "#2563eb"
+    }
+  }
+}
+```
+
+In the docs config you may also see `primary`; it is an alias for `accent`.
+
+### Gray scale
+
+Use a preset or a custom hex for backgrounds, text, and borders:
+
+```json
+{
+  "theme": {
+    "colors": {
+      "gray": "zinc"
+    }
+  }
+}
+```
+
+**Presets:** `zinc`, `slate`, `neutral`, `stone`, `gray`. Default is `zinc`.
+
+### Light and dark
+
+The theme supports a light/dark toggle (user preference or system). You can set a different accent for dark mode:
+
+```json
+{
+  "theme": {
+    "colors": {
+      "accent": "#2563eb",
+      "dark": {
+        "accent": "#60a5fa"
+      }
+    }
+  }
+}
+```
+
+## Fonts
+
+Override heading, body, and code fonts:
+
+```json
+{
+  "theme": {
+    "fonts": {
+      "heading": "Inter, sans-serif",
+      "body": "Inter, sans-serif",
+      "code": "JetBrains Mono, monospace"
+    }
+  }
+}
+```
+
+Load the fonts in your layout or `public/` (e.g. link tag or `@font-face`).
+
+## Border radius
+
+Affects buttons, cards, and inputs:
+
+```json
+{
+  "theme": {
+    "radius": "0.5rem"
+  }
+}
+```
+
+Use any valid CSS value (e.g. `"8px"`, `"0.25rem"`).
+
+## Dark mode
+
+The header includes a theme toggle. The theme uses the `dark` class on the root; colors switch via semantic tokens (`--bd-bg`, `--bd-text`, etc.) that map to the gray scale and accent in both modes. No extra config is required beyond `theme.colors.dark` if you want a different accent in dark mode.
+
+## Code blocks
+
+Syntax highlighting uses the theme’s background and text tokens. Line numbers are controlled by the top-level `lineNumbers` option in `barodoc.config.json`. The code block style (e.g. border, padding) is defined in the theme’s global CSS; in full custom mode you can override it with `customCss` or by replacing the theme’s code block styles.
+
+## Full custom (Astro) overrides
+
+When you use Barodoc in full custom mode (your own Astro project with `@barodoc/theme-docs`), you can override the design tokens directly. The theme defines CSS variables in `global.css` (in `@barodoc/theme-docs`):
+
+- **Accent:** `--color-primary-50` … `--color-primary-950` (generated from `theme.colors.accent`).
+- **Gray:** `--bd-gray-50` … `--bd-gray-950`.
+- **Semantic:** `--bd-bg`, `--bd-text`, `--bd-border`, `--bd-sidebar-active-*`, etc.
+
+Add a custom CSS file via `customCss` in config, or import your own styles in the Astro layout, and override these variables. Example:
+
+```css
+:root {
+  --bd-bg: #fafafa;
+  --bd-text: #1a1a1a;
+}
+.dark {
+  --bd-bg: #0a0a0a;
+  --bd-text: #e5e5e5;
+}
+```
+
+This gives you full control over the look while keeping the same structure (sidebar, content, TOC).

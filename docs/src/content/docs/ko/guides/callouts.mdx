@@ -1,0 +1,59 @@
+---
+title: 콜아웃
+description: 문서에서 참고, 팁, 경고, 위험을 강조하는 콜아웃 사용하기
+tags: [components, callout, mdx]
+related: [components/callout, guides/theming]
+difficulty: beginner
+---
+import { Callout } from "@barodoc/theme-docs";
+
+콜아웃은 중요한 내용을 강조할 때 씁니다. 테마에서 제공하는 다섯 가지 타입은 문서에서 자주 쓰는 패턴과 맞춰져 있습니다.
+
+## 지원 타입
+
+| 타입     | 용도 |
+|----------|------|
+| `info`   | 일반 정보, 중립적인 안내 |
+| `note`   | 보조·참고 정보(회색) |
+| `tip`    | 유용한 팁, 권장 사항 |
+| `warning`| 주의 사항, 제한 사항 |
+| `danger` | 중요 경고, 호환 깨짐 등 |
+
+## 예시
+
+<Callout type="info">
+  **Info** — 팁이나 경고가 아닌 일반 정보에 사용합니다.
+</Callout>
+
+<Callout type="note">
+  **Note** — 추가 맥락이나 참고(예: "참고: …")에 사용합니다.
+</Callout>
+
+<Callout type="tip">
+  **Tip** — 요령, 권장 사항, "프로" 팁에 사용합니다.
+</Callout>
+
+<Callout type="warning">
+  **Warning** — deprecated, 제한, 문제가 생길 수 있는 경우에 사용합니다.
+</Callout>
+
+<Callout type="danger">
+  **Danger** — 보안, 데이터 손실, 호환 깨짐 등에 사용합니다.
+</Callout>
+
+## MDX에서
+
+Full custom에서는 `@barodoc/theme-docs`에서 import하고, 사용 중인 설정에서 노출된 컴포넌트 이름을 사용하세요:
+
+```mdx
+import { Callout } from "@barodoc/theme-docs";
+
+<Callout type="tip" title="요약">
+  서브경로에 배포할 때는 config에 `base`와 `site`를 두는 것이 좋습니다.
+</Callout>
+```
+
+- **type** — `info` | `note` | `warning` | `tip` | `danger` (기본: `info`).
+- **title** — 선택; 기본 라벨(예: "Info", "Warning")을 덮어씁니다.
+
+더 많은 예시와 API는 [Callout](/docs/components/callout)을 참고하세요.

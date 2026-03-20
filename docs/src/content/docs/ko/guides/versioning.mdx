@@ -1,0 +1,74 @@
+---
+title: 문서 버저닝
+description: 버전 스위처로 여러 문서 버전 제공하기
+tags: [versioning, versions, configuration]
+related: [guides/configuration, guides/content-structure]
+difficulty: intermediate
+---
+
+문서를 여러 버전(예: v1, v2)으로 유지할 때, 사이드바에 **버전 스위처**를 표시하고 콘텐츠를 버전별 URL 세그먼트로 구성할 수 있습니다.
+
+## 설정
+
+`barodoc.config.json`에 `versions`를 추가합니다. `{ label, path }` 배열이며, 버전이 하나뿐이면 스위처는 숨겨집니다.
+
+```json
+{
+  "versions": [
+    { "label": "v2", "path": "v2" },
+    { "label": "v1", "path": "v1" }
+  ]
+}
+```
+
+- **label** — 드롭다운에 표시되는 텍스트(예: `"v2"`, `"현재"`).
+- **path** — 해당 버전의 URL 세그먼트. 이 버전의 문서는 `/docs/{path}/...` 아래에 제공됩니다(예: `/docs/v2/en/introduction`).
+
+## 폴더 구조
+
+콘텐츠는 섹션(예: `docs`) 다음 첫 번째 세그먼트가 버전 경로가 되도록 구성합니다.
+
+**Full custom (Astro)** — docs 콘텐츠 컬렉션(예: `src/content/docs/`) 아래:
+
+- `v1/en/introduction.md` → URL `/docs/v1/en/introduction` (기본 로케일 생략 시 `/docs/v1/introduction`)
+- `v2/en/introduction.md` → URL `/docs/v2/en/introduction`
+
+구조 예:
+
+```
+src/content/docs/
+├── v1/
+│   ├── en/
+│   │   ├── introduction.md
+│   │   └── guides/
+│   └── ko/
+└── v2/
+    ├── en/
+    └── ko/
+```
+
+**Quick 모드** — `docs/` 아래:
+
+- `docs/v1/en/introduction.md`, `docs/v2/en/introduction.md` 등.
+
+`barodoc.config.json`의 navigation은 각 버전 기준 슬러그를 사용합니다. v2에서도 `introduction`, `guides/setup`처럼 참조하며, 테마와 빌드가 버전 경로 아래에서 해석합니다. 각 버전의 navigation이 해당 버전 폴더에 있는 슬러그를 가리키는지 확인하세요.
+
+## VersionSwitcher 동작
+
+테마의 **VersionSwitcher** 컴포넌트는 `config.versions`가 2개 이상일 때 사이드바에 사용됩니다.
+
+1. 현재 URL을 읽어 일치하는 `versions[].path`를 찾습니다(예: `/docs/v2/en/...` → `v2`).
+2. 모든 label로 드롭다운을 렌더링하고, 현재 버전을 강조합니다.
+3. 선택 시 같은 상대 경로로 해당 버전으로 이동합니다(예: `/docs/v2/en/guides/setup` → `/docs/v1/en/guides/setup`).
+
+현재 경로에 버전 세그먼트가 없으면 `versions`의 첫 항목이 현재로 간주됩니다.
+
+## 요약
+
+| 단계 | 작업 |
+|------|------|
+| 1 | `barodoc.config.json`에 `versions: [{ label, path }, ...]` 추가. |
+| 2 | 콘텐츠를 `docs/{path}/...`(예: `v1/en/`, `v2/en/`) 아래에 버전별로 구성. |
+| 3 | 스위처가 경로를 올바르게 매핑할 수 있도록 버전 간 navigation 슬러그를 맞춤. |
+
+단일 버전 사이트에서는 `versions`를 두지 않으면 스위처가 표시되지 않습니다.

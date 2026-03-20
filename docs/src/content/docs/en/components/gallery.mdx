@@ -1,0 +1,99 @@
+---
+title: Component gallery
+description: Overview of Barodoc content components with when to use each
+tags: [components, callout, card, steps, tabs, code, api]
+related: [components/callout, components/card, components/steps, components/tabs, components/code-group, components/api-reference]
+difficulty: beginner
+---
+import { Callout, Card, CardGroup, Steps, Step, Tabs } from "@barodoc/theme-docs";
+import CodeGroup from "@barodoc/theme-docs/components/mdx/CodeGroup.astro";
+import CodeItem from "@barodoc/theme-docs/components/mdx/CodeItem.astro";
+import { ApiEndpoint, ApiParams, ApiParam, ApiResponse } from "@barodoc/theme-docs";
+
+This page shows the main content components in one place. Use it to choose the right component and then open the linked page for full props and examples.
+
+## Callout
+
+**When to use:** Notes, tips, warnings, and danger blocks in prose.
+
+<Callout type="tip" title="Tip">
+  Prefer a single accent color and use callouts to draw attention where needed.
+</Callout>
+
+→ [Callout](/docs/components/callout)
+
+## Card & CardGroup
+
+**When to use:** Feature highlights, next-step links, or a grid of related pages.
+
+<CardGroup cols={2}>
+  <Card title="Installation" icon="📦" href="/docs/guides/installation">
+    Set up Barodoc in your project.
+  </Card>
+  <Card title="Configuration" icon="⚙️" href="/docs/guides/configuration">
+    Configure name, theme, and navigation.
+  </Card>
+</CardGroup>
+
+→ [Card](/docs/components/card)
+
+## Steps
+
+**When to use:** Numbered how-to guides (install, configure, run).
+
+<Steps client:load>
+  <Step title="First step">Do this first.</Step>
+  <Step title="Second step">Then do this.</Step>
+  <Step title="Third step">Finally, verify.</Step>
+</Steps>
+
+→ [Steps](/docs/components/steps)
+
+## Tabs
+
+**When to use:** Switching between package managers, languages, or code variants.
+
+<Tabs client:load items={[
+  { label: "npm", value: "npm", children: "npm install barodoc" },
+  { label: "pnpm", value: "pnpm", children: "pnpm add barodoc" },
+  { label: "yarn", value: "yarn", children: "yarn add barodoc" }
+]} />
+
+→ [Tabs](/docs/components/tabs)
+
+## Code group
+
+**When to use:** Multiple code samples (e.g. same example in JS, Python, Go).
+
+<CodeGroup>
+  <CodeItem title="JavaScript">
+
+```javascript
+console.log("Hello");
+```
+
+  </CodeItem>
+  <CodeItem title="Python">
+
+```python
+print("Hello")
+```
+
+  </CodeItem>
+</CodeGroup>
+
+→ [Code Group](/docs/components/code-group)
+
+## API reference
+
+**When to use:** Documenting REST endpoints (method, path, params, responses).
+
+<ApiEndpoint method="GET" path="/api/health" description="Health check.">
+  <ApiResponse status={200} description="OK">
+    <ApiParams title="Body">
+      <ApiParam name="status" type="string" description="ok" />
+    </ApiParams>
+  </ApiResponse>
+</ApiEndpoint>
+
+→ [API Reference](/docs/components/api-reference)

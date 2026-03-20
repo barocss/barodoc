@@ -161,7 +161,10 @@ if (!isAsset) {
   const rendered = await render(doc);
   Content = rendered.Content;
   headings = rendered.headings;
-  readTime = readingTime(doc.body ?? "");
+  const frontmatter = doc.data as Record<string, unknown>;
+  if (frontmatter.readingTime !== false) {
+    readTime = readingTime(doc.body ?? "");
+  }
 }
 
 /** Flatten navigation entries to string slugs (handles nested { label, pages }). */
@@ -254,9 +257,10 @@ const assetUrl = isAsset
   editUrl={editUrl}
   lastUpdated={lastUpdated}
   breadcrumbs={breadcrumbs}
-  readingTime={readTime.text}
+  readingTime={readTime.text || undefined}
   filePath={isAsset ? undefined : `src/content/${sectionSlug}/${doc.id}`}
   sectionSlug={sectionSlug}
+  fullWidth={isAsset}
 >
   {isAsset ? (
     <div class="asset-viewer-wrapper">

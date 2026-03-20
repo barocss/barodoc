@@ -1,0 +1,59 @@
+---
+title: Callouts
+description: Use callouts to highlight notes, tips, warnings, and danger in your docs
+tags: [components, callout, mdx]
+related: [components/callout, guides/theming]
+difficulty: beginner
+---
+import { Callout } from "@barodoc/theme-docs";
+
+Callouts draw attention to important information. The theme provides five types that match common documentation patterns.
+
+## Supported types
+
+| Type     | Use for |
+|----------|--------|
+| `info`   | General information, neutral notes |
+| `note`   | Supplementary or reference information (gray) |
+| `tip`    | Helpful tips, best practices |
+| `warning`| Important notices, caveats |
+| `danger` | Critical warnings, breaking changes |
+
+## Examples
+
+<Callout type="info">
+  **Info** — Use for general information that isn’t a tip or warning.
+</Callout>
+
+<Callout type="note">
+  **Note** — Use for extra context or references (e.g. “See also …”).
+</Callout>
+
+<Callout type="tip">
+  **Tip** — Use for shortcuts, recommendations, or “pro” advice.
+</Callout>
+
+<Callout type="warning">
+  **Warning** — Use for deprecations, limitations, or things that can go wrong.
+</Callout>
+
+<Callout type="danger">
+  **Danger** — Use for security, data loss, or breaking changes.
+</Callout>
+
+## In MDX
+
+Import from `@barodoc/theme-docs` (full custom) or use the component name your setup exposes:
+
+```mdx
+import { Callout } from "@barodoc/theme-docs";
+
+<Callout type="tip" title="Quick tip">
+  Prefer `base` and `site` in config when deploying to a subpath.
+</Callout>
+```
+
+- **type** — `info` | `note` | `warning` | `tip` | `danger` (default: `info`).
+- **title** — Optional; overrides the default label (e.g. "Info", "Warning").
+
+For more examples and API details, see [Callout](/docs/components/callout).

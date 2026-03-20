@@ -1,0 +1,51 @@
+---
+title: Search options
+description: Compare Pagefind, DocSearch, and when to use each
+tags: [search, pagefind, docsearch]
+related: [guides/configuration, guides/plugins/search, guides/plugins/docsearch]
+difficulty: beginner
+---
+
+Barodoc supports two main search options: **Pagefind** (built-in, client-side) and **Algolia DocSearch** (hosted, optional). Choose based on site size, hosting, and whether you want a backend.
+
+## Comparison
+
+| | **@barodoc/plugin-search** (Pagefind) | **@barodoc/plugin-docsearch** (Algolia) |
+|--|--------------------------------------|----------------------------------------|
+| **Backend** | None. Index is built at build time and served as static files. | Algolia hosts the index; search requests go to Algolia. |
+| **Setup** | Add plugin to `plugins`; index runs after build (`pagefind --site dist`). | Requires Algolia DocSearch application (free for public docs); add plugin with app id and API key. |
+| **Cost** | Free. | Free for public, open-source docs via [DocSearch program](https://docsearch.algolia.com/); paid for private or high volume. |
+| **Best for** | Small–medium docs, static-only hosting, no API keys. | Large docs, instant typo-tolerant search, need for analytics or hosted index. |
+| **Index** | Generated into `dist/pagefind/` (or configured path). | Crawled by Algolia; no local index. |
+
+## Pagefind (default)
+
+When you use `@barodoc/plugin-search` (or the theme’s default search), Barodoc uses [Pagefind](https://pagefind.app/). The index is created during `barodoc build` and loaded in the browser; no server or API key is needed. Good for:
+
+- Quick mode and full custom projects.
+- GitHub Pages, Vercel, Netlify, or any static host.
+- Sites that stay under roughly a few hundred pages (Pagefind scales well but very large sites may prefer Algolia for speed).
+
+Add to `barodoc.config.json`:
+
+```json
+{
+  "plugins": ["@barodoc/plugin-search"]
+}
+```
+
+Search is enabled by default when the theme is used; the plugin ensures the index is built and the search UI is wired. See [Search plugin](/docs/guides/plugins/search) for options.
+
+## Algolia DocSearch
+
+Use **@barodoc/plugin-docsearch** when you want Algolia’s hosted search (faster typo tolerance, analytics, or crawling-based indexing). You need an Algolia DocSearch application; for open-source docs you can apply for the free program. See [DocSearch plugin](/docs/guides/plugins/docsearch) for setup (app id, API key, index name).
+
+- **When to choose:** Large doc sets, need for DocSearch branding/analytics, or preference for a hosted index.
+- **When to skip:** Prefer zero backend, no API keys, or minimal setup; then use Pagefind.
+
+## Summary
+
+- **Default / no backend:** Use `@barodoc/plugin-search` (Pagefind). No keys, no server.
+- **Hosted search / Algolia:** Use `@barodoc/plugin-docsearch` and configure Algolia.
+
+You can only use one search provider at a time; do not enable both plugins together.

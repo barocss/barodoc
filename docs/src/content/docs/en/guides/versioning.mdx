@@ -1,0 +1,74 @@
+---
+title: Doc versioning
+description: Serve multiple doc versions with the version switcher
+tags: [versioning, versions, configuration]
+related: [guides/configuration, guides/content-structure]
+difficulty: intermediate
+---
+
+When you maintain several doc versions (e.g. v1 and v2), you can show a **version switcher** in the sidebar and structure content so each version has its own URL segment.
+
+## Config
+
+In `barodoc.config.json` add `versions`: an array of `{ label, path }`. The switcher is hidden when there is only one version.
+
+```json
+{
+  "versions": [
+    { "label": "v2", "path": "v2" },
+    { "label": "v1", "path": "v1" }
+  ]
+}
+```
+
+- **label** — Text shown in the dropdown (e.g. `"v2"`, `"Current"`).
+- **path** — URL segment used for that version. Docs for this version are served under `/docs/{path}/...` (e.g. `/docs/v2/en/introduction`).
+
+## Folder structure
+
+Content must be organized so the first segment after the section (e.g. `docs`) is the version path.
+
+**Full custom (Astro)** — under your docs content collection (e.g. `src/content/docs/`):
+
+- `v1/en/introduction.md` → URL `/docs/v1/en/introduction` (or `/docs/v1/introduction` if default locale is omitted)
+- `v2/en/introduction.md` → URL `/docs/v2/en/introduction`
+
+So you get:
+
+```
+src/content/docs/
+├── v1/
+│   ├── en/
+│   │   ├── introduction.md
+│   │   └── guides/
+│   └── ko/
+└── v2/
+    ├── en/
+    └── ko/
+```
+
+**Quick mode** — under `docs/`:
+
+- `docs/v1/en/introduction.md`, `docs/v2/en/introduction.md`, etc.
+
+Navigation in `barodoc.config.json` uses slugs relative to each version. So for `v2` you still reference `introduction`, `guides/setup`; the theme and build resolve them under the versioned path. Ensure each version’s navigation points to slugs that exist under that version’s folder.
+
+## VersionSwitcher behavior
+
+The theme’s **VersionSwitcher** component (used in the sidebar when `config.versions` has more than one entry):
+
+1. Reads the current URL and finds which `versions[].path` matches (e.g. `/docs/v2/en/...` → `v2`).
+2. Renders a dropdown with all labels; the current version is highlighted.
+3. On select, navigates to the same relative path under the chosen version (e.g. from `/docs/v2/en/guides/setup` to `/docs/v1/en/guides/setup`).
+
+If the current path does not contain any version segment, the first item in `versions` is treated as current.
+
+## Summary
+
+| Step | Action |
+|------|--------|
+| 1 | Add `versions: [{ label, path }, ...]` to `barodoc.config.json`. |
+| 2 | Organize content so each version lives under `docs/{path}/...` (e.g. `v1/en/`, `v2/en/`). |
+| 3 | Keep navigation slugs consistent across versions so the switcher can map paths correctly. |
+
+For a single-version site, omit `versions`; the switcher will not appear.
