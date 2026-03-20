@@ -1,5 +1,11 @@
 # @barodoc/plugin-openapi
 
+## 10.0.1
+
+### Patch Changes
+
+- 6cd6861: feat: CLI production check, create --with-github-pages, theme readingTime/fullWidth, plugin READMEs and docs
+
 ## 10.0.0
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @barodoc/theme-docs
 
+## 10.0.5
+
+### Patch Changes
+
+- 6cd6861: feat: CLI production check, create --with-github-pages, theme readingTime/fullWidth, plugin READMEs and docs
+
 ## 10.0.4
 
 ### Patch Changes
