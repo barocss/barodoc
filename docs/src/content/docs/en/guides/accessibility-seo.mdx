@@ -1,0 +1,66 @@
+---
+title: Accessibility and SEO
+description: Checklist for accessible and search-engine-friendly Barodoc sites
+tags: [accessibility, a11y, seo]
+related: [guides/configuration, guides/deployment]
+difficulty: intermediate
+---
+
+A few checks help keep your Barodoc site accessible and easy to find in search results.
+
+## Accessibility (a11y)
+
+### Heading hierarchy
+
+- Use **one H1 per page** (usually the page title). The theme uses the first heading or frontmatter `title` as the document title.
+- Use H2 → H3 in order; don’t skip levels (e.g. H2 then H4).
+
+### Focus and keyboard
+
+- Interactive elements (links, buttons, search, theme toggle) are focusable. The theme uses visible focus styles where applicable.
+- If you add custom interactive components, ensure they are keyboard accessible and not trap focus.
+
+### Skip link
+
+- The theme may include a “Skip to content” or similar link for keyboard users; if not, consider adding one in a custom layout for long pages.
+
+### Color contrast
+
+- The default palette meets contrast guidelines for body text and links. If you override `theme.colors`, test contrast (e.g. with browser DevTools or a contrast checker).
+
+### Screen readers
+
+- Landmarks (header, main, nav, footer) and heading structure make the page navigable. Images should have `alt` text in Markdown or MDX.
+
+## SEO
+
+### site and base
+
+- Set **`site`** in `barodoc.config.json` to your production URL (e.g. `https://docs.example.com`). Used for canonical URLs and OG tags.
+- For **project sites** (e.g. `username.github.io/repo-name/`), set **`base`** to `/repo-name/` so assets and routes resolve correctly. See [Deployment — Base path](/docs/guides/deployment#base-path-project-sites).
+
+### Meta and Open Graph
+
+- Each page uses `title` and `description` (from frontmatter or first heading/paragraph). For rich previews (social, search), use **@barodoc/plugin-og-image** or ensure your layout outputs `<meta property="og:title">`, `og:description`, and `og:image` where needed.
+- The theme can emit basic meta tags; check the layout or plugin docs.
+
+### Sitemap
+
+- Use **@barodoc/plugin-sitemap** so search engines can discover all pages. Add it to `plugins` in config.
+
+### i18n and hreflang
+
+- If you use multiple locales, the theme may output `hreflang` links for alternate language versions. Verify in the built HTML that each locale has the correct `hreflang` and canonical URL.
+
+### Content
+
+- Clear **title** and **description** per page improve snippets in search results. Avoid empty or duplicate descriptions.
+
+## Optional: CI checks
+
+You can add a lightweight a11y check in CI (e.g. on the built `dist/`):
+
+- **pa11y** or **axe-core** (e.g. `npx pa11y-ci dist/index.html`) to catch obvious violations.
+- Run only on a few key URLs to keep CI fast.
+
+This is optional; the checklist above already improves accessibility and SEO for most sites.

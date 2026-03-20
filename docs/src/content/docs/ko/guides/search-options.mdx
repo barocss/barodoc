@@ -1,0 +1,51 @@
+---
+title: 검색 옵션
+description: Pagefind와 DocSearch 비교 및 선택 가이드
+tags: [search, pagefind, docsearch]
+related: [guides/configuration, guides/plugins/search, guides/plugins/docsearch]
+difficulty: beginner
+---
+
+Barodoc은 **Pagefind**(내장, 클라이언트)와 **Algolia DocSearch**(호스팅, 선택) 두 가지 검색 방식을 지원합니다. 사이트 규모, 호스팅, 백엔드 필요 여부에 따라 선택하세요.
+
+## 비교
+
+| | **@barodoc/plugin-search** (Pagefind) | **@barodoc/plugin-docsearch** (Algolia) |
+|--|--------------------------------------|----------------------------------------|
+| **백엔드** | 없음. 빌드 시 인덱스 생성 후 정적 파일로 제공. | Algolia가 인덱스 호스팅; 검색 요청이 Algolia로 전달됨. |
+| **설정** | `plugins`에 플러그인 추가; 빌드 후 인덱스 생성(`pagefind --site dist`). | Algolia DocSearch 신청(공개 문서는 무료); 플러그인에 app id, API key 설정. |
+| **비용** | 무료. | 공개·오픈소스 문서는 [DocSearch 프로그램](https://docsearch.algolia.com/)으로 무료; 비공개·대량은 유료. |
+| **적합** | 소·중규모 문서, 정적 전용 호스팅, API 키 없음. | 대규모 문서, 즉시 오타 허용 검색, 분석·호스팅 인덱스 필요 시. |
+| **인덱스** | `dist/pagefind/`(또는 설정 경로)에 생성. | Algolia가 크롤링; 로컬 인덱스 없음. |
+
+## Pagefind (기본)
+
+`@barodoc/plugin-search`(또는 테마 기본 검색)를 쓰면 Barodoc은 [Pagefind](https://pagefind.app/)를 사용합니다. 인덱스는 `barodoc build` 시 생성되고 브라우저에서 로드되며, 서버나 API 키가 필요 없습니다. 다음에 적합합니다:
+
+- Quick 모드 및 Full custom 프로젝트.
+- GitHub Pages, Vercel, Netlify 등 정적 호스팅.
+- 수백 페이지 이하 규모(Pagefind도 확장 가능하나, 매우 큰 사이트는 Algolia가 더 빠를 수 있음).
+
+`barodoc.config.json`에 추가:
+
+```json
+{
+  "plugins": ["@barodoc/plugin-search"]
+}
+```
+
+테마를 쓰면 검색은 기본 활성화되며, 플러그인은 인덱스 빌드와 검색 UI 연결을 담당합니다. 옵션은 [Search 플러그인](/docs/guides/plugins/search)을 참고하세요.
+
+## Algolia DocSearch
+
+**@barodoc/plugin-docsearch**는 Algolia 호스팅 검색(오타 허용, 분석, 크롤링 기반 인덱스)이 필요할 때 사용합니다. Algolia DocSearch 애플리케이션이 필요하며, 오픈소스 문서는 무료 프로그램에 신청할 수 있습니다. 설정(app id, API key, index name)은 [DocSearch 플러그인](/docs/guides/plugins/docsearch)을 참고하세요.
+
+- **선택 시기:** 대규모 문서, DocSearch 브랜딩/분석, 호스팅 인덱스 선호.
+- **생략 시기:** 백엔드·API 키 없이 최소 설정을 원할 때는 Pagefind 사용.
+
+## 요약
+
+- **기본 / 백엔드 없음:** `@barodoc/plugin-search` (Pagefind). 키·서버 불필요.
+- **호스팅 검색 / Algolia:** `@barodoc/plugin-docsearch` 사용 후 Algolia 설정.
+
+검색 제공자는 하나만 사용할 수 있으며, 두 플러그인을 동시에 켜지 마세요.

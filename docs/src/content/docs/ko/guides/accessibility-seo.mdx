@@ -1,0 +1,66 @@
+---
+title: 접근성과 SEO
+description: 접근 가능하고 검색에 유리한 Barodoc 사이트를 위한 체크리스트
+tags: [accessibility, a11y, seo]
+related: [guides/configuration, guides/deployment]
+difficulty: intermediate
+---
+
+몇 가지를 점검하면 Barodoc 사이트를 접근 가능하게 유지하고 검색 결과에 잘 노출할 수 있습니다.
+
+## 접근성 (a11y)
+
+### 제목 계층
+
+- 페이지당 **H1은 하나** (보통 페이지 제목). 테마는 첫 제목 또는 frontmatter `title`을 문서 제목으로 사용합니다.
+- H2 → H3 순서를 지키고, 단계를 건너뛰지 마세요 (예: H2 다음 H4).
+
+### 포커스와 키보드
+
+- 링크, 버튼, 검색, 테마 토글 등은 포커스 가능합니다. 테마는 해당 요소에 포커스 스타일을 둡니다.
+- 커스텀 인터랙티브 컴포넌트를 추가할 때는 키보드로 조작 가능하고 포커스가 갇히지 않도록 하세요.
+
+### 스킵 링크
+
+- 테마에 “본문으로 건너뛰기” 등 링크가 있을 수 있습니다. 없으면 긴 페이지용으로 커스텀 레이아웃에 추가를 고려하세요.
+
+### 색 대비
+
+- 기본 팔레트는 본문·링크에 대해 대비 가이드라인을 충족합니다. `theme.colors`를 덮어쓸 때는 대비를 확인하세요 (브라우저 DevTools 또는 대비 검사 도구).
+
+### 스크린 리더
+
+- 랜드마크(header, main, nav, footer)와 제목 구조로 페이지 탐색이 가능합니다. 이미지는 Markdown/MDX에서 `alt` 텍스트를 넣으세요.
+
+## SEO
+
+### site와 base
+
+- **`site`**를 `barodoc.config.json`에 프로덕션 URL(예: `https://docs.example.com`)로 설정하세요. canonical·OG 태그에 사용됩니다.
+- **프로젝트 사이트**(예: `username.github.io/repo-name/`)면 **`base`**를 `/repo-name/`로 두어 자산·라우트가 올바르게 해석되게 하세요. [배포 — Base path](/docs/guides/deployment#base-path-프로젝트-사이트) 참고.
+
+### 메타와 Open Graph
+
+- 각 페이지는 frontmatter 또는 첫 제목/단락의 `title`, `description`을 사용합니다. 소셜·검색 미리보기를 위해 **@barodoc/plugin-og-image**를 쓰거나, 레이아웃에서 `<meta property="og:title">`, `og:description`, `og:image`를 출력하세요.
+- 테마가 기본 메타 태그를 내보낼 수 있음; 레이아웃·플러그인 문서를 확인하세요.
+
+### Sitemap
+
+- **@barodoc/plugin-sitemap**을 사용해 검색 엔진이 모든 페이지를 발견할 수 있게 하세요. 설정의 `plugins`에 추가합니다.
+
+### i18n과 hreflang
+
+- 여러 로케일을 쓰면 테마가 대체 언어용 `hreflang` 링크를 출력할 수 있습니다. 빌드된 HTML에서 각 로케일의 `hreflang`와 canonical URL이 맞는지 확인하세요.
+
+### 콘텐츠
+
+- 페이지별 명확한 **title**과 **description**이 검색 스니펫에 유리합니다. 비어 있거나 중복된 설명은 피하세요.
+
+## 선택: CI 검사
+
+빌드 결과 `dist/`에 대해 CI에서 간단한 a11y 검사를 넣을 수 있습니다:
+
+- **pa11y** 또는 **axe-core** (예: `npx pa11y-ci dist/index.html`)로 눈에 띄는 위반을 찾습니다.
+- 주요 URL 몇 개만 검사해 CI 시간을 줄이세요.
+
+선택 사항이며, 위 체크리스트만으로도 대부분의 사이트에서 접근성과 SEO가 개선됩니다.
