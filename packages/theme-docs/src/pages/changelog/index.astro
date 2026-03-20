@@ -20,11 +20,13 @@ try {
   // changelog collection may not exist
 }
 
+// Newest version first (primary), then newest date first (tiebreaker)
 const sorted = entries.sort((a, b) => {
+  const versionCompare = compareVersion(a.data.version, b.data.version);
+  if (versionCompare !== 0) return versionCompare; // positive when b is newer → b first
   const dateA = new Date(a.data.date).getTime();
   const dateB = new Date(b.data.date).getTime();
-  if (dateB !== dateA) return dateB - dateA; // newest date first
-  return compareVersion(b.data.version, a.data.version); // same date: newest version first
+  return dateB - dateA;
 });
 ---
 
