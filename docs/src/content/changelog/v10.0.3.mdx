@@ -1,0 +1,13 @@
+---
+version: "10.0.3"
+date: 2026-03-19
+title: "Changelog sort and shared version utils"
+---
+
+### Fixes
+
+- **Changelog page** — Entries are now sorted by date (newest first), then by version when dates are equal, so the latest release (e.g. 10.0.2) always appears at the top.
+
+### Improvements
+
+- **Shared version helpers** — `parseVersion` and `compareVersion` moved to `lib/version.ts` for reuse; changelog page imports from there.

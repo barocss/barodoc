@@ -6,6 +6,7 @@ import Banner from "../../components/Banner.astro";
 import { defaultLocale, locales, uiStrings } from "virtual:barodoc/i18n";
 import { getLocaleFromPath } from "@barodoc/core";
 import config from "virtual:barodoc/config";
+import { compareVersion } from "../../lib/version.js";
 
 const currentPath = Astro.url.pathname;
 const i18nConfig = { defaultLocale, locales: locales ?? [defaultLocale] };
@@ -20,7 +21,10 @@ try {
 }
 
 const sorted = entries.sort((a, b) => {
-  return new Date(b.data.date).getTime() - new Date(a.data.date).getTime();
+  const dateA = new Date(a.data.date).getTime();
+  const dateB = new Date(b.data.date).getTime();
+  if (dateB !== dateA) return dateB - dateA; // newest date first
+  return compareVersion(b.data.version, a.data.version); // same date: newest version first
 });
 ---
 
