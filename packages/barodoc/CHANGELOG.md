@@ -1,5 +1,15 @@
 # barodoc
 
+## 10.0.5
+
+### Patch Changes
+
+- 6cd6861: feat: CLI production check, create --with-github-pages, theme readingTime/fullWidth, plugin READMEs and docs
+- Updated dependencies [6cd6861]
+  - @barodoc/theme-docs@10.0.5
+  - @barodoc/plugin-openapi@10.0.1
+  - @barodoc/plugin-llms-txt@10.0.5
+
 ## 10.0.4
 
 ### Patch Changes
