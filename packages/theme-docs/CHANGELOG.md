@@ -1,5 +1,11 @@
 # @barodoc/theme-docs
 
+## 10.0.6
+
+### Patch Changes
+
+- c127a14: feat(theme-docs): declarative SaaS landing — `LandingLayout`, `pageLayout` + `landingPage` YAML, and landing blocks (`LandingHero`, `LandingLogoStrip`, `LandingStats`, `LandingFeatures`, `LandingTestimonials`, `LandingPricing`, `LandingFaq`, `LandingCta`, `LandingFooter`). Export `@barodoc/theme-docs/landing` types. Standalone `[...page]` supports full-width marketing layout.
+
 ## 10.0.5
 
 ### Patch Changes
