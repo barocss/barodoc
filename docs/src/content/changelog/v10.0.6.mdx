@@ -1,0 +1,18 @@
+---
+version: "10.0.6"
+date: 2026-03-19
+title: "SaaS-style landing blocks and YAML-driven pages"
+---
+
+### Theme (@barodoc/theme-docs)
+
+- **Landing layout** — `LandingLayout` full-width shell (header, banner, no sidebar). Standalone `pages` entries use `pageLayout: landing` (use `pageLayout`, not `layout` — reserved in Astro 5 Markdown collections).
+- **Declarative `landingPage` YAML** — Optional blocks rendered in order: `hero` → `logoStrip` → `stats` → `features` → `testimonials` → `pricing` → `faq` → `cta` → `footer`.
+- **React blocks** — `LandingHero`, `LandingLogoStrip`, `LandingStats`, `LandingFeatures`, `LandingTestimonials`, `LandingPricing`, `LandingFaq`, `LandingCta`, `LandingFooter` (also importable from `@barodoc/theme-docs` for MDX).
+- **Types** — `export "@barodoc/theme-docs/landing"` for `LandingFrontmatter` and related types.
+- **Home** — Default `index.astro` composes shared landing components.
+
+### Docs site
+
+- Guides: [Landing pages (SaaS-style)](/docs/guides/landing) (EN), KO summary; standalone pages guide links to landing.
+- Demo: `/yaml-landing-demo` — full SaaS-style sample from YAML; header tab **Landing demo**.

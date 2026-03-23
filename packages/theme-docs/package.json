@@ -15,7 +15,8 @@
     "./layouts/*": "./src/layouts/*",
     "./pages/*": "./src/pages/*",
     "./styles/*": "./src/styles/*",
-    "./lib/*": "./src/lib/*"
+    "./lib/*": "./src/lib/*",
+    "./landing": "./src/landing/types.ts"
   },
   "files": [
     "src",
