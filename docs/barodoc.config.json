@@ -17,6 +17,7 @@
   },
   "tabs": [
     { "label": "Docs", "href": "/docs/introduction" },
+    { "label": "Landing demo", "label:ko": "랜딩 데모", "href": "/yaml-landing-demo" },
     { "label": "Help", "href": "/help/faq" },
     { "label": "Blog", "href": "/blog" },
     { "label": "API Reference", "href": "/docs/api/pet" },
@@ -49,6 +50,7 @@
         "guides/content-structure",
         "guides/sections",
         "guides/standalone-pages",
+        "guides/landing",
         "guides/cli",
         "guides/overrides",
         "guides/deployment",

@@ -50,11 +50,132 @@ const helpCollection = defineCollection({
   }),
 });
 
+/** Declarative landing blocks (VuePress-style); use with `pageLayout: landing`. Key is `landingPage`. */
+const landingPageFrontmatterSchema = z
+  .object({
+    hero: z
+      .object({
+        badge: z.string().optional(),
+        title: z.string(),
+        titleHighlight: z.string().optional(),
+        subtitle: z.string(),
+        primaryCta: z.object({ label: z.string(), href: z.string() }),
+        secondaryCta: z.object({ label: z.string(), href: z.string() }).optional(),
+        snippet: z.string().optional(),
+        snippetAriaLabel: z.string().optional(),
+      })
+      .optional(),
+    logoStrip: z
+      .object({
+        title: z.string().optional(),
+        items: z.array(
+          z.object({
+            name: z.string(),
+            href: z.string().optional(),
+          }),
+        ),
+      })
+      .optional(),
+    stats: z
+      .object({
+        title: z.string().optional(),
+        subtitle: z.string().optional(),
+        items: z.array(
+          z.object({
+            value: z.string(),
+            label: z.string(),
+          }),
+        ),
+      })
+      .optional(),
+    features: z
+      .object({
+        title: z.string(),
+        subtitle: z.string().optional(),
+        items: z.array(
+          z.object({
+            icon: z.string(),
+            title: z.string(),
+            description: z.string(),
+          }),
+        ),
+      })
+      .optional(),
+    testimonials: z
+      .object({
+        title: z.string(),
+        subtitle: z.string().optional(),
+        items: z.array(
+          z.object({
+            quote: z.string(),
+            author: z.string(),
+            role: z.string(),
+            avatar: z.string().optional(),
+          }),
+        ),
+      })
+      .optional(),
+    pricing: z
+      .object({
+        title: z.string(),
+        subtitle: z.string().optional(),
+        plans: z.array(
+          z.object({
+            name: z.string(),
+            price: z.string(),
+            period: z.string().optional(),
+            description: z.string().optional(),
+            features: z.array(z.string()),
+            ctaLabel: z.string(),
+            ctaHref: z.string(),
+            highlighted: z.boolean().optional(),
+          }),
+        ),
+      })
+      .optional(),
+    faq: z
+      .object({
+        title: z.string().optional(),
+        subtitle: z.string().optional(),
+        items: z.array(
+          z.object({
+            q: z.string(),
+            a: z.string(),
+          }),
+        ),
+      })
+      .optional(),
+    cta: z
+      .object({
+        title: z.string(),
+        subtitle: z.string().optional(),
+        buttonLabel: z.string(),
+        buttonHref: z.string(),
+      })
+      .optional(),
+    footer: z
+      .object({
+        tagline: z.string().optional(),
+        showLogo: z.boolean().optional(),
+        links: z.array(z.object({ label: z.string(), href: z.string() })).optional(),
+      })
+      .optional(),
+  })
+  .optional();
+
 const pagesCollection = defineCollection({
   type: "content",
   schema: z.object({
     title: z.string(),
     description: z.string().optional(),
+    /**
+     * `landing` = full-width marketing layout. Use **`pageLayout`** — Astro 5 reserves `layout` for Markdown in content collections.
+     * @deprecated `layout` — ignored for `.md` in Astro 5; use `pageLayout` instead.
+     */
+    pageLayout: z.enum(["default", "landing"]).optional(),
+    layout: z.enum(["default", "landing"]).optional(),
+    /** With `pageLayout: landing`, optional YAML blocks (see Guides → Landing pages). */
+    landingPage: landingPageFrontmatterSchema,
   }),
 });
 

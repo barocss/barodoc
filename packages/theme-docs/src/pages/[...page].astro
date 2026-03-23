@@ -1,7 +1,10 @@
 ---
 import { getCollection, render } from "astro:content";
 import PageLayout from "../layouts/PageLayout.astro";
+import LandingLayout from "../layouts/LandingLayout.astro";
+import LandingBlocks from "../components/landing/LandingBlocks.astro";
 import config from "virtual:barodoc/config";
+import type { LandingFrontmatter } from "../landing/types.ts";
 
 export async function getStaticPaths() {
   const reserved = new Set(["blog", "changelog", "docs", "rss.xml"]);
@@ -38,8 +41,25 @@ interface Props {
 
 const { page } = Astro.props;
 const { Content } = await render(page);
+const data = page.data as { pageLayout?: string; layout?: string; landingPage?: LandingFrontmatter };
+/** Prefer `pageLayout` — Astro 5 reserves `layout` for Markdown in content collections. */
+const pageLayout = data.pageLayout ?? data.layout ?? "default";
+const landingPage = data.landingPage;
 ---
 
-<PageLayout title={page.data.title} description={page.data.description}>
-  <Content />
-</PageLayout>
+{pageLayout === "landing" ? (
+  <LandingLayout title={page.data.title} description={page.data.description}>
+    {landingPage && <LandingBlocks landing={landingPage} />}
+    {landingPage ? (
+      <div class="bd-landing-mdx max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10 prose prose-gray dark:prose-invert max-w-none">
+        <Content />
+      </div>
+    ) : (
+      <Content />
+    )}
+  </LandingLayout>
+) : (
+  <PageLayout title={page.data.title} description={page.data.description}>
+    <Content />
+  </PageLayout>
+)}

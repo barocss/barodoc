@@ -1,0 +1,115 @@
+---
+/**
+ * Renders built-in landing sections from frontmatter (`landingPage:` in content schema).
+ * Order: Hero → Logo strip → Stats → Features → Testimonials → Pricing → FAQ → CTA → Footer
+ */
+import config from "virtual:barodoc/config";
+import type { LandingFrontmatter } from "../../landing/types.ts";
+import { LandingHero } from "./LandingHero.tsx";
+import { LandingLogoStrip } from "./LandingLogoStrip.tsx";
+import { LandingStats } from "./LandingStats.tsx";
+import { LandingFeatures } from "./LandingFeatures.tsx";
+import { LandingTestimonials } from "./LandingTestimonials.tsx";
+import { LandingPricing } from "./LandingPricing.tsx";
+import { LandingFaq } from "./LandingFaq.tsx";
+import { LandingCta } from "./LandingCta.tsx";
+import { LandingFooter } from "./LandingFooter.tsx";
+
+interface Props {
+  landing: LandingFrontmatter;
+}
+
+const { landing } = Astro.props;
+
+const siteName = (config as { name?: string }).name ?? "";
+const logo = (config as { logo?: string }).logo;
+const github = (config as { topbar?: { github?: string } }).topbar?.github;
+
+const footerShowLogo = landing.footer?.showLogo !== false;
+---
+
+<div class="bd-landing-blocks">
+  {landing.hero && (
+    <LandingHero
+      client:load
+      badge={landing.hero.badge}
+      title={landing.hero.title}
+      titleHighlight={landing.hero.titleHighlight}
+      subtitle={landing.hero.subtitle}
+      primaryCta={landing.hero.primaryCta}
+      secondaryCta={landing.hero.secondaryCta}
+      snippet={landing.hero.snippet}
+      snippetAriaLabel={landing.hero.snippetAriaLabel}
+    />
+  )}
+
+  {landing.logoStrip && landing.logoStrip.items?.length > 0 && (
+    <LandingLogoStrip title={landing.logoStrip.title} items={landing.logoStrip.items} />
+  )}
+
+  {landing.stats && landing.stats.items?.length > 0 && (
+    <LandingStats
+      title={landing.stats.title}
+      subtitle={landing.stats.subtitle}
+      items={landing.stats.items}
+    />
+  )}
+
+  {landing.features && (
+    <LandingFeatures
+      title={landing.features.title}
+      subtitle={landing.features.subtitle}
+      items={landing.features.items}
+    />
+  )}
+
+  {landing.testimonials && landing.testimonials.items?.length > 0 && (
+    <LandingTestimonials
+      title={landing.testimonials.title}
+      subtitle={landing.testimonials.subtitle}
+      items={landing.testimonials.items}
+    />
+  )}
+
+  {landing.pricing && landing.pricing.plans?.length > 0 && (
+    <LandingPricing
+      title={landing.pricing.title}
+      subtitle={landing.pricing.subtitle}
+      plans={landing.pricing.plans}
+    />
+  )}
+
+  {landing.faq && landing.faq.items?.length > 0 && (
+    <LandingFaq
+      title={landing.faq.title}
+      subtitle={landing.faq.subtitle}
+      items={landing.faq.items}
+    />
+  )}
+
+  {landing.cta && (
+    <LandingCta
+      title={landing.cta.title}
+      subtitle={landing.cta.subtitle}
+      buttonLabel={landing.cta.buttonLabel}
+      buttonHref={landing.cta.buttonHref}
+    />
+  )}
+
+  {landing.footer && (
+    <LandingFooter
+      tagline={landing.footer.tagline ?? `Built with ${siteName || "Barodoc"}`}
+      logoSrc={footerShowLogo && logo ? logo : undefined}
+      logoAlt={siteName}
+      links={
+        landing.footer.links ??
+        (github
+          ? [
+              { label: "GitHub", href: github },
+              { label: "Documentation", href: "/docs/introduction" },
+            ]
+          : [{ label: "Documentation", href: "/docs/introduction" }])
+      }
+    />
+  )}
+</div>

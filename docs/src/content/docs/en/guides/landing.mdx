@@ -1,0 +1,156 @@
+---
+title: Landing pages (SaaS-style)
+description: Build marketing-style landing pages with built-in Barodoc components and a full-width layout
+tags: [pages, landing, marketing, layout]
+related: [guides/standalone-pages, guides/content-structure]
+difficulty: beginner
+---
+
+import { Callout, Steps, Step } from "@barodoc/theme-docs";
+
+Barodoc ships **reusable landing blocks** in `@barodoc/theme-docs` so you can compose SaaS-style pages (hero, feature grid, CTA, footer) without copying HTML from the default home page.
+
+## Full-width layout
+
+Standalone pages normally use a **narrow** reading column (`max-width` ~720px). For marketing landings, set **`pageLayout: landing`** in frontmatter so the page uses the theme’s **full-width** shell (header + banner, no sidebar). Use **`pageLayout`** (not `layout`) — Astro 5 reserves `layout` for Markdown in content collections.
+
+```yaml
+---
+title: Pricing
+description: Plans and pricing
+pageLayout: landing
+---
+```
+
+You can either **declare sections in YAML** (VuePress-style, under **`landingPage:`**) or **compose React components** in MDX — or combine both (YAML blocks first, then optional Markdown body).
+
+## Declarative landing (frontmatter)
+
+With **`pageLayout: landing`**, add a **`landingPage:`** object. The theme renders built-in sections **in order** for each block you define: **hero → logoStrip → stats → features → testimonials → pricing → faq → cta → footer**. No imports required.
+
+For **YAML-heavy** pages, prefer **`.md`** so you avoid MDX parsing quirks (unquoted URLs like `/docs/guides/landing` can confuse the MDX compiler). For **MDX**, quote paths in YAML (`href: "/docs/..."`) and use **`pageLayout: "landing"`** if the compiler mis-parses bare `landing`.
+
+```yaml
+---
+title: Pricing
+pageLayout: landing
+landingPage:
+  hero:
+    badge: New
+    title: Simple
+    titleHighlight: pricing
+    subtitle: One plan for teams who ship docs.
+    primaryCta: { label: Start, href: /docs/introduction }
+    secondaryCta: { label: Contact, href: mailto:sales@example.com }
+    snippet: "npx create-barodoc my-docs"
+  stats:
+    title: At a glance
+    items:
+      - { value: "99%", label: "Uptime story" }
+      - { value: "24/7", label: "Static edge" }
+  features:
+    title: Why us
+    items:
+      - icon: "⚡"
+        title: Fast
+        description: Static output.
+  cta:
+    title: Ready?
+    buttonLabel: Read the docs
+    buttonHref: /docs/introduction
+  footer:
+    tagline: Built with Acme
+    showLogo: true
+    links:
+      - { label: Privacy, href: /privacy }
+---
+```
+
+- **`footer.links`** — omit to default to **GitHub** (from `topbar.github`) + **Documentation** (`/docs/introduction`). Set `links: []` for no links.
+- **`footer.showLogo`** — defaults to showing the site logo when `logo` is set in `barodoc.config.json`.
+
+Optional Markdown **below** the frontmatter is rendered in a prose column under the blocks (omit the body for YAML-only pages).
+
+Live demo: [`/yaml-landing-demo`](/yaml-landing-demo) (`.md` + `pageLayout` + `landingPage` YAML).
+
+## Components (MDX)
+
+Import from the same entry as other MDX components:
+
+```tsx
+import {
+  LandingHero,
+  LandingLogoStrip,
+  LandingStats,
+  LandingFeatures,
+  LandingTestimonials,
+  LandingPricing,
+  LandingFaq,
+  LandingCta,
+  LandingFooter,
+} from "@barodoc/theme-docs";
+```
+
+| Component | Role |
+|-----------|------|
+| `LandingHero` | Badge, headline + gradient highlight, subtitle, primary/secondary CTAs, optional install **snippet** with copy |
+| `LandingLogoStrip` | “Trusted by” **logo / name row** (optional `href` per item) |
+| `LandingStats` | Optional title + **metrics row** (value + label cells) |
+| `LandingFeatures` | Section title + responsive **feature cards** (emoji icon, title, description) |
+| `LandingTestimonials` | Quote cards (author, role, optional avatar label) |
+| `LandingPricing` | **3-column pricing** (features list, `highlighted` tier) |
+| `LandingFaq` | **`<details>`** FAQ list (accessible, no extra JS) |
+| `LandingCta` | Closing headline, optional subtitle, single button |
+| `LandingFooter` | Tagline, optional logo, link row |
+
+`LandingHero` uses a copy-to-clipboard control for the snippet — add **`client:load`** when you use it in MDX:
+
+```tsx
+<LandingHero
+  client:load
+  badge="New"
+  title="Ship docs"
+  titleHighlight="faster"
+  subtitle="One stack for docs and marketing."
+  primaryCta={{ label: "Get started", href: "/docs/introduction" }}
+  secondaryCta={{ label: "Pricing", href: "/pricing" }}
+  snippet="npx create-barodoc my-docs"
+/>
+```
+
+```tsx
+<LandingFeatures
+  title="Why us"
+  subtitle="Short value prop."
+  items={[
+    {
+      icon: "⚡",
+      title: "Fast",
+      description: "Static output, great DX.",
+    },
+  ]}
+/>
+```
+
+<Callout type="info">
+  The default site **home** (`/`) is implemented with these same components — see the theme’s `index.astro` for a full example.
+</Callout>
+
+## Quick checklist
+
+<Steps>
+  <Step title="Create an MDX page under pages">
+    e.g. `src/content/pages/pricing.mdx` (full custom) or `pages/pricing.mdx` (quick mode).
+  </Step>
+  <Step title="Set pageLayout: landing">
+    So content is not constrained to the prose column (use `pageLayout`, not `layout`).
+  </Step>
+  <Step title="Add content">
+    Either fill a **`landingPage:`** YAML block (declarative), or import `LandingHero`, `LandingFeatures`, `LandingCta`, and `LandingFooter` from `@barodoc/theme-docs` in MDX — or use YAML plus a short Markdown section below.
+  </Step>
+  <Step title="Link from tabs or docs">
+    Add the URL to `tabs` in `barodoc.config.json` if it should appear in the top bar.
+  </Step>
+</Steps>
+
+See also [Standalone pages](/docs/guides/standalone-pages) for routing, reserved slugs, and tabs.

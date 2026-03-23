@@ -37,6 +37,49 @@ export { ApiResponse } from "./mdx/ApiResponse.tsx";
 
 export { VersionSwitcher } from "./VersionSwitcher.tsx";
 
+// SaaS-style landing blocks (MDX / Astro)
+export {
+  LandingHero,
+  LandingLogoStrip,
+  LandingStats,
+  LandingFeatures,
+  LandingTestimonials,
+  LandingPricing,
+  LandingFaq,
+  LandingCta,
+  LandingFooter,
+} from "./landing/index.ts";
+export type {
+  LandingHeroProps,
+  LandingLogoStripProps,
+  LandingLogoStripItem,
+  LandingStatsProps,
+  LandingStatItem,
+  LandingFeaturesProps,
+  LandingFeatureItem,
+  LandingTestimonialsProps,
+  LandingTestimonialItem,
+  LandingPricingProps,
+  LandingPricingPlan,
+  LandingFaqProps,
+  LandingFaqItem,
+  LandingCtaProps,
+  LandingFooterProps,
+  LandingFooterLink,
+} from "./landing/index.ts";
+export type {
+  LandingFrontmatter,
+  LandingHeroFm,
+  LandingLogoStripFm,
+  LandingStatsFm,
+  LandingFeaturesFm,
+  LandingTestimonialsFm,
+  LandingPricingFm,
+  LandingFaqFm,
+  LandingCtaFm,
+  LandingFooterFm,
+} from "../landing/types.ts";
+
 // Legacy exports for backwards compatibility
 export { Tabs, Tab } from "./mdx/Tabs.tsx";
 export { Accordion, AccordionGroup } from "./mdx/Accordion.tsx";

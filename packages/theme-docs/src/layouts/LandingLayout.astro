@@ -1,0 +1,34 @@
+---
+/**
+ * Full-width marketing-style layout for standalone `pages` content (no sidebar, no narrow prose column).
+ * Use with frontmatter `pageLayout: landing` in `src/content/pages/*.{md,mdx}`.
+ */
+import BaseLayout from "./BaseLayout.astro";
+import Header from "../components/Header.astro";
+import Banner from "../components/Banner.astro";
+import CodeCopy from "../components/CodeCopy.astro";
+import { defaultLocale } from "virtual:barodoc/i18n";
+import { getLocaleFromPath } from "@barodoc/core";
+
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description } = Astro.props;
+const currentPath = Astro.url.pathname;
+const i18nConfig = { defaultLocale, locales: [defaultLocale] };
+const currentLocale = getLocaleFromPath(currentPath, i18nConfig);
+---
+
+<BaseLayout title={title} description={description}>
+  <Banner />
+  <Header currentLocale={currentLocale} currentPath={currentPath} />
+
+  <div class="w-full min-w-0 min-h-[calc(100vh-3.5rem)] flex flex-col">
+    <main class="w-full flex-1">
+      <slot />
+    </main>
+    <CodeCopy />
+  </div>
+</BaseLayout>

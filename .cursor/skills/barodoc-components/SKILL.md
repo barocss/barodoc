@@ -362,6 +362,24 @@ import { ApiEndpoint, ApiParams, ApiParam, ApiResponse } from "@barodoc/theme-do
   </ApiResponse>
 </ApiEndpoint>
 
+## Landing (marketing / SaaS-style)
+
+Use for standalone pages with `pageLayout: landing` (full-width; not `layout` — reserved in Astro 5). Import from `@barodoc/theme-docs`:
+
+- `LandingHero` — badge, title + optional gradient `titleHighlight`, CTAs, optional `snippet` (use **`client:load`** for copy button)
+- `LandingLogoStrip` — “trusted by” name row
+- `LandingStats` — metric cells (`value` + `label`)
+- `LandingFeatures` — section title + `items` (icon, title, description)
+- `LandingTestimonials` — quote cards
+- `LandingPricing` — tier cards + `highlighted`
+- `LandingFaq` — `<details>` Q&A
+- `LandingCta` — closing headline + button
+- `LandingFooter` — tagline, optional logo, links
+
+YAML order under `landingPage:`: hero → logoStrip → stats → features → testimonials → pricing → faq → cta → footer.
+
+See `docs/src/content/docs/en/guides/landing.mdx` in the Barodoc repo.
+
 ## Quick Start
 
 <Steps>
