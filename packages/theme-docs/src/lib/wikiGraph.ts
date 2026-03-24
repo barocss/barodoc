@@ -46,6 +46,21 @@ export interface WikiGraphJson {
   broken?: WikiGraphBroken[];
 }
 
+/** Dedupe graph nodes by id, sort by title (for Linked pages lists). */
+export function sortDedupeDocLinks(
+  nodes: WikiGraphNode[],
+): { title: string; href: string }[] {
+  const seen = new Set<string>();
+  const out: WikiGraphNode[] = [];
+  for (const n of nodes) {
+    if (seen.has(n.id)) continue;
+    seen.add(n.id);
+    out.push(n);
+  }
+  out.sort((a, b) => a.title.localeCompare(b.title));
+  return out.map((n) => ({ title: n.title, href: n.href }));
+}
+
 function stripFencedCode(raw: string): string {
   return raw.replace(/```[\s\S]*?```/g, " ");
 }

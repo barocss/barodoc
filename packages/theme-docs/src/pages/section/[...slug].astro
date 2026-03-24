@@ -19,19 +19,7 @@ import AssetViewerJs from "../../components/asset/AssetViewerJs.astro";
 import AssetIpynb from "../../components/asset/AssetIpynb.astro";
 import AssetRst from "../../components/asset/AssetRst.astro";
 import AssetEpub from "../../components/asset/AssetEpub.astro";
-import { buildWikiGraph, type WikiGraphNode } from "../../lib/wikiGraph.js";
-
-function sortDedupeDocLinks(nodes: WikiGraphNode[]): { title: string; href: string }[] {
-  const seen = new Set<string>();
-  const out: WikiGraphNode[] = [];
-  for (const n of nodes) {
-    if (seen.has(n.id)) continue;
-    seen.add(n.id);
-    out.push(n);
-  }
-  out.sort((a, b) => a.title.localeCompare(b.title));
-  return out.map((n) => ({ title: n.title, href: n.href }));
-}
+import { buildWikiGraph, sortDedupeDocLinks, type WikiGraphNode } from "../../lib/wikiGraph.js";
 
 export async function getStaticPaths() {
   const projectRoot = process.env.BARODOC_PROJECT_ROOT || process.cwd();
