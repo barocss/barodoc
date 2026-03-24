@@ -40,9 +40,34 @@ interface Props {
   connectedIncoming?: PageLink[];
   /** Internal links that did not resolve (see graph.json) */
   brokenLinks?: { kind: string; raw: string }[];
+  /** Reader-trust badges from frontmatter (`since`, `deprecated`, `experimental`). */
+  docMeta?: {
+    since?: string;
+    deprecated?: boolean | string;
+    experimental?: boolean;
+  };
+  /** Resolved changelog link (site or page `changelogUrl`). */
+  changelogHref?: string | null;
 }
 
-const { title, description, headings = [], prevPage, nextPage, editUrl, lastUpdated, breadcrumbs = [], readingTime, filePath, sectionSlug, connectedOutgoing = [], connectedIncoming = [], brokenLinks = [] } = Astro.props;
+const {
+  title,
+  description,
+  headings = [],
+  prevPage,
+  nextPage,
+  editUrl,
+  lastUpdated,
+  breadcrumbs = [],
+  readingTime,
+  filePath,
+  sectionSlug,
+  connectedOutgoing = [],
+  connectedIncoming = [],
+  brokenLinks = [],
+  docMeta,
+  changelogHref = null,
+} = Astro.props;
 const currentPath = Astro.url.pathname;
 
 const i18nConfig = { defaultLocale, locales };
@@ -52,6 +77,30 @@ const dir = dirByLocale[currentLocale] ?? dirByLocale[defaultLocale] ?? "ltr";
 
 const hasFeedback = config.feedback?.enabled === true;
 const feedbackEndpoint = config.feedback?.endpoint;
+const feedbackIssueUrl = config.feedback?.issueUrl;
+
+const hasDocMetaRow =
+  docMeta &&
+  (docMeta.since ||
+    docMeta.experimental === true ||
+    (docMeta.deprecated !== undefined && docMeta.deprecated !== false));
+
+function buildIssueUrl(base: string, pageTitle: string): string {
+  try {
+    const u = new URL(base);
+    if (!u.searchParams.has("title")) {
+      u.searchParams.set("title", `[docs] ${pageTitle}`);
+    }
+    return u.toString();
+  } catch {
+    return base;
+  }
+}
+
+const feedbackIssueHref =
+  feedbackIssueUrl && hasFeedback ? buildIssueUrl(feedbackIssueUrl, title) : null;
+
+const tocHeadings = headings.filter((h) => h.depth >= 2 && h.depth <= 4);
 ---
 
 <BaseLayout title={title} description={description} dir={dir} lang={currentLocale} uiStrings={t}>
@@ -69,7 +118,7 @@ const feedbackEndpoint = config.feedback?.endpoint;
       </aside>
 
       <!-- Main Content: flex-1 uses full space between sidebar and TOC; inner wrapper caps width and centers -->
-      <main class="flex-1 min-w-0 flex justify-center">
+      <main id="main-content" tabindex="-1" class="flex-1 min-w-0 flex justify-center outline-none">
         <div class="w-full max-w-[768px] px-4 py-8 sm:px-6 sm:py-10 lg:px-10 lg:py-10">
           {breadcrumbs.length > 0 && <Breadcrumb items={breadcrumbs} sectionSlug={sectionSlug} />}
           {readingTime && (
@@ -80,7 +129,32 @@ const feedbackEndpoint = config.feedback?.endpoint;
               <span>{readingTime}</span>
             </div>
           )}
-          <article class="prose prose-gray dark:prose-invert max-w-none min-w-0 overflow-x-auto">
+          {hasDocMetaRow && (
+            <div class="not-prose flex flex-wrap items-center gap-2 mb-4" aria-label="page status">
+              {docMeta!.since && (
+                <span class="inline-flex items-center rounded-md border border-primary-200 bg-primary-50 px-2 py-0.5 text-xs font-medium text-primary-800 dark:border-primary-800/40 dark:bg-primary-950/40 dark:text-primary-200">
+                  {t.sinceVersion ?? "Since"} {docMeta!.since}
+                </span>
+              )}
+              {docMeta!.experimental === true && (
+                <span class="inline-flex items-center rounded-md border border-violet-200 bg-violet-50 px-2 py-0.5 text-xs font-medium text-violet-900 dark:border-violet-800/40 dark:bg-violet-950/40 dark:text-violet-200">
+                  {t.experimental ?? "Experimental"}
+                </span>
+              )}
+              {docMeta!.deprecated !== undefined && docMeta!.deprecated !== false && (
+                <span class="inline-flex items-center rounded-md border border-amber-300 bg-amber-50 px-2 py-0.5 text-xs font-medium text-amber-950 dark:border-amber-800/50 dark:bg-amber-950/30 dark:text-amber-100">
+                  {t.deprecated ?? "Deprecated"}
+                  {typeof docMeta!.deprecated === "string"
+                    ? `: ${docMeta!.deprecated}`
+                    : ""}
+                </span>
+              )}
+            </div>
+          )}
+          <article
+            class="prose prose-gray dark:prose-invert max-w-none min-w-0 overflow-x-auto"
+            data-copy-section-label={t.copySectionLink ?? "Copy link to section"}
+          >
             <slot />
           </article>
 
@@ -178,13 +252,23 @@ const feedbackEndpoint = config.feedback?.endpoint;
           <footer class="mt-8 pt-6 border-t border-[var(--bd-border-subtle)] flex flex-col gap-3">
             {filePath && <Contributors filePath={filePath} />}
             <div class="flex flex-wrap items-center justify-between gap-2 text-[13px] text-[var(--bd-text-muted)]">
-              {lastUpdated && (
-                <span>
-                  {t.lastUpdated ?? "Last updated"}: <time datetime={lastUpdated.toISOString()}>
-                    {lastUpdated.toLocaleDateString(currentLocale, { year: "numeric", month: "short", day: "numeric" })}
-                  </time>
-                </span>
-              )}
+              <div class="flex flex-wrap items-center gap-x-4 gap-y-1">
+                {lastUpdated && (
+                  <span>
+                    {t.lastUpdated ?? "Last updated"}: <time datetime={lastUpdated.toISOString()}>
+                      {lastUpdated.toLocaleDateString(currentLocale, { year: "numeric", month: "short", day: "numeric" })}
+                    </time>
+                  </span>
+                )}
+                {changelogHref && (
+                  <a
+                    href={changelogHref}
+                    class="inline-flex items-center gap-1.5 text-[var(--bd-text-secondary)] hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
+                  >
+                    {t.viewChangelog ?? "Changelog"}
+                  </a>
+                )}
+              </div>
               {editUrl && (
                 <a
                   href={editUrl}
@@ -200,7 +284,11 @@ const feedbackEndpoint = config.feedback?.endpoint;
               )}
             </div>
             {hasFeedback && (
-              <div class="doc-feedback flex items-center gap-3 text-sm text-[var(--bd-text-muted)]" data-endpoint={feedbackEndpoint}>
+              <div
+                class="doc-feedback flex flex-wrap items-center gap-3 text-sm text-[var(--bd-text-muted)]"
+                data-endpoint={feedbackEndpoint}
+                data-thanks={t.feedbackThanks ?? "Thanks!"}
+              >
                 <span>{t.wasThisHelpful ?? "Was this helpful?"}</span>
                 <button type="button" class="feedback-btn inline-flex items-center gap-1 px-2 py-1 rounded border border-[var(--bd-border)] hover:bg-[var(--bd-bg-subtle)] transition-colors" data-value="yes" aria-label={t.yes ?? "Yes"}>
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 9V5a3 3 0 00-3-3l-4 9v11h11.28a2 2 0 002-1.7l1.38-9a2 2 0 00-2-2.3H14z" /></svg>
@@ -208,7 +296,17 @@ const feedbackEndpoint = config.feedback?.endpoint;
                 <button type="button" class="feedback-btn inline-flex items-center gap-1 px-2 py-1 rounded border border-[var(--bd-border)] hover:bg-[var(--bd-bg-subtle)] transition-colors" data-value="no" aria-label={t.no ?? "No"}>
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 15v3.586a1 1 0 01-.293.707l-2 2A1 1 0 016 20.586V15m4 0h5.17a2 2 0 001.98-1.742l1.08-7.56A1 1 0 0017.242 4.5H10m0 10.5V4.5m0 0H7.5A2.5 2.5 0 005 7v3" /></svg>
                 </button>
-                <span class="feedback-thanks hidden text-green-600 dark:text-green-400">Thanks for your feedback!</span>
+                {feedbackIssueHref && (
+                  <a
+                    href={feedbackIssueHref}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="feedback-issue inline-flex items-center gap-1 text-[var(--bd-text-secondary)] hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
+                  >
+                    {t.reportIssue ?? "Report an issue"}
+                  </a>
+                )}
+                <span class="feedback-thanks hidden text-green-600 dark:text-green-400" />
               </div>
             )}
           </footer>
@@ -216,7 +314,7 @@ const feedbackEndpoint = config.feedback?.endpoint;
       </main>
 
       <!-- Table of Contents -->
-      {headings.length > 0 && (
+      {tocHeadings.length > 0 && (
         <aside class="hidden xl:block w-[220px] shrink-0">
           <div class="sticky top-14 h-[calc(100vh-3.5rem)] overflow-y-auto py-10 pl-8">
             <TableOfContents headings={headings} onThisPageLabel={t.onThisPage ?? "On this page"} />
@@ -248,17 +346,39 @@ const feedbackEndpoint = config.feedback?.endpoint;
     document.addEventListener('astro:page-load', initImageZoom);
   </script>
 
-  <!-- Heading anchor links -->
+  <!-- Heading anchor + copy link to section -->
   <script>
     function initHeadingAnchors() {
+      const article = document.querySelector('article.prose[data-copy-section-label]');
+      const copyLabel = article?.getAttribute('data-copy-section-label') ?? 'Copy link to section';
       document.querySelectorAll('.prose h2[id], .prose h3[id], .prose h4[id]').forEach((heading) => {
-        if (heading.querySelector('.heading-anchor')) return;
+        if (heading.querySelector('.heading-anchor-wrap')) return;
+        const wrap = document.createElement('span');
+        wrap.className = 'heading-anchor-wrap';
         const anchor = document.createElement('a');
         anchor.className = 'heading-anchor';
         anchor.href = `#${heading.id}`;
         anchor.textContent = '#';
-        anchor.setAttribute('aria-label', `Link to ${heading.textContent}`);
-        heading.appendChild(anchor);
+        const ht = heading.textContent?.replace(/\s*#\s*$/, '').trim() ?? '';
+        anchor.setAttribute('aria-label', `Link to ${ht}`);
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'heading-copy-link';
+        btn.setAttribute('aria-label', copyLabel);
+        btn.title = copyLabel;
+        btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>';
+        btn.addEventListener('click', async (e) => {
+          e.preventDefault();
+          const url = `${window.location.origin}${window.location.pathname}#${heading.id}`;
+          try {
+            await navigator.clipboard.writeText(url);
+            btn.classList.add('heading-copy-done');
+            setTimeout(() => btn.classList.remove('heading-copy-done'), 1500);
+          } catch { /* ignore */ }
+        });
+        wrap.appendChild(anchor);
+        wrap.appendChild(btn);
+        heading.appendChild(wrap);
       });
     }
     initHeadingAnchors();
@@ -278,7 +398,11 @@ const feedbackEndpoint = config.feedback?.endpoint;
               const value = btn.getAttribute('data-value');
               const page = window.location.pathname;
               el.querySelectorAll('.feedback-btn').forEach((b: any) => b.disabled = true);
-              if (thanks) thanks.classList.remove('hidden');
+              if (thanks) {
+                const msg = el.getAttribute('data-thanks');
+                if (msg) thanks.textContent = msg;
+                thanks.classList.remove('hidden');
+              }
               if (endpoint) {
                 try { await fetch(endpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ page, value }) }); } catch {}
               }

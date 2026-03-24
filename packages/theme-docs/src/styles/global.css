@@ -317,21 +317,51 @@
   scroll-margin-top: 5rem;
 }
 
-.prose :where(h2, h3, h4)[id] > a.heading-anchor {
-  color: var(--color-primary-400);
-  opacity: 0;
+.prose :where(h2, h3, h4)[id] > .heading-anchor-wrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.15em;
   margin-left: 0.25em;
+  opacity: 0;
+  transition: opacity 150ms ease;
+  vertical-align: middle;
+}
+
+.prose :where(h2, h3, h4)[id]:hover > .heading-anchor-wrap {
+  opacity: 1;
+}
+
+.prose :where(h2, h3, h4)[id] > .heading-anchor-wrap > a.heading-anchor {
+  color: var(--color-primary-400);
   font-weight: 400;
   text-decoration: none !important;
-  transition: opacity 150ms ease;
 }
 
-.prose :where(h2, h3, h4)[id]:hover > a.heading-anchor {
-  opacity: 0.7;
-}
-
-.prose :where(h2, h3, h4)[id] > a.heading-anchor:hover {
+.prose :where(h2, h3, h4)[id] > .heading-anchor-wrap > a.heading-anchor:hover {
   opacity: 1;
+}
+
+.prose :where(h2, h3, h4)[id] > .heading-anchor-wrap > .heading-copy-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.1rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: var(--color-primary-500);
+  border-radius: 0.25rem;
+  opacity: 0.75;
+}
+
+.prose :where(h2, h3, h4)[id] > .heading-anchor-wrap > .heading-copy-link:hover,
+.prose :where(h2, h3, h4)[id] > .heading-anchor-wrap > .heading-copy-link.heading-copy-done {
+  opacity: 1;
+  color: var(--color-primary-600);
+}
+
+:global(.dark) .prose :where(h2, h3, h4)[id] > .heading-anchor-wrap > .heading-copy-link {
+  color: var(--color-primary-400);
 }
 
 /* ==========================================================================

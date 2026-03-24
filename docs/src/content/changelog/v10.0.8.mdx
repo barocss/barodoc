@@ -1,0 +1,27 @@
+---
+version: "10.0.8"
+date: 2026-03-24
+title: "Reader-focused docs: accessibility, TOC, trust badges, and feedback"
+---
+
+### Core (@barodoc/core)
+
+- **Config** — Optional `changelogUrl` for doc footers; `feedback.issueUrl` for “Report an issue” (prefills title when supported).
+- **Content schema** — Frontmatter: `since`, `deprecated`, `experimental`, `changelogUrl` (Quick mode `content.config` template updated).
+- **i18n** — New UI strings: skip to content, since/deprecated/experimental, changelog, copy section link, feedback thanks, report issue.
+
+### CLI (barodoc)
+
+- Generated **content collection schema** includes the new doc frontmatter fields.
+
+### Theme (@barodoc/theme-docs)
+
+- **Accessibility** — Skip link to `#main-content`; main/content wrappers use `id="main-content"` on docs, pages, blog, landing.
+- **On this page** — Headings `h2`–`h4`; scroll-based TOC highlight; duplicate scroll listeners avoided with `AbortController`.
+- **Trust** — Badges from frontmatter; footer **Changelog** link from site or page `changelogUrl`.
+- **Feedback** — Localized thanks text; optional **Report an issue** when `feedback.issueUrl` is set.
+- **Headings** — `#` anchor plus **copy section URL** control next to h2–h4.
+
+### Docs site
+
+- **`changelogUrl`** in `barodoc.config.json` pointing at `/changelog`.
