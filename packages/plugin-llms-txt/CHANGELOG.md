@@ -1,5 +1,12 @@
 # @barodoc/plugin-llms-txt
 
+## 10.0.7
+
+### Patch Changes
+
+- Updated dependencies [d8c580d]
+  - @barodoc/core@10.0.7
+
 ## 10.0.5
 
 ### Patch Changes

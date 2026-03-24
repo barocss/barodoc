@@ -1,5 +1,22 @@
 # barodoc
 
+## 10.0.7
+
+### Patch Changes
+
+- Updated dependencies [d8c580d]
+  - @barodoc/core@10.0.7
+  - @barodoc/theme-docs@10.0.7
+  - @barodoc/plugin-analytics@10.0.7
+  - @barodoc/plugin-docsearch@10.0.1
+  - @barodoc/plugin-llms-txt@10.0.7
+  - @barodoc/plugin-og-image@9.0.1
+  - @barodoc/plugin-openapi@10.0.2
+  - @barodoc/plugin-pwa@10.0.1
+  - @barodoc/plugin-rss@10.0.1
+  - @barodoc/plugin-search@10.0.7
+  - @barodoc/plugin-sitemap@10.0.7
+
 ## 10.0.6
 
 ### Patch Changes
