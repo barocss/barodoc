@@ -1,11 +1,20 @@
 ---
 name: barodoc-release
-description: Barodoc changeset and release workflow. Use when adding a changeset, updating the changelog, preparing a release, or merging the "Version packages" PR. Prefer this skill whenever the user mentions changeset, release, version bump, changelog, or publishing barodoc packages to npm.
+description: Barodoc changeset and release workflow. Use when adding a changeset, updating the changelog, preparing a release, or merging the "Version packages" PR. Prefer this skill whenever the user mentions changeset, release, version bump, changelog, or publishing barodoc packages to npm. Agents must use GitHub CLI (gh) for issue, PR, merge, and release-PR monitoring.
 ---
 
 # Barodoc Changeset & Release
 
 This skill covers how to add changesets, keep the docs changelog in sync, and complete a release. Linked packages (core, theme-docs, barodoc CLI, plugins) are versioned together.
+
+## GitHub CLI (`gh`) — **required for agents**
+
+Automated runs (issue → branch → PR → merge → monitor **chore: release packages** → merge) **must** use **`gh`**. Do not substitute the GitHub web UI for these steps unless a human explicitly opts out.
+
+- **Issue:** `gh issue create`
+- **PR:** `gh pr create`, `gh pr view`, `gh pr merge`
+- **Monitor:** `gh pr list`, `gh pr checks` (poll until the Version PR exists and is green)
+- **Prereq:** `gh auth status` succeeds in the environment running the agent.
 
 ## Version bump: prefer patch
 
@@ -88,31 +97,41 @@ Details: **.changeset/README.md** and **DEVELOPMENT.md** in the repo.
 
 ## End-to-end checklist (issue → changeset → PR → npm)
 
-Use this when **shipping code** that touches **published packages** (`packages/*`, `barodoc` CLI, plugins). Agents can run the same flow with **GitHub CLI** (`gh`).
+Use when **shipping code** that touches **published packages** (`packages/*`, `barodoc` CLI, plugins). **Run every GitHub step with `gh`** (see above).
 
 | # | Step | What to do |
 |---|------|------------|
-| 1 | **Issue** | Create a tracking issue: `gh issue create --title "..." --body "..."`. Reference it in the feature PR body with `Fixes #N` so it closes on merge. |
+| 1 | **Issue** | `gh issue create --title "..." --body "..."`. Put `Fixes #N` in the feature PR body (`gh pr create --body` or edit) so the issue closes on merge. |
 | 2 | **Changeset** | Add `.changeset/<name>.md` listing each **touched** package and bump type (`patch` unless feature/breaking). |
 | 3 | **Site changelog** | Add `docs/src/content/changelog/vX.Y.Z.mdx` using the **next patch** version (see `packages/theme-docs/package.json`). |
-| 4 | **Branch & commit** | Feature branch; **one commit or PR** should include code + changeset + changelog together. |
-| 5 | **Open & merge PR** | `gh pr create` → `gh pr merge` into `main` (after CI is green). |
-| 6 | **Wait for Version PR** | The **Release** workflow (`changesets/action`) opens a PR titled **`chore: release packages`** (branch often `changeset-release/main`). Poll until it appears: `gh pr list --state open --search "chore: release packages"`. |
-| 7 | **Merge release PR** | `gh pr merge <number> --merge` — this bumps versions, updates package `CHANGELOG.md` files, and **publishes to npm** (per `.github/workflows/release.yml`). |
+| 4 | **Branch & commit** | Feature branch; **one PR** should include code + changeset + changelog together. |
+| 5 | **Open & merge PR** | `git push -u origin <branch>` → `gh pr create --base main --head <branch> --title "..." --body "Fixes #N\n\n..."` → wait for checks (`gh pr checks <N>` or poll) → `gh pr merge <N> --merge` (use squash only if repo policy allows; default here is `--merge`). |
+| 6 | **Monitor Version PR** | After merge to `main`, **poll** until the release PR exists: e.g. every 10–15s run `gh pr list --state open --search "chore: release packages" --json number,title,url`. Optionally `gh run watch` on the latest **Release** workflow on `main` while waiting. |
+| 7 | **Merge release PR** | `gh pr merge <number> --merge` — bumps versions, updates package `CHANGELOG.md` files, **publishes to npm** (`.github/workflows/release.yml`). Confirm with `gh pr view <number> --json state` after merge. |
 
 ### When **not** to use changeset / release PR
 
 - **Skill-only**, **plans**, or **docs** that do not ship with a versioned package.
 - **Repo/tooling** changes that do not affect `@barodoc/*` or `barodoc` publish artifacts.
 
-In those cases: issue + PR to `main` is enough; **no** `.changeset/` and **no** `vX.Y.Z.mdx` unless the docs site itself should announce something on `/changelog`.
+Still use **`gh`** for issue + PR + merge to `main`; only **skip** `.changeset/`, `vX.Y.Z.mdx`, and step 6–7 (no Version PR / npm).
 
-### Optional `gh` snippets
+### `gh` commands (reference)
 
 ```bash
-# List open release PRs
-gh pr list --state open --search "chore: release packages"
+# Auth (must work before anything else)
+gh auth status
 
-# Merge release PR (replace N)
-gh pr merge N --merge
+# Feature PR
+gh pr create --base main --head <branch> --title "..." --body $'Summary\n\nFixes #N'
+gh pr checks <PR_NUMBER>   # wait until pass
+gh pr merge <PR_NUMBER> --merge
+
+# Find and merge Version packages PR (poll until listed)
+gh pr list --state open --search "chore: release packages" --json number,title,url
+gh pr merge <N> --merge
+
+# Optional: watch the Release workflow on main after pushing
+gh run list --workflow=release.yml --limit 1
+gh run watch <RUN_ID>
 ```
