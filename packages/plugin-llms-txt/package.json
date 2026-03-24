@@ -1,6 +1,6 @@
 {
   "name": "@barodoc/plugin-llms-txt",
-  "version": "10.0.7",
+  "version": "10.0.8",
   "description": "Generate llms.txt and llms-full.txt for AI consumption",
   "type": "module",
   "main": "./dist/index.js",
