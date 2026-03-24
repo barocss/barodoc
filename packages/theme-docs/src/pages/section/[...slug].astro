@@ -19,8 +19,44 @@ import AssetViewerJs from "../../components/asset/AssetViewerJs.astro";
 import AssetIpynb from "../../components/asset/AssetIpynb.astro";
 import AssetRst from "../../components/asset/AssetRst.astro";
 import AssetEpub from "../../components/asset/AssetEpub.astro";
+import { buildWikiGraph, type WikiGraphNode } from "../../lib/wikiGraph.js";
+
+function sortDedupeDocLinks(nodes: WikiGraphNode[]): { title: string; href: string }[] {
+  const seen = new Set<string>();
+  const out: WikiGraphNode[] = [];
+  for (const n of nodes) {
+    if (seen.has(n.id)) continue;
+    seen.add(n.id);
+    out.push(n);
+  }
+  out.sort((a, b) => a.title.localeCompare(b.title));
+  return out.map((n) => ({ title: n.title, href: n.href }));
+}
 
 export async function getStaticPaths() {
+  const projectRoot = process.env.BARODOC_PROJECT_ROOT || process.cwd();
+  const graph = buildWikiGraph(projectRoot, config);
+  const nodeById = new Map(graph.nodes.map((n) => [n.id, n]));
+  const outgoing = new Map<string, WikiGraphNode[]>();
+  const incoming = new Map<string, WikiGraphNode[]>();
+  for (const e of graph.edges) {
+    const to = nodeById.get(e.to);
+    const from = nodeById.get(e.from);
+    if (to) {
+      if (!outgoing.has(e.from)) outgoing.set(e.from, []);
+      outgoing.get(e.from)!.push(to);
+    }
+    if (from) {
+      if (!incoming.has(e.to)) incoming.set(e.to, []);
+      incoming.get(e.to)!.push(from);
+    }
+  }
+  const brokenByDoc = new Map<string, { kind: string; raw: string }[]>();
+  for (const b of graph.broken ?? []) {
+    if (!brokenByDoc.has(b.from)) brokenByDoc.set(b.from, []);
+    brokenByDoc.get(b.from)!.push({ kind: b.kind, raw: b.raw });
+  }
+
   const sections = [
     { slug: "docs", label: "Documentation", navigation: config.navigation },
     ...(config.sections ?? []).map((s: any) => ({
@@ -78,6 +114,9 @@ export async function getStaticPaths() {
           cleanSlug,
           sectionSlug: section.slug,
           sectionNav: section.navigation,
+          connectedOutgoing: sortDedupeDocLinks(outgoing.get(docId) ?? []),
+          connectedIncoming: sortDedupeDocLinks(incoming.get(docId) ?? []),
+          brokenOnPage: brokenByDoc.get(docId) ?? [],
         },
       });
     }
@@ -127,6 +166,9 @@ export async function getStaticPaths() {
           cleanSlug: innerPath,
           sectionSlug: section.slug,
           sectionNav: section.navigation,
+          connectedOutgoing: [],
+          connectedIncoming: [],
+          brokenOnPage: [],
         },
       });
     }
@@ -136,6 +178,9 @@ export async function getStaticPaths() {
 
 interface Props {
   doc: any;
+  connectedOutgoing: { title: string; href: string }[];
+  connectedIncoming: { title: string; href: string }[];
+  brokenOnPage: { kind: string; raw: string }[];
   assetEntry?: {
     slug: string;
     relPath: string;
@@ -151,7 +196,19 @@ interface Props {
   sectionNav: typeof config.navigation;
 }
 
-const { doc, assetEntry = null, rstRenderedHtml = null, rstHeader = null, locale, cleanSlug, sectionSlug, sectionNav } = Astro.props;
+const {
+  doc,
+  assetEntry = null,
+  rstRenderedHtml = null,
+  rstHeader = null,
+  locale,
+  cleanSlug,
+  sectionSlug,
+  sectionNav,
+  connectedOutgoing = [],
+  connectedIncoming = [],
+  brokenOnPage = [],
+} = Astro.props;
 const isAsset = !!assetEntry;
 
 let Content: any;
@@ -261,6 +318,9 @@ const assetUrl = isAsset
   filePath={isAsset ? undefined : `src/content/${sectionSlug}/${doc.id}`}
   sectionSlug={sectionSlug}
   fullWidth={isAsset}
+  connectedOutgoing={isAsset ? [] : connectedOutgoing}
+  connectedIncoming={isAsset ? [] : connectedIncoming}
+  brokenLinks={isAsset ? [] : brokenOnPage}
 >
   {isAsset ? (
     <div class="asset-viewer-wrapper">

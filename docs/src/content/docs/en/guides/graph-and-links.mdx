@@ -1,0 +1,86 @@
+---
+title: Graph and wiki-style links
+description: Wikilinks, internal Markdown links, the link graph page, and CI checks
+tags: [graph, wikilinks, links, navigation]
+related: [guides/content-structure, guides/i18n]
+difficulty: intermediate
+---
+
+Barodoc’s docs theme can treat your content like an Obsidian-style vault: **wiki links**, normal **Markdown links**, and **MDX `<a href>`** all participate in a **link graph**, optional **broken-link** reporting, and a **Linked pages** section on each doc.
+
+## Wikilinks `[[...]]`
+
+In `.md` / `.mdx`, use Obsidian-style syntax:
+
+```md
+See [[guides/i18n]] for locale folders.
+
+[[introduction|Getting started]]
+```
+
+- **Same section** as the source file (e.g. `docs` → other `docs` pages).
+- **Aliases:** `[[page|Label]]` sets the visible label.
+- **Headings:** `[[page#Section]]` resolves the page and adds a `#heading` fragment.
+- Unresolved wikilinks stay as `[[...]]` in the output and are listed as **broken** in `graph.json` and on the page (when internal).
+
+Resolution follows the same locale as the source file (see the implementation in `@barodoc/theme-docs` / `wikiIndex.ts`).
+
+## Markdown links `[text](url)`
+
+Internal links are included in the graph when they point at another indexed page:
+
+- **Site path:** `/docs/ko/guides/cli`
+- **Relative:** `./other-page`, `../folder/page`
+- **Absolute URL** on your own site (`site` in `barodoc.config.json`): same rules as path links
+
+External URLs (other domains) are not graph edges. Mailto / tel / `javascript:` are ignored.
+
+## MDX anchor tags
+
+`<a href="/docs/...">` (and single-quoted `href`) in MDX are scanned the same way as Markdown links for edges and broken-link detection.
+
+## Link graph page `/graph`
+
+The theme adds a **`/graph`** route (Sigma.js, client-only). It loads **`/graph.json`** and shows nodes and edges.
+
+- **`?focus=`** — pass a doc id or path fragment to highlight that page and its neighbors (e.g. `/graph?focus=ko/guides/landing`).
+
+## `graph.json`
+
+During dev, the theme writes **`public/graph.json`**. In production build, it is emitted to the site root (e.g. `dist/graph.json`).
+
+The file includes:
+
+- **`nodes`** — indexed pages with `id`, `title`, `href`, `sectionSlug`
+- **`edges`** — `from` / `to` doc ids
+- **`broken`** (optional) — internal-looking links that did not resolve (`wikilink`, `mdlink`, `anchor`)
+
+## Linked pages on each doc
+
+At the bottom of a documentation page (not asset viewers), you’ll see:
+
+- **Links to** — outgoing edges from this page
+- **Linked from** — incoming edges
+- A callout if this page has **unresolved internal links**
+
+## CI — no broken internal links
+
+The docs package includes a check that fails if any unresolved internal links exist:
+
+```bash
+pnpm --filter docs run check:graph
+```
+
+Run it locally before pushing, or rely on **CI** (see the main repo workflow). Fix or remove broken targets until the command exits `0`.
+
+## Configuration
+
+- **`site`** in `barodoc.config.json` — used to decide whether an `https://` URL is “same site” for graph edges and broken detection.
+- **`i18n`** — locale folders affect how relative paths and wikilinks resolve.
+
+### Paths and `check:graph`
+
+- **Default locale URLs** omit the locale segment: English pages live under `src/content/docs/en/…` but their public path is `/docs/guides/…`, not `/docs/en/guides/…`.
+- **`/ko/docs/…` vs `/docs/ko/…`** — both are resolved to the same doc id for the graph (use `/docs/ko/…` in new links).
+- **Non-doc routes** (e.g. `/yaml-landing-demo`, `/pricing`) are not treated as broken when they do not match indexed content — only paths under your content sections (`docs`, `help`, …) are checked.
+- **Inline code** (backticks) is ignored when scanning for wikilinks and links, so examples like `` `[[page|Label]]` `` do not pollute the graph.

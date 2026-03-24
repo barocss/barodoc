@@ -1,0 +1,44 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Header from "../../components/Header.astro";
+import Banner from "../../components/Banner.astro";
+import { WikiGraphView } from "../../components/graph/WikiGraphView.tsx";
+import {
+  defaultLocale,
+  locales,
+  uiStrings,
+} from "virtual:barodoc/i18n";
+import { getLocaleFromPath } from "@barodoc/core";
+
+const currentPath = Astro.url.pathname;
+const currentLocale = getLocaleFromPath(currentPath, {
+  defaultLocale,
+  locales,
+});
+const t = uiStrings[currentLocale] ?? uiStrings[defaultLocale] ?? {};
+const focus = Astro.url.searchParams.get("focus") ?? undefined;
+---
+
+<BaseLayout
+  title="Graph"
+  description="Wiki links between documentation pages"
+  lang={currentLocale}
+  uiStrings={t}
+>
+  <Banner />
+  <Header currentLocale={currentLocale} currentPath={currentPath} />
+  <div class="w-full max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <header class="mb-6">
+      <h1 class="text-2xl sm:text-3xl font-bold text-[var(--bd-text-heading)]">
+        Graph
+      </h1>
+      <p class="mt-2 text-sm text-[var(--bd-text-secondary)] max-w-2xl">
+        Pages and <code class="text-xs">[[wikilink]]</code> connections. Use
+        <code class="text-xs">?focus=</code> with a doc id (e.g.
+        <code class="text-xs">ko/guides/landing</code>) or path to highlight a
+        page and its neighbors.
+      </p>
+    </header>
+    <WikiGraphView client:only="react" focus={focus} />
+  </div>
+</BaseLayout>
