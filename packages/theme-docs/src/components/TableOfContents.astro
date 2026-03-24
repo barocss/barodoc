@@ -12,8 +12,7 @@ interface Props {
 
 const { headings, onThisPageLabel = "On this page" } = Astro.props;
 
-// Filter to only show h2 and h3
-const filteredHeadings = headings.filter(h => h.depth >= 2 && h.depth <= 3);
+const filteredHeadings = headings.filter((h) => h.depth >= 2 && h.depth <= 4);
 ---
 
 {filteredHeadings.length > 0 && (
@@ -21,7 +20,7 @@ const filteredHeadings = headings.filter(h => h.depth >= 2 && h.depth <= 3);
     <h4 class="text-[11px] font-semibold uppercase tracking-widest text-[var(--bd-text-muted)] mb-3">
       {onThisPageLabel}
     </h4>
-    <nav class="relative">
+    <nav class="relative" aria-label={onThisPageLabel}>
       <div class="absolute left-0 top-0 bottom-0 w-px bg-[var(--bd-border)]"></div>
       <ul class="space-y-0.5">
         {filteredHeadings.map((heading) => (
@@ -30,7 +29,7 @@ const filteredHeadings = headings.filter(h => h.depth >= 2 && h.depth <= 3);
               href={`#${heading.slug}`}
               class:list={[
                 "toc-link block text-[var(--bd-text-muted)] hover:text-[var(--bd-text)] transition-all duration-150",
-                heading.depth === 2 ? "py-1 pl-3.5 text-[13px]" : "py-0.5 pl-6 text-xs"
+                heading.depth === 2 ? "py-1 pl-3.5 text-[13px]" : heading.depth === 3 ? "py-0.5 pl-6 text-xs" : "py-0.5 pl-8 text-[11px]",
               ]}
               data-heading={heading.slug}
             >
@@ -48,9 +47,9 @@ const filteredHeadings = headings.filter(h => h.depth >= 2 && h.depth <= 3);
     color: var(--color-primary-600);
     font-weight: 500;
   }
-  
+
   .toc-link.active::before {
-    content: '';
+    content: "";
     position: absolute;
     left: 0;
     top: 50%;
@@ -60,40 +59,62 @@ const filteredHeadings = headings.filter(h => h.depth >= 2 && h.depth <= 3);
     background: var(--color-primary-500);
     border-radius: 1px;
   }
-  
+
   :global(.dark) .toc-link.active {
     color: var(--color-primary-400);
   }
 </style>
 
-<script>
-  function initTOCHighlight() {
-    const headings = document.querySelectorAll('article h2, article h3');
-    const tocLinks = document.querySelectorAll('.toc-link');
-    
-    if (headings.length === 0 || tocLinks.length === 0) return;
+<script is:inline>
+  (function () {
+    let tocAbort = null;
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            const id = entry.target.id;
-            tocLinks.forEach((link) => {
-              const isActive = link.getAttribute('data-heading') === id;
-              link.classList.toggle('active', isActive);
-            });
-          }
+    function getHeadingElements() {
+      return Array.prototype.slice.call(
+        document.querySelectorAll("article h2[id], article h3[id], article h4[id]"),
+      );
+    }
+
+    function initTOCHighlight() {
+      if (tocAbort) tocAbort.abort();
+      tocAbort = new AbortController();
+      const signal = tocAbort.signal;
+
+      const headings = getHeadingElements();
+      const tocLinks = document.querySelectorAll(".toc-link");
+      if (headings.length === 0 || tocLinks.length === 0) return;
+
+      const offset = 96;
+      let raf = 0;
+
+      function updateActive() {
+        let activeId = headings[0].id;
+        for (let i = 0; i < headings.length; i++) {
+          const h = headings[i];
+          const top = h.getBoundingClientRect().top;
+          if (top <= offset) activeId = h.id;
+          else break;
+        }
+
+        tocLinks.forEach(function (link) {
+          link.classList.toggle("active", link.getAttribute("data-heading") === activeId);
         });
-      },
-      {
-        rootMargin: '-80px 0px -80% 0px',
-        threshold: 0
       }
-    );
 
-    headings.forEach((heading) => observer.observe(heading));
-  }
+      function onScrollOrResize() {
+        if (raf) cancelAnimationFrame(raf);
+        raf = requestAnimationFrame(function () {
+          updateActive();
+          raf = 0;
+        });
+      }
 
-  initTOCHighlight();
-  document.addEventListener('astro:page-load', initTOCHighlight);
+      updateActive();
+      window.addEventListener("scroll", onScrollOrResize, { passive: true, signal: signal });
+      window.addEventListener("resize", onScrollOrResize, { passive: true, signal: signal });
+    }
+
+    initTOCHighlight();
+    document.addEventListener("astro:page-load", initTOCHighlight);
+  })();
 </script>

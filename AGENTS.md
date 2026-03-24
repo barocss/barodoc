@@ -97,6 +97,16 @@ interface BarodocConfig {
   plugins?: Array<string | [string, object]>;
   
   topbar?: { github?: string };
+
+  /** Doc footer link to changelog (path or URL). */
+  changelogUrl?: string;
+
+  feedback?: {
+    enabled: boolean;
+    endpoint?: string;
+    /** "Report an issue" (e.g. GitHub issues/new); page title sent as query when possible. */
+    issueUrl?: string;
+  };
 }
 ```
 
@@ -128,6 +138,13 @@ description: This becomes the description.
 ### Wikilinks (Obsidian-style)
 
 In `@barodoc/theme-docs`, `[[...]]` in `.md`/`.mdx` is resolved at **MDX compile time** (remark), so **dev and production** use the same rules. Targets are resolved within the same content section (`docs`, `help`, etc.); see `packages/theme-docs/src/lib/wikiIndex.ts` for resolution order and tests.
+
+### Reader-oriented frontmatter (optional)
+
+- **`since`** — text badge (e.g. product version).
+- **`deprecated`** — `true` or a short string (shown next to the badge).
+- **`experimental`** — boolean badge.
+- **`changelogUrl`** — overrides site `changelogUrl` for the doc footer link.
 
 ### Link graph
 

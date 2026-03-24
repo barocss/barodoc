@@ -79,6 +79,7 @@ export const announcementSchema = z.object({
 export const feedbackSchema = z.object({
   enabled: z.boolean(),
   endpoint: z.string().optional(),
+  issueUrl: z.string().optional(),
 }).optional();
 
 /** Frontmatter schema for MDX/MD content files. Reusable across custom and quick mode. */
@@ -91,6 +92,14 @@ export const docsFrontmatterSchema = z.object({
   api_reference: z.boolean().optional(),
   difficulty: z.enum(["beginner", "intermediate", "advanced"]).optional(),
   lastUpdated: z.date().optional(),
+  /** Shown as a "Since …" badge (e.g. product or doc version). */
+  since: z.string().optional(),
+  /** Mark page as deprecated; use `true` or a short reason string. */
+  deprecated: z.union([z.boolean(), z.string()]).optional(),
+  /** Experimental / preview badge. */
+  experimental: z.boolean().optional(),
+  /** Override site `changelogUrl` for this page only. */
+  changelogUrl: z.string().optional(),
 });
 
 export type DocsFrontmatter = z.infer<typeof docsFrontmatterSchema>;
@@ -138,6 +147,7 @@ export const barodocConfigSchema = z.object({
   lineNumbers: lineNumbersSchema,
   editLink: editLinkSchema,
   lastUpdated: z.boolean().optional(),
+  changelogUrl: z.string().optional(),
   announcement: announcementSchema,
   feedback: feedbackSchema,
   blog: blogConfigSchema,

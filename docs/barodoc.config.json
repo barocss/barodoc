@@ -1,6 +1,7 @@
 {
   "name": "Barodoc",
   "site": "https://barodoc.dev",
+  "changelogUrl": "/changelog",
   "logo": "/logo.svg",
   "favicon": "/favicon.ico",
   "theme": {

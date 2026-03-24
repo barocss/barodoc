@@ -264,6 +264,10 @@ const contentSchema = `z.object({
     api_reference: z.boolean().optional(),
     difficulty: z.enum(["beginner", "intermediate", "advanced"]).optional(),
     lastUpdated: z.date().optional(),
+    since: z.string().optional(),
+    deprecated: z.union([z.boolean(), z.string()]).optional(),
+    experimental: z.boolean().optional(),
+    changelogUrl: z.string().optional(),
   })`;
 
 function generateContentConfig(config: BarodocConfig): string {

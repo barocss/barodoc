@@ -96,6 +96,9 @@ export interface BarodocConfig {
   /** When true, shows git-based last updated timestamp on each page. */
   lastUpdated?: boolean;
 
+  /** Site-wide link to changelog (shown on doc pages when set). Path or absolute URL. */
+  changelogUrl?: string;
+
   /** Top-of-page announcement banner. */
   announcement?: {
     text: string;
@@ -107,6 +110,8 @@ export interface BarodocConfig {
   feedback?: {
     enabled: boolean;
     endpoint?: string;
+    /** Base URL for "Report an issue" (e.g. GitHub issues/new). Page path is appended as title query param when possible. */
+    issueUrl?: string;
   };
   
   blog?: {

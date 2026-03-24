@@ -11,6 +11,10 @@ const docsCollection = defineCollection({
     api_reference: z.boolean().optional(),
     difficulty: z.enum(["beginner", "intermediate", "advanced"]).optional(),
     lastUpdated: z.date().optional(),
+    since: z.string().optional(),
+    deprecated: z.union([z.boolean(), z.string()]).optional(),
+    experimental: z.boolean().optional(),
+    changelogUrl: z.string().optional(),
   }),
 });
 
@@ -47,6 +51,10 @@ const helpCollection = defineCollection({
     tags: z.array(z.string()).optional(),
     related: z.array(z.string()).optional(),
     difficulty: z.enum(["beginner", "intermediate", "advanced"]).optional(),
+    since: z.string().optional(),
+    deprecated: z.union([z.boolean(), z.string()]).optional(),
+    experimental: z.boolean().optional(),
+    changelogUrl: z.string().optional(),
   }),
 });
 

@@ -34,6 +34,14 @@ export const DEFAULT_UI_STRINGS: Record<string, string> = {
   linksOut: "Links to",
   linksIn: "Linked from",
   brokenLinks: "Unresolved internal links",
+  skipToContent: "Skip to main content",
+  sinceVersion: "Since",
+  deprecated: "Deprecated",
+  experimental: "Experimental",
+  viewChangelog: "Changelog",
+  copySectionLink: "Copy link to section",
+  feedbackThanks: "Thanks for your feedback!",
+  reportIssue: "Report an issue",
 };
 
 /** Optional default strings for other locales (partial overrides). */
@@ -70,6 +78,14 @@ export const DEFAULT_UI_STRINGS_KO: Record<string, string> = {
   linksOut: "이 문서에서 링크",
   linksIn: "이 문서를 가리키는 페이지",
   brokenLinks: "풀리지 않은 내부 링크",
+  skipToContent: "본문으로 건너뛰기",
+  sinceVersion: "도입",
+  deprecated: "사용 중단",
+  experimental: "실험적",
+  viewChangelog: "변경 사항",
+  copySectionLink: "섹션 링크 복사",
+  feedbackThanks: "피드백 감사합니다!",
+  reportIssue: "이슈 등록",
 };
 
 export function getDefaultUIStringsForLocale(locale: string): Record<string, string> {

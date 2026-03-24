@@ -25,6 +25,7 @@ const ogImageUrl = ogImage
   : undefined;
 
 const themeCSS = config.theme?.colors ? generateThemeCSS(config.theme.colors) : "";
+const skipLabel = uiStrings?.skipToContent ?? "Skip to main content";
 ---
 
 <!doctype html>
@@ -58,6 +59,12 @@ const themeCSS = config.theme?.colors ? generateThemeCSS(config.theme.colors) : 
     {themeCSS && <style set:html={themeCSS} />}
   </head>
   <body class="min-h-screen bg-[var(--bd-bg)] text-[var(--bd-text)] antialiased">
+    <a
+      href="#main-content"
+      class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[200] focus:rounded-md focus:bg-primary-600 focus:px-4 focus:py-2 focus:text-sm focus:font-medium focus:text-white focus:outline-none focus:ring-2 focus:ring-primary-400 focus:ring-offset-2 dark:focus:ring-offset-[var(--bd-bg)]"
+    >
+      {skipLabel}
+    </a>
     <slot />
     <SearchDialog client:load searchPlaceholder={uiStrings?.searchPlaceholder} noResults={uiStrings?.noResults} searchIndexNotAvailable={uiStrings?.searchIndexNotAvailable} />
   </body>

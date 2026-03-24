@@ -291,6 +291,37 @@ breadcrumbs.push({ label: pageTitle });
 const assetUrl = isAsset
   ? `/_content/${sectionSlug}/${assetEntry!.relPath}`
   : "";
+
+function resolveChangelogHref(
+  pageOverride: string | undefined,
+  siteChangelog: string | undefined,
+  site: string | undefined,
+): string | null {
+  const raw = pageOverride ?? siteChangelog;
+  if (!raw) return null;
+  if (/^https?:\/\//i.test(raw)) return raw;
+  if (site) {
+    const base = site.replace(/\/$/, "");
+    return `${base}${raw.startsWith("/") ? raw : `/${raw}`}`;
+  }
+  return raw.startsWith("/") ? raw : `/${raw}`;
+}
+
+const fm = !isAsset ? (doc.data as Record<string, unknown>) : null;
+const docMeta = fm
+  ? {
+      since: fm.since as string | undefined,
+      deprecated: fm.deprecated as boolean | string | undefined,
+      experimental: fm.experimental as boolean | undefined,
+    }
+  : undefined;
+const changelogHref = fm
+  ? resolveChangelogHref(
+      fm.changelogUrl as string | undefined,
+      config.changelogUrl,
+      config.site,
+    )
+  : null;
 ---
 
 <DocsLayout
@@ -305,10 +336,11 @@ const assetUrl = isAsset
   readingTime={readTime.text || undefined}
   filePath={isAsset ? undefined : `src/content/${sectionSlug}/${doc.id}`}
   sectionSlug={sectionSlug}
-  fullWidth={isAsset}
   connectedOutgoing={isAsset ? [] : connectedOutgoing}
   connectedIncoming={isAsset ? [] : connectedIncoming}
   brokenLinks={isAsset ? [] : brokenOnPage}
+  docMeta={docMeta}
+  changelogHref={changelogHref}
 >
   {isAsset ? (
     <div class="asset-viewer-wrapper">

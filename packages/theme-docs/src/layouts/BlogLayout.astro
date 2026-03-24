@@ -28,7 +28,11 @@ const t = uiStrings?.[currentLocale] ?? uiStrings?.[defaultLocale] ?? {};
   <Banner />
   <Header currentLocale={currentLocale} currentPath={currentPath} uiStrings={t} />
   
-  <div class="w-full min-w-0 min-h-[calc(100vh-3.5rem)] flex justify-center">
+  <div
+    id="main-content"
+    tabindex="-1"
+    class="w-full min-w-0 min-h-[calc(100vh-3.5rem)] flex justify-center outline-none"
+  >
     <article class="w-full max-w-[720px] px-4 py-10 sm:px-6 lg:px-8">
       <!-- Blog post header -->
       <header class="mb-10">
