@@ -1,5 +1,12 @@
 # @barodoc/plugin-openapi
 
+## 10.0.2
+
+### Patch Changes
+
+- Updated dependencies [d8c580d]
+  - @barodoc/core@10.0.7
+
 ## 10.0.1
 
 ### Patch Changes

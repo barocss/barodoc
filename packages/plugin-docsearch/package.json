@@ -1,6 +1,6 @@
 {
   "name": "@barodoc/plugin-docsearch",
-  "version": "10.0.0",
+  "version": "10.0.1",
   "description": "Algolia DocSearch plugin for Barodoc",
   "type": "module",
   "main": "./dist/index.js",
