@@ -1,6 +1,6 @@
 {
   "name": "@barodoc/plugin-sitemap",
-  "version": "10.0.7",
+  "version": "10.0.8",
   "description": "Sitemap plugin for Barodoc",
   "type": "module",
   "main": "./dist/index.js",
