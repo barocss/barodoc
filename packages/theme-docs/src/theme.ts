@@ -11,6 +11,8 @@ import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
 import { ASSET_EXTENSIONS } from "./lib/assetExtensions.js";
 import { scanSectionAssets } from "./lib/scanAssets.js";
+import { remarkWikiLink, createWikiIndexCache } from "./lib/remarkWikiLink.js";
+import { writeWikiGraphJson } from "./lib/wikiGraph.js";
 
 export interface DocsThemeOptions {
   customCss?: string[];
@@ -176,11 +178,108 @@ function createAssetContentDevPlugin(contentDir: string) {
   };
 }
 
+/**
+ * True when `file` is under `src/content`. Used so writes to `public/graph.json`
+ * do not retrigger wiki/graph watchers (would loop: write → watch → regen → write…).
+ */
+function isContentTreeFile(projectRoot: string, file: string): boolean {
+  const contentRoot = path.resolve(projectRoot, "src", "content");
+  try {
+    const resolved = path.resolve(file);
+    return (
+      resolved === contentRoot || resolved.startsWith(contentRoot + path.sep)
+    );
+  } catch {
+    return false;
+  }
+}
+
+function createWikiIndexRefreshPlugin(
+  projectRoot: string,
+  barodocConfig: ResolvedBarodocConfig,
+  cache: ReturnType<typeof createWikiIndexCache>,
+) {
+  return {
+    name: "barodoc-wiki-index-refresh",
+    buildStart() {
+      cache.invalidate();
+    },
+    configureServer(server: ViteDevServer) {
+      const contentRoot = path.join(projectRoot, "src", "content");
+      if (fs.existsSync(contentRoot)) {
+        server.watcher.add(contentRoot);
+      }
+      const invalidate = (file: string) => {
+        if (!isContentTreeFile(projectRoot, file)) return;
+        cache.invalidate();
+      };
+      server.watcher.on("change", invalidate);
+      server.watcher.on("add", invalidate);
+      server.watcher.on("unlink", invalidate);
+    },
+  };
+}
+
+function createWikiGraphPlugin(
+  projectRoot: string,
+  barodocConfig: ResolvedBarodocConfig,
+  buildOutDir: string,
+) {
+  let debounce: ReturnType<typeof setTimeout> | null = null;
+  const publicGraph = path.join(projectRoot, "public", "graph.json");
+
+  const writePublic = () => {
+    try {
+      writeWikiGraphJson(projectRoot, barodocConfig, publicGraph);
+    } catch (e) {
+      console.warn("[@barodoc/theme-docs] wiki graph:", e);
+    }
+  };
+
+  const schedulePublic = () => {
+    if (debounce) clearTimeout(debounce);
+    debounce = setTimeout(writePublic, 350);
+  };
+
+  return {
+    name: "barodoc-wiki-graph",
+    buildStart() {
+      writePublic();
+    },
+    configureServer(server: ViteDevServer) {
+      writePublic();
+      const contentRoot = path.join(projectRoot, "src", "content");
+      if (fs.existsSync(contentRoot)) {
+        server.watcher.add(contentRoot);
+      }
+      const onContentChange = (file: string) => {
+        if (!isContentTreeFile(projectRoot, file)) return;
+        schedulePublic();
+      };
+      server.watcher.on("change", onContentChange);
+      server.watcher.on("add", onContentChange);
+      server.watcher.on("unlink", onContentChange);
+    },
+    closeBundle() {
+      try {
+        writeWikiGraphJson(
+          projectRoot,
+          barodocConfig,
+          path.join(buildOutDir, "graph.json"),
+        );
+      } catch (e) {
+        console.warn("[@barodoc/theme-docs] wiki graph (build):", e);
+      }
+    },
+  };
+}
+
 function createThemeIntegration(
   config: ResolvedBarodocConfig,
   options?: DocsThemeOptions
 ): AstroIntegration {
   const lineNumbers = config?.lineNumbers === true;
+  const wikiIndexCache = createWikiIndexCache();
   return {
     name: "@barodoc/theme-docs",
     hooks: {
@@ -222,6 +321,11 @@ function createThemeIntegration(
         });
 
         injectRoute({
+          pattern: "/graph",
+          entrypoint: "@barodoc/theme-docs/pages/graph/index.astro",
+        });
+
+        injectRoute({
           pattern: "/[...page]",
           entrypoint: "@barodoc/theme-docs/pages/[...page].astro",
         });
@@ -237,7 +341,14 @@ function createThemeIntegration(
         updateConfig({
           integrations: [
             mdx({
-              remarkPlugins: [remarkMath],
+              remarkPlugins: [
+                remarkWikiLink({
+                  projectRoot,
+                  config,
+                  getWikiIndex: () => wikiIndexCache.get(projectRoot, config),
+                }),
+                remarkMath,
+              ],
               rehypePlugins: [rehypeKatex],
             }),
             react(),
@@ -247,6 +358,8 @@ function createThemeIntegration(
               tailwindcss(),
               createAssetContentPlugin(outDir),
               createAssetContentDevPlugin(contentDirForPlugins),
+              createWikiIndexRefreshPlugin(projectRoot, config, wikiIndexCache),
+              createWikiGraphPlugin(projectRoot, config, outDir),
             ],
             optimizeDeps: {
               include: ["mermaid"],

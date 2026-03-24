@@ -30,6 +30,10 @@ export const DEFAULT_UI_STRINGS: Record<string, string> = {
   getStarted: "Get Started",
   documentation: "Documentation",
   showShortcuts: "Show shortcuts",
+  connectedDocs: "Linked pages",
+  linksOut: "Links to",
+  linksIn: "Linked from",
+  brokenLinks: "Unresolved internal links",
 };
 
 /** Optional default strings for other locales (partial overrides). */
@@ -62,6 +66,10 @@ export const DEFAULT_UI_STRINGS_KO: Record<string, string> = {
   getStarted: "시작하기",
   documentation: "문서",
   showShortcuts: "단축키 보기",
+  connectedDocs: "연결된 문서",
+  linksOut: "이 문서에서 링크",
+  linksIn: "이 문서를 가리키는 페이지",
+  brokenLinks: "풀리지 않은 내부 링크",
 };
 
 export function getDefaultUIStringsForLocale(locale: string): Record<string, string> {

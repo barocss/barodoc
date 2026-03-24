@@ -1,0 +1,22 @@
+---
+version: "10.0.7"
+date: 2026-03-24
+title: "Wiki-style links, link graph, and broken-link checks"
+---
+
+### Core (@barodoc/core)
+
+- **i18n** — Strings for doc link graph UI: connected pages, links in/out, broken links.
+
+### Theme (@barodoc/theme-docs)
+
+- **Wikilinks** — Obsidian-style `[[...]]` resolved at MDX compile time (remark); same behavior in dev and production.
+- **Link graph** — `buildWikiGraph` indexes wikilinks, internal Markdown links, and MDX anchor `href`s; writes `graph.json` (nodes, edges, optional `broken`).
+- **`/graph`** — Visualization page (Sigma.js, client-only) with optional `?focus=` query.
+- **Doc layout** — **Linked pages** (outgoing / incoming) and a hint when the page has unresolved internal links.
+- **Path resolution** — Default-locale URLs without `/en/`, legacy `/ko/docs/...` normalization, inline backticks excluded from scans; app routes outside content sections are not reported as broken.
+
+### Docs site
+
+- **CI** — `pnpm --filter docs run check:graph` fails on unresolved internal links.
+- **Guides** — [Graph and wiki-style links](/docs/guides/graph-and-links) (EN), [KO](/docs/ko/guides/graph-and-links).

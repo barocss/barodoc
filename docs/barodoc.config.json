@@ -1,5 +1,6 @@
 {
   "name": "Barodoc",
+  "site": "https://barodoc.dev",
   "logo": "/logo.svg",
   "favicon": "/favicon.ico",
   "theme": {
@@ -22,6 +23,7 @@
     { "label": "Blog", "href": "/blog" },
     { "label": "API Reference", "href": "/docs/api/pet" },
     { "label": "Changelog", "href": "/changelog" },
+    { "label": "Graph", "label:ko": "그래프", "href": "/graph" },
     { "label": "About", "href": "/about" }
   ],
   "sections": [
@@ -57,7 +59,8 @@
         "guides/i18n",
         "guides/migration",
         "guides/troubleshooting",
-        "guides/ai-and-agents"
+        "guides/ai-and-agents",
+        "guides/graph-and-links"
       ]
     },
     {

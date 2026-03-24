@@ -125,6 +125,15 @@ description: This becomes the description.
 ## Content starts here
 ```
 
+### Wikilinks (Obsidian-style)
+
+In `@barodoc/theme-docs`, `[[...]]` in `.md`/`.mdx` is resolved at **MDX compile time** (remark), so **dev and production** use the same rules. Targets are resolved within the same content section (`docs`, `help`, etc.); see `packages/theme-docs/src/lib/wikiIndex.ts` for resolution order and tests.
+
+### Link graph
+
+- **`/graph`** — interactive view of **[[wikilinks]]**, **Markdown** `[text](href)`, and **MDX `<a href>`** (Sigma.js). Optional query **`?focus=`** (doc id or path) highlights that page and its neighbors.
+- **`graph.json`** — includes `edges` and optional **`broken`** (internal-looking links that did not resolve). Written to **`public/graph.json`** during dev (site root in production); regenerated when `src/content` changes. Doc pages list **연결된 문서** (out/in) and show unresolved hints when needed.
+
 ## Plugin System
 
 ```typescript

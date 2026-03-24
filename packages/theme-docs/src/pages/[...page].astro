@@ -7,7 +7,7 @@ import config from "virtual:barodoc/config";
 import type { LandingFrontmatter } from "../landing/types.ts";
 
 export async function getStaticPaths() {
-  const reserved = new Set(["blog", "changelog", "docs", "rss.xml"]);
+  const reserved = new Set(["blog", "changelog", "docs", "graph", "rss.xml"]);
   if (config.sections) {
     for (const s of config.sections as any[]) {
       reserved.add(s.slug);

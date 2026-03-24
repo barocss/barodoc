@@ -34,9 +34,15 @@ interface Props {
   readingTime?: string;
   filePath?: string;
   sectionSlug?: string;
+  /** Outgoing links (from graph) — wiki + markdown + MDX <a> */
+  connectedOutgoing?: PageLink[];
+  /** Pages linking here */
+  connectedIncoming?: PageLink[];
+  /** Internal links that did not resolve (see graph.json) */
+  brokenLinks?: { kind: string; raw: string }[];
 }
 
-const { title, description, headings = [], prevPage, nextPage, editUrl, lastUpdated, breadcrumbs = [], readingTime, filePath, sectionSlug } = Astro.props;
+const { title, description, headings = [], prevPage, nextPage, editUrl, lastUpdated, breadcrumbs = [], readingTime, filePath, sectionSlug, connectedOutgoing = [], connectedIncoming = [], brokenLinks = [] } = Astro.props;
 const currentPath = Astro.url.pathname;
 
 const i18nConfig = { defaultLocale, locales };
@@ -77,6 +83,52 @@ const feedbackEndpoint = config.feedback?.endpoint;
           <article class="prose prose-gray dark:prose-invert max-w-none min-w-0 overflow-x-auto">
             <slot />
           </article>
+
+          {(connectedOutgoing.length > 0 || connectedIncoming.length > 0 || brokenLinks.length > 0) && (
+            <section class="mt-10 pt-6 border-t border-[var(--bd-border)] space-y-6 not-prose" aria-labelledby="doc-links-heading">
+              <h2 id="doc-links-heading" class="text-sm font-semibold uppercase tracking-wide text-[var(--bd-text-muted)]">
+                {t.connectedDocs ?? "Linked pages"}
+              </h2>
+              {connectedOutgoing.length > 0 && (
+                <div>
+                  <h3 class="text-xs font-medium text-[var(--bd-text-secondary)] mb-2">{t.linksOut ?? "Links to"}</h3>
+                  <ul class="flex flex-wrap gap-2">
+                    {connectedOutgoing.map((l) => (
+                      <li>
+                        <a href={l.href} class="inline-flex items-center rounded-md border border-[var(--bd-border)] px-2.5 py-1 text-sm text-[var(--bd-text)] hover:border-primary-400/50 dark:hover:border-primary-500/40 hover:bg-[var(--bd-bg-subtle)] transition-colors">
+                          {l.title}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+              {connectedIncoming.length > 0 && (
+                <div>
+                  <h3 class="text-xs font-medium text-[var(--bd-text-secondary)] mb-2">{t.linksIn ?? "Linked from"}</h3>
+                  <ul class="flex flex-wrap gap-2">
+                    {connectedIncoming.map((l) => (
+                      <li>
+                        <a href={l.href} class="inline-flex items-center rounded-md border border-[var(--bd-border)] px-2.5 py-1 text-sm text-[var(--bd-text)] hover:border-primary-400/50 dark:hover:border-primary-500/40 hover:bg-[var(--bd-bg-subtle)] transition-colors">
+                          {l.title}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+              {brokenLinks.length > 0 && (
+                <div class="rounded-lg border border-amber-200/80 dark:border-amber-900/50 bg-amber-50/80 dark:bg-amber-950/30 px-3 py-2">
+                  <p class="text-xs font-medium text-amber-900 dark:text-amber-200 mb-1.5">{t.brokenLinks ?? "Unresolved internal links"}</p>
+                  <ul class="text-xs font-mono text-amber-950/90 dark:text-amber-100/90 space-y-0.5">
+                    {brokenLinks.map((b) => (
+                      <li><span class="text-[var(--bd-text-muted)]">{b.kind}:</span> {b.raw}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </section>
+          )}
           
           <!-- Page Navigation -->
           {(prevPage || nextPage) && (

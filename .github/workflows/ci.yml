@@ -43,3 +43,6 @@ jobs:
 
       - name: Run tests
         run: pnpm test
+
+      - name: Check documentation graph (no broken internal links)
+        run: pnpm --filter docs run check:graph

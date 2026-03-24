@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build && pagefind --site dist",
-    "preview": "astro preview"
+    "preview": "astro preview",
+    "check:graph": "tsx scripts/check-graph-broken.ts"
   },
   "dependencies": {
     "@astrojs/mdx": "^4.3.13",
@@ -22,6 +23,7 @@
   "devDependencies": {
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
-    "pagefind": "^1.2.0"
+    "pagefind": "^1.2.0",
+    "tsx": "^4.19.0"
   }
 }

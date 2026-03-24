@@ -14,5 +14,6 @@ export default defineConfig({
     "@tailwindcss/vite",
     "remark-math",
     "rehype-katex",
+    "mdast-util-find-and-replace",
   ],
 });
