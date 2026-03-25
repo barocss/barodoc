@@ -1,5 +1,30 @@
 # barodoc
 
+## 10.0.9
+
+### Patch Changes
+
+- 9d46ac2: feat: reading mode, slide mode, and smoother in-doc navigation
+
+  - **Reading mode** — Toggle beside the article hides chrome (sidebar, TOC, pre/post article); comfortable fluid width; prev/next as side chevrons; `localStorage` + `?read=1`.
+  - **Slide mode** — Optional `slides: true` frontmatter; full-screen deck split by `---`; hover/focus chrome; prev/next motion; `?slide=` URL sync; hide nav category label inside slides.
+  - **View transitions** — `ClientRouter` in the docs shell; `ThemeScript` reapplies theme and reading mode on `astro:after-swap` to avoid flash between pages.
+  - **CLI** — `barodoc create` adds `docs/en/example-slides.md` and nav entry; agent rules example updated.
+  - **Core** — Content schema `slides`; i18n strings for slide UI and view toolbar.
+
+- Updated dependencies [9d46ac2]
+  - @barodoc/core@10.0.9
+  - @barodoc/theme-docs@10.0.9
+  - @barodoc/plugin-analytics@10.0.9
+  - @barodoc/plugin-docsearch@10.0.3
+  - @barodoc/plugin-llms-txt@10.0.9
+  - @barodoc/plugin-og-image@9.0.3
+  - @barodoc/plugin-openapi@10.0.4
+  - @barodoc/plugin-pwa@10.0.3
+  - @barodoc/plugin-rss@10.0.3
+  - @barodoc/plugin-search@10.0.9
+  - @barodoc/plugin-sitemap@10.0.9
+
 ## 10.0.8
 
 ### Patch Changes

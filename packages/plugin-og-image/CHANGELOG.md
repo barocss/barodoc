@@ -1,5 +1,12 @@
 # @barodoc/plugin-og-image
 
+## 9.0.3
+
+### Patch Changes
+
+- Updated dependencies [9d46ac2]
+  - @barodoc/core@10.0.9
+
 ## 9.0.2
 
 ### Patch Changes

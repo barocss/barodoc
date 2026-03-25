@@ -1,5 +1,12 @@
 # @barodoc/plugin-docsearch
 
+## 10.0.3
+
+### Patch Changes
+
+- Updated dependencies [9d46ac2]
+  - @barodoc/core@10.0.9
+
 ## 10.0.2
 
 ### Patch Changes

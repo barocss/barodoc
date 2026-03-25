@@ -1,6 +1,6 @@
 {
   "name": "@barodoc/plugin-rss",
-  "version": "10.0.2",
+  "version": "10.0.3",
   "description": "RSS feed plugin for Barodoc",
   "type": "module",
   "main": "./dist/index.js",
