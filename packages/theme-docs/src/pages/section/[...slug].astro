@@ -322,6 +322,8 @@ const changelogHref = fm
       config.site,
     )
   : null;
+
+const slidesEnabled = !isAsset && (fm?.slides === true);
 ---
 
 <DocsLayout
@@ -341,6 +343,7 @@ const changelogHref = fm
   brokenLinks={isAsset ? [] : brokenOnPage}
   docMeta={docMeta}
   changelogHref={changelogHref}
+  slidesEnabled={slidesEnabled}
 >
   {isAsset ? (
     <div class="asset-viewer-wrapper">
@@ -372,7 +375,7 @@ const changelogHref = fm
   ) : (
     <>
       {category && (
-        <p class="text-xs font-semibold uppercase tracking-widest text-primary-600 dark:text-primary-400 mb-3">
+        <p class="bd-doc-category text-xs font-semibold uppercase tracking-widest text-primary-600 dark:text-primary-400 mb-3">
           {category}
         </p>
       )}

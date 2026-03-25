@@ -80,6 +80,9 @@ const {
 
       if (isInputFocused()) return;
 
+      // Slide mode uses ←/→ for slides; don't trigger doc prev/next
+      if (document.querySelector('.bd-slide-overlay')) return;
+
       // ? → show shortcuts
       if (e.key === '?' || (e.shiftKey && e.key === '/')) {
         e.preventDefault();
@@ -87,20 +90,27 @@ const {
         return;
       }
 
-      // ← → prev page
+      // ← → prev/next (reading mode: `.bd-reading-nav` side arrows; else footer nav)
       if (e.key === 'ArrowLeft' && !e.metaKey && !e.ctrlKey && !e.altKey) {
+        if (document.documentElement.classList.contains('bd-reading-mode')) {
+          const prev = document.querySelector('.bd-reading-nav > div:first-child a') as HTMLAnchorElement;
+          if (prev) { prev.click(); return; }
+        }
         const prev = document.querySelector('nav[aria-label="Page navigation"] a:first-of-type') as HTMLAnchorElement;
         if (prev) { prev.click(); return; }
       }
 
-      // → → next page
       if (e.key === 'ArrowRight' && !e.metaKey && !e.ctrlKey && !e.altKey) {
+        if (document.documentElement.classList.contains('bd-reading-mode')) {
+          const next = document.querySelector('.bd-reading-nav > div:last-child a') as HTMLAnchorElement;
+          if (next) { next.click(); return; }
+        }
         const links = document.querySelectorAll('nav[aria-label="Page navigation"] a');
         const next = links[links.length - 1] as HTMLAnchorElement;
         if (next && links.length > 1) { next.click(); return; }
         if (next && links.length === 1) {
           const parent = next.closest('.col-span-1');
-          if (parent && parent === parent.parentElement?.lastElementChild) { next.click(); }
+          if (parent && parent === parent.parentElement?.lastElementChild) { next.click(); return; }
         }
       }
     });

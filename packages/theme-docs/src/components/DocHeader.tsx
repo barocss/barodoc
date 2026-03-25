@@ -101,7 +101,7 @@ export function DocHeader({
 
   return (
     <TooltipProvider>
-      <header className="sticky top-0 z-50 w-full min-w-0 border-b border-[var(--bd-border)] bg-[var(--bd-bg)]/95 backdrop-blur-md supports-[backdrop-filter]:bg-[var(--bd-bg)]/80">
+      <header className="bd-site-header sticky top-0 z-50 w-full min-w-0 border-b border-[var(--bd-border)] bg-[var(--bd-bg)]/95 backdrop-blur-md supports-[backdrop-filter]:bg-[var(--bd-bg)]/80">
         <div className="flex h-14 items-center justify-between gap-2 px-4 sm:px-6 lg:px-8 w-full min-w-0">
           {/* Left: hamburger (mobile) + logo + tabs */}
           <div className="flex items-center gap-3 md:gap-6 min-w-0 shrink">

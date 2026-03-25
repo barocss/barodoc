@@ -1,4 +1,5 @@
 ---
+import { ClientRouter } from "astro:transitions";
 import ThemeScript from "../components/ThemeScript.astro";
 import { SearchDialog } from "../components/SearchDialog";
 import config from "virtual:barodoc/config";
@@ -55,6 +56,7 @@ const skipLabel = uiStrings?.skipToContent ?? "Skip to main content";
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.css" crossorigin="anonymous" />
 
     <title>{title}</title>
+    <ClientRouter />
     <ThemeScript />
     {themeCSS && <style set:html={themeCSS} />}
   </head>

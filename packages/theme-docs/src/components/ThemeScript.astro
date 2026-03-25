@@ -1,11 +1,32 @@
 ---
-// This script runs before the page renders to prevent flash of wrong theme
+// Runs before paint (theme + reading mode) and after View Transitions swaps (same sync).
 ---
 <script is:inline>
-  (function() {
-    const theme = localStorage.getItem('theme');
-    if (theme === 'dark' || (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-      document.documentElement.classList.add('dark');
+  (function () {
+    function applyTheme() {
+      try {
+        const theme = localStorage.getItem("theme");
+        if (theme === "dark" || (!theme && window.matchMedia("(prefers-color-scheme: dark)").matches)) {
+          document.documentElement.classList.add("dark");
+        } else {
+          document.documentElement.classList.remove("dark");
+        }
+      } catch (e) {}
     }
+    function applyReadingMode() {
+      try {
+        if (localStorage.getItem("barodoc-reading-mode") === "1") {
+          document.documentElement.classList.add("bd-reading-mode");
+        } else {
+          document.documentElement.classList.remove("bd-reading-mode");
+        }
+      } catch (e) {}
+    }
+    applyTheme();
+    applyReadingMode();
+    document.addEventListener("astro:after-swap", function () {
+      applyTheme();
+      applyReadingMode();
+    });
   })();
 </script>

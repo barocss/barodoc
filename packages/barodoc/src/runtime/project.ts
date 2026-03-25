@@ -268,6 +268,7 @@ const contentSchema = `z.object({
     deprecated: z.union([z.boolean(), z.string()]).optional(),
     experimental: z.boolean().optional(),
     changelogUrl: z.string().optional(),
+    slides: z.boolean().optional(),
   })`;
 
 function generateContentConfig(config: BarodocConfig): string {
