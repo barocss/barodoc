@@ -42,6 +42,21 @@ export const DEFAULT_UI_STRINGS: Record<string, string> = {
   copySectionLink: "Copy link to section",
   feedbackThanks: "Thanks for your feedback!",
   reportIssue: "Report an issue",
+  readingMode: "Reading mode",
+  exitReadingMode: "Exit reading mode",
+  docViewToolbar: "View options",
+  slideMode: "Slides",
+  exitSlideMode: "Exit slide mode",
+  slidePrevious: "Previous slide",
+  slideNext: "Next slide",
+  slidesEmpty: "No slide breaks — add horizontal rules (---) between sections.",
+  slidesHint: "Add --- in your Markdown to separate slides.",
+  pageNavReading: "Page navigation",
+  slideCopyLink: "Copy link to this slide",
+  slideLinkCopied: "Link copied",
+  slideKeyboardHint: "← → navigate · Esc exit",
+  slideGoFirst: "First slide",
+  slideGoLast: "Last slide",
 };
 
 /** Optional default strings for other locales (partial overrides). */
@@ -86,6 +101,21 @@ export const DEFAULT_UI_STRINGS_KO: Record<string, string> = {
   copySectionLink: "섹션 링크 복사",
   feedbackThanks: "피드백 감사합니다!",
   reportIssue: "이슈 등록",
+  readingMode: "읽기 모드",
+  exitReadingMode: "읽기 모드 종료",
+  docViewToolbar: "보기 옵션",
+  slideMode: "슬라이드",
+  exitSlideMode: "슬라이드 종료",
+  slidePrevious: "이전 슬라이드",
+  slideNext: "다음 슬라이드",
+  slidesEmpty: "슬라이드 구분이 없습니다. 섹션 사이에 ---(수평선)을 넣으세요.",
+  slidesHint: "Markdown에서 ---로 슬라이드를 나눌 수 있습니다.",
+  pageNavReading: "문서 이동",
+  slideCopyLink: "이 슬라이드 링크 복사",
+  slideLinkCopied: "링크를 복사했습니다",
+  slideKeyboardHint: "← → 이동 · Esc 종료",
+  slideGoFirst: "첫 슬라이드",
+  slideGoLast: "마지막 슬라이드",
 };
 
 export function getDefaultUIStringsForLocale(locale: string): Record<string, string> {

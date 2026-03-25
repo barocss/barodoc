@@ -15,6 +15,7 @@ const docsCollection = defineCollection({
     deprecated: z.union([z.boolean(), z.string()]).optional(),
     experimental: z.boolean().optional(),
     changelogUrl: z.string().optional(),
+    slides: z.boolean().optional(),
   }),
 });
 
@@ -55,6 +56,7 @@ const helpCollection = defineCollection({
     deprecated: z.union([z.boolean(), z.string()]).optional(),
     experimental: z.boolean().optional(),
     changelogUrl: z.string().optional(),
+    slides: z.boolean().optional(),
   }),
 });
 

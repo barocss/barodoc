@@ -1,0 +1,77 @@
+---
+title: Slide mode demo
+description: Test full-screen slides split by horizontal rules (---), including a two-column layout.
+slides: true
+---
+
+import { Callout, Columns, Column } from "@barodoc/theme-docs";
+
+## Minimal template (copy-paste)
+
+Use **YAML at the very top** of the file, then split slides with `---` **in the body** (after the closing frontmatter `---`). Quick mode **`.md`** files work without MDX.
+
+<Callout type="info">
+The first `---` … `---` block is frontmatter only. Later `---` lines on their own are slide breaks (horizontal rules).
+</Callout>
+
+````markdown
+---
+title: My deck
+description: One-line summary
+slides: true
+---
+
+# First slide
+
+Your content.
+
+---
+
+# Second slide
+
+More content.
+
+---
+
+# Third slide
+
+Done.
+````
+
+`pnpm create barodoc` also adds `docs/en/example-slides.md` with the same shape — copy or edit that file.
+
+## First slide
+
+This is the **first** slide. Use the **book / slides** icons in the toolbar above the article to open **Slide mode**.
+
+Use **arrow keys** to move between slides, **Escape** to exit.
+
+---
+
+## Second slide
+
+Here is the second slide. Slides are separated by `---` in the Markdown source (renders as a horizontal rule).
+
+---
+
+## Two columns on one slide
+
+Layouts from MDX apply inside slide mode too. The whole `<Columns>` block stays on **one** slide — do not put `---` between columns.
+
+<Columns columns={2}>
+  <Column>
+    ![Barodoc logo](/logo.svg)
+  </Column>
+  <Column>
+    **Left:** image or diagram. **Right:** bullets or copy.
+
+    - Keep column pairs inside one slide
+    - Use `Columns` / `Column` from `@barodoc/theme-docs`
+  </Column>
+</Columns>
+
+---
+
+## Last slide
+
+That is it — a quick test including a column layout.

@@ -137,7 +137,8 @@ my-docs/
 ├── docs/
 │   └── en/
 │       ├── introduction.md
-│       └── quickstart.md
+│       ├── quickstart.md
+│       └── example-slides.md
 ├── public/
 │   └── logo.svg
 └── .gitignore

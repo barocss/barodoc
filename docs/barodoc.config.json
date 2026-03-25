@@ -61,7 +61,8 @@
         "guides/migration",
         "guides/troubleshooting",
         "guides/ai-and-agents",
-        "guides/graph-and-links"
+        "guides/graph-and-links",
+        "guides/slide-demo"
       ]
     },
     {

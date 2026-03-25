@@ -842,6 +842,121 @@
 }
 
 /* ==========================================================================
+   Reading mode + slide deck (DocViewControls)
+   ========================================================================== */
+
+html.bd-reading-mode #site-banner {
+  display: none;
+}
+
+html.bd-reading-mode .bd-docs-site-chrome {
+  display: none;
+}
+
+html.bd-reading-mode .bd-docs-shell {
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+/* Sidebar + TOC: asides sit under .bd-docs-shell > .flex (not direct children of .bd-docs-shell) */
+html.bd-reading-mode .bd-docs-shell > .flex > aside {
+  display: none;
+}
+
+html.bd-reading-mode .bd-docs-shell > .flex > main {
+  flex: 1;
+  max-width: 100%;
+}
+
+/* Breadcrumb, reading time, badges — hidden; article stays visible */
+html.bd-reading-mode .bd-docs-pre-article {
+  display: none;
+}
+
+/* Linked pages, footer prev/next, contributors, edit, feedback — hidden (side arrows + keyboard) */
+html.bd-reading-mode .bd-docs-post-article {
+  display: none;
+}
+
+/*
+ * Reading column: comfortable on phones, scales up on large screens (cap 72rem).
+ * clamp(min, preferred, max) — middle term ties width to viewport so wide monitors don’t feel cramped.
+ */
+html.bd-reading-mode .bd-docs-inner {
+  width: 100%;
+  box-sizing: border-box;
+  max-width: clamp(21rem, 36rem + 12vw, 72rem);
+  padding-bottom: 2rem;
+  /* Keep text clear of fixed side arrow hit targets */
+  padding-left: max(1rem, env(safe-area-inset-left, 0px));
+  padding-right: max(1rem, env(safe-area-inset-right, 0px));
+}
+
+@media (min-width: 480px) {
+  html.bd-reading-mode .bd-docs-inner {
+    padding-left: max(3.5rem, env(safe-area-inset-left, 0px));
+    padding-right: max(3.5rem, env(safe-area-inset-right, 0px));
+  }
+}
+
+html.bd-reading-mode .bd-docs-inner .prose {
+  font-size: 1.0625rem;
+  line-height: 1.75;
+}
+
+.bd-slide-overlay .bd-slide-stage img {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Slide deck: slide enter motion (prev / next) */
+@keyframes bd-slide-enter-next {
+  from {
+    opacity: 0;
+    transform: translateX(0.75rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes bd-slide-enter-prev {
+  from {
+    opacity: 0;
+    transform: translateX(-0.75rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.bd-slide-overlay .bd-slide-stage-anim.bd-slide-enter-next {
+  animation: bd-slide-enter-next 0.22s ease-out both;
+}
+
+.bd-slide-overlay .bd-slide-stage-anim.bd-slide-enter-prev {
+  animation: bd-slide-enter-prev 0.22s ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bd-slide-overlay .bd-slide-stage-anim.bd-slide-enter-next,
+  .bd-slide-overlay .bd-slide-stage-anim.bd-slide-enter-prev {
+    animation: none;
+  }
+}
+
+/* Nav group label (e.g. Guides) above H1 — hidden in slide deck; H1 remains */
+.bd-slide-overlay .bd-slide-stage .bd-doc-category {
+  display: none;
+}
+
+body[data-bd-slide-open] {
+  overflow: hidden;
+}
+
+/* ==========================================================================
    Keyboard shortcuts modal
    ========================================================================== */
 

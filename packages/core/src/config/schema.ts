@@ -100,6 +100,11 @@ export const docsFrontmatterSchema = z.object({
   experimental: z.boolean().optional(),
   /** Override site `changelogUrl` for this page only. */
   changelogUrl: z.string().optional(),
+  /**
+   * Enable slide mode for this page (full-screen slides split by horizontal rules `---` in Markdown).
+   * When false or omitted, the slide control is hidden.
+   */
+  slides: z.boolean().optional(),
 });
 
 export type DocsFrontmatter = z.infer<typeof docsFrontmatterSchema>;

@@ -86,25 +86,27 @@ const mobileNavGroups = sectionNav.map((group: any) => ({
 }));
 ---
 
-<DocHeader 
-  client:load
-  siteName={config.name}
-  logo={config.logo}
-  tabs={tabs}
-  githubUrl={config.topbar?.github}
-  hasMultipleLocales={hasMultipleLocales}
-  currentLocale={currentLocale}
-  localeLabels={localeLabels}
-  currentPath={currentPath}
-  locales={locales}
-  defaultLocale={defaultLocale}
-  uiStrings={uiStrings}
-/>
-<MobileNavSheet
-  client:load
-  groups={mobileNavGroups}
-  siteName={config.name}
-  logo={config.logo}
-  tabs={tabs}
-  currentPath={currentPath}
-/>
+<div class="bd-docs-site-chrome">
+  <DocHeader
+    client:load
+    siteName={config.name}
+    logo={config.logo}
+    tabs={tabs}
+    githubUrl={config.topbar?.github}
+    hasMultipleLocales={hasMultipleLocales}
+    currentLocale={currentLocale}
+    localeLabels={localeLabels}
+    currentPath={currentPath}
+    locales={locales}
+    defaultLocale={defaultLocale}
+    uiStrings={uiStrings}
+  />
+  <MobileNavSheet
+    client:load
+    groups={mobileNavGroups}
+    siteName={config.name}
+    logo={config.logo}
+    tabs={tabs}
+    currentPath={currentPath}
+  />
+</div>

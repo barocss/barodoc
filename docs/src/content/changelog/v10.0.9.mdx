@@ -1,0 +1,27 @@
+---
+version: "10.0.9"
+date: 2026-03-25
+title: "Reading mode, slide mode, and smoother doc navigation"
+---
+
+### Core (@barodoc/core)
+
+- **Content schema** — Optional frontmatter `slides` (boolean) for slide-capable pages.
+- **i18n** — Strings for slide controls, copy link, keyboard hints, and the in-article view toolbar.
+
+### CLI (`barodoc`)
+
+- **Quick mode / create** — Generated content config includes `slides`. `barodoc create` ships `docs/en/example-slides.md` (minimal deck sample) and registers it in the default navigation.
+
+### Theme (`@barodoc/theme-docs`)
+
+- **Reading mode** — Book icon in the article toolbar; hides banner, header chrome, sidebar, TOC, and post-article blocks; fluid max width for prose; circular prev/next from navigation order; keyboard shortcuts respect reading targets.
+- **Slide mode** — Presentation icon when `slides: true`; full-screen overlay with hover/focus toolbar and side arrows; slide enter animation; sync `?slide=`; optional dots and first/last/copy link; Escape and arrows.
+- **Slides in content** — Nav group label (category) hidden inside the slide stage only.
+- **View transitions** — `ClientRouter` (`astro:transitions`) on the base layout for softer same-origin navigations; inline script restores `dark` / `bd-reading-mode` from `localStorage` after each swap.
+- **Layouts** — `DocViewControls` rendered in-flow above the article; reading/slide targets wired from `[...slug].astro`.
+
+### Docs site
+
+- **Content config** — `slides` on `docs` and `help` collections.
+- **Guides** — English and Korean slide demo pages (minimal template, columns example) and nav entry.

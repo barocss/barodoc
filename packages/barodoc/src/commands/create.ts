@@ -31,7 +31,7 @@ export async function create(name: string): Promise<void> {
       navigation: [
         {
           group: "Getting Started",
-          pages: ["introduction", "quickstart"],
+          pages: ["introduction", "quickstart", "example-slides"],
         },
       ],
       i18n: {
@@ -86,6 +86,32 @@ barodoc build
 \`\`\`bash
 barodoc preview
 \`\`\`
+`
+  );
+
+  await fs.writeFile(
+    path.join(targetDir, "docs/en/example-slides.md"),
+    `---
+title: Example slides
+description: Minimal slide deck — frontmatter plus --- between slides in the body.
+slides: true
+---
+
+# First slide
+
+Edit \`docs/en/example-slides.md\`. Use the **Slides** control on the page (with \`slides: true\` in frontmatter) to open full-screen mode. Arrow keys move between slides; **Escape** exits.
+
+---
+
+# Second slide
+
+In the **body**, a line with only \`---\` starts the next slide (not the YAML block at the top).
+
+---
+
+# Third slide
+
+Copy this file or see the Barodoc docs **Slide mode demo** for MDX layouts (e.g. columns).
 `
   );
 

@@ -79,7 +79,7 @@ After creating a new file, register it in \`barodoc.config.json\`:
     {
       "group": "Getting Started",
       "group:ko": "시작하기",
-      "pages": ["introduction", "quickstart"]
+      "pages": ["introduction", "quickstart", "example-slides"]
     },
     {
       "group": "Guides",

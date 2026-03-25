@@ -8,6 +8,7 @@ import Breadcrumb from "../components/Breadcrumb.astro";
 import Banner from "../components/Banner.astro";
 import KeyboardShortcuts from "../components/KeyboardShortcuts.astro";
 import Contributors from "../components/Contributors.astro";
+import { DocViewControls } from "../components/DocViewControls.tsx";
 import { defaultLocale, locales, uiStrings, dirByLocale } from "virtual:barodoc/i18n";
 import { getLocaleFromPath } from "@barodoc/core";
 import config from "virtual:barodoc/config";
@@ -48,6 +49,8 @@ interface Props {
   };
   /** Resolved changelog link (site or page `changelogUrl`). */
   changelogHref?: string | null;
+  /** When true, show slide mode control (`slides: true` in frontmatter). */
+  slidesEnabled?: boolean;
 }
 
 const {
@@ -67,6 +70,7 @@ const {
   brokenLinks = [],
   docMeta,
   changelogHref = null,
+  slidesEnabled = false,
 } = Astro.props;
 const currentPath = Astro.url.pathname;
 
@@ -108,7 +112,7 @@ const tocHeadings = headings.filter((h) => h.depth >= 2 && h.depth <= 4);
   <Header currentLocale={currentLocale} currentPath={currentPath} sectionSlug={sectionSlug} uiStrings={t} />
   
   <!-- Full-width docs layout: sidebar + content + TOC use full viewport -->
-  <div class="w-full min-w-0 min-h-[calc(100vh-3.5rem)] flex overflow-x-clip" dir={dir}>
+  <div class="bd-docs-shell w-full min-w-0 min-h-[calc(100vh-3.5rem)] flex overflow-x-clip" dir={dir}>
     <div class="flex w-full min-w-0">
       <!-- Desktop Sidebar: no vertical line, indent + bold section, active = text only -->
       <aside class="hidden lg:block w-[280px] shrink-0 border-r border-[var(--bd-border)] bg-[var(--bd-bg)]">
@@ -119,45 +123,59 @@ const tocHeadings = headings.filter((h) => h.depth >= 2 && h.depth <= 4);
 
       <!-- Main Content: flex-1 uses full space between sidebar and TOC; inner wrapper caps width and centers -->
       <main id="main-content" tabindex="-1" class="flex-1 min-w-0 flex justify-center outline-none">
-        <div class="w-full max-w-[768px] px-4 py-8 sm:px-6 sm:py-10 lg:px-10 lg:py-10">
-          {breadcrumbs.length > 0 && <Breadcrumb items={breadcrumbs} sectionSlug={sectionSlug} />}
-          {readingTime && (
-            <div class="bd-reading-time mb-4">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" />
-              </svg>
-              <span>{readingTime}</span>
-            </div>
-          )}
-          {hasDocMetaRow && (
-            <div class="not-prose flex flex-wrap items-center gap-2 mb-4" aria-label="page status">
-              {docMeta!.since && (
-                <span class="inline-flex items-center rounded-md border border-primary-200 bg-primary-50 px-2 py-0.5 text-xs font-medium text-primary-800 dark:border-primary-800/40 dark:bg-primary-950/40 dark:text-primary-200">
-                  {t.sinceVersion ?? "Since"} {docMeta!.since}
-                </span>
-              )}
-              {docMeta!.experimental === true && (
-                <span class="inline-flex items-center rounded-md border border-violet-200 bg-violet-50 px-2 py-0.5 text-xs font-medium text-violet-900 dark:border-violet-800/40 dark:bg-violet-950/40 dark:text-violet-200">
-                  {t.experimental ?? "Experimental"}
-                </span>
-              )}
-              {docMeta!.deprecated !== undefined && docMeta!.deprecated !== false && (
-                <span class="inline-flex items-center rounded-md border border-amber-300 bg-amber-50 px-2 py-0.5 text-xs font-medium text-amber-950 dark:border-amber-800/50 dark:bg-amber-950/30 dark:text-amber-100">
-                  {t.deprecated ?? "Deprecated"}
-                  {typeof docMeta!.deprecated === "string"
-                    ? `: ${docMeta!.deprecated}`
-                    : ""}
-                </span>
-              )}
-            </div>
-          )}
+        <div class="bd-docs-inner w-full max-w-[768px] px-4 py-8 sm:px-6 sm:py-10 lg:px-10 lg:py-10">
+          <div class="bd-docs-pre-article">
+            {breadcrumbs.length > 0 && <Breadcrumb items={breadcrumbs} sectionSlug={sectionSlug} />}
+            {readingTime && (
+              <div class="bd-reading-time mb-4">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" />
+                </svg>
+                <span>{readingTime}</span>
+              </div>
+            )}
+            {hasDocMetaRow && (
+              <div class="not-prose flex flex-wrap items-center gap-2 mb-4" aria-label="page status">
+                {docMeta!.since && (
+                  <span class="inline-flex items-center rounded-md border border-primary-200 bg-primary-50 px-2 py-0.5 text-xs font-medium text-primary-800 dark:border-primary-800/40 dark:bg-primary-950/40 dark:text-primary-200">
+                    {t.sinceVersion ?? "Since"} {docMeta!.since}
+                  </span>
+                )}
+                {docMeta!.experimental === true && (
+                  <span class="inline-flex items-center rounded-md border border-violet-200 bg-violet-50 px-2 py-0.5 text-xs font-medium text-violet-900 dark:border-violet-800/40 dark:bg-violet-950/40 dark:text-violet-200">
+                    {t.experimental ?? "Experimental"}
+                  </span>
+                )}
+                {docMeta!.deprecated !== undefined && docMeta!.deprecated !== false && (
+                  <span class="inline-flex items-center rounded-md border border-amber-300 bg-amber-50 px-2 py-0.5 text-xs font-medium text-amber-950 dark:border-amber-800/50 dark:bg-amber-950/30 dark:text-amber-100">
+                    {t.deprecated ?? "Deprecated"}
+                    {typeof docMeta!.deprecated === "string"
+                      ? `: ${docMeta!.deprecated}`
+                      : ""}
+                  </span>
+                )}
+              </div>
+            )}
+          </div>
+          <!-- Reading / slide: React island lives in-flow here (title row) — not a fixed viewport layer -->
+          <div class="bd-docs-view-tools not-prose mb-1 flex min-h-[1.75rem] justify-end">
+            <DocViewControls
+              client:load
+              slidesEnabled={slidesEnabled}
+              prevPage={prevPage}
+              nextPage={nextPage}
+              uiStrings={t}
+            />
+          </div>
           <article
             class="prose prose-gray dark:prose-invert max-w-none min-w-0 overflow-x-auto"
+            data-bd-prose
             data-copy-section-label={t.copySectionLink ?? "Copy link to section"}
           >
             <slot />
           </article>
 
+          <div class="bd-docs-post-article">
           {(connectedOutgoing.length > 0 || connectedIncoming.length > 0 || brokenLinks.length > 0) && (
             <section class="mt-10 pt-6 border-t border-[var(--bd-border)] space-y-6 not-prose" aria-labelledby="doc-links-heading">
               <h2 id="doc-links-heading" class="text-sm font-semibold uppercase tracking-wide text-[var(--bd-text-muted)]">
@@ -310,6 +328,7 @@ const tocHeadings = headings.filter((h) => h.depth >= 2 && h.depth <= 4);
               </div>
             )}
           </footer>
+          </div>
         </div>
       </main>
 
