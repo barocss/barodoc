@@ -1,6 +1,6 @@
 {
   "name": "barodoc",
-  "version": "10.0.8",
+  "version": "10.0.9",
   "description": "Documentation framework powered by Astro",
   "type": "module",
   "bin": {
