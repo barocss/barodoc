@@ -1,5 +1,11 @@
 # barodoc
 
+## 10.0.10
+
+### Patch Changes
+
+- f6e3aa3: Quick mode: isolated `npm install` under `.barodoc/` (no symlink to monorepo root `node_modules`); monorepo `@barodoc/*` via `npm pack` with workspace-to-semver rewrite; dependency hash cache; file-based `astro.config.mjs`; `scheduler` for React; Vitest for `project.ts` helpers.
+
 ## 10.0.9
 
 ### Patch Changes
