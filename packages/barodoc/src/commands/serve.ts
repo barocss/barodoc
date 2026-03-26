@@ -1,8 +1,6 @@
 import path from "path";
 import pc from "picocolors";
 import { dev } from "astro";
-import barodoc from "@barodoc/core";
-import docsTheme from "@barodoc/theme-docs/theme";
 import {
   isCustomProject,
   loadProjectConfig,
@@ -59,28 +57,11 @@ export async function serve(dir: string, options: ServeOptions): Promise<void> {
 
   const devServer = await dev({
     root: projectDir,
-    configFile: false,
-    integrations: [
-      barodoc({
-        config: "./barodoc.config.json",
-        theme: docsTheme(),
-      }),
-    ],
-    vite: {
-      resolve: {
-        preserveSymlinks: true,
-      },
-      ssr: {
-        noExternal: [/^@barodoc\//],
-      },
-    },
     server: {
       port: options.port,
       host: options.host ? true : undefined,
       open: options.open,
     },
-    ...(config.site ? { site: config.site } : {}),
-    ...(config.base ? { base: config.base } : {}),
   });
 
   process.on("SIGINT", async () => {

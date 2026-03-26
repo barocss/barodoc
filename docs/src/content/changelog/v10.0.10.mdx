@@ -1,0 +1,15 @@
+---
+version: "10.0.10"
+date: 2026-03-26
+title: "Quick mode isolated install and Astro config"
+---
+
+### CLI (`barodoc`)
+
+- **Quick mode** — `.barodoc/` now uses its own `package.json` and **`npm install`** (not a symlink to the monorepo root `node_modules`), with a dependency hash cache and project-local npm caches.
+- **Monorepo** — `@barodoc/*` workspace packages are installed via **`npm pack`** tarballs; staged manifests rewrite `workspace:*` to semver so installs succeed.
+- **Astro** — quick mode continues to use a generated `astro.config.mjs` (Vite options aligned with the docs app); `scheduler` remains a direct dependency for the React runtime chain.
+
+### Contributors
+
+- Vitest coverage for quick-mode dependency resolution in `packages/barodoc/src/runtime/project.test.ts`.
