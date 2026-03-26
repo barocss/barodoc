@@ -8,8 +8,11 @@ Barodoc supports two modes:
 
 ### Quick Mode (Zero Config)
 - Users only need MD files and optional `barodoc.config.json`
-- CLI creates temporary Astro project on-the-fly
-- No `package.json` or `node_modules` needed
+- CLI creates a temporary Astro project under **`<project>/.barodoc/`** and runs Astro from there
+- **Isolated install:** quick mode writes a dedicated `package.json` in `.barodoc/` and runs **`npm install`** there (not a symlink to the CLI or monorepo root `node_modules`), so dependency resolution matches a normal project and avoids hoisted dev-tooling conflicts
+- **Monorepo dev:** when the CLI runs from the Barodoc repo, `@barodoc/*` packages are installed via **`npm pack`** tarballs (with `workspace:*` rewritten to semver inside the pack) so Astro 5 builds stay inside `.barodoc/` without broken path joins
+- **Cache:** `.barodoc-deps-hash` plus workspace package versions decide when to reinstall; `src/`, `public`, and `overrides` are refreshed each run
+- **Requirements:** **npm** (on `PATH`) and network on first install or after dependency changes; local npm caches live under `.barodoc/.npm-cache` and `.barodoc/.npm-pack-cache`
 
 ### Full Custom Mode
 - Users have full Astro project with `astro.config.mjs`
@@ -182,6 +185,7 @@ export default definePlugin<Options>((options) => ({
 | `pnpm build:packages` | Build all packages |
 | `pnpm changeset` | Create changeset |
 | `pnpm release` | Publish to npm |
+| `pnpm test` | Vitest (includes `packages/barodoc/src/runtime/project.test.ts` for quick-mode helpers) |
 
 ## Development and testing
 

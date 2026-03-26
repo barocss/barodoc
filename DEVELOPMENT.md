@@ -69,7 +69,13 @@ The public docs site (e.g. [barodoc.barocss.com](https://barodoc.barocss.com)) i
 
 ## 2. Testing with my-docs (quick mode)
 
-**my-docs** is a separate project (e.g. sibling of barodoc: `barocss/my-docs`) that has only Markdown and `barodoc.config.json` (no `package.json` or Astro setup). The Barodoc CLI runs in “quick mode”: it creates a temporary project under `my-docs/.barodoc/` and runs Astro from there.
+**my-docs** is a separate project (e.g. sibling of barodoc: `barocss/my-docs`) that has only Markdown and `barodoc.config.json` (no `package.json` or Astro setup). The Barodoc CLI runs in “quick mode”: it maintains a temporary project under `my-docs/.barodoc/` and runs Astro from there.
+
+### How `.barodoc/` dependencies work
+
+- Quick mode writes **`package.json`** inside `.barodoc/` and runs **`npm install`** there (with `--legacy-peer-deps` and a project-local npm cache). It does **not** symlink the monorepo root `node_modules` into `.barodoc/`, so installs stay isolated from unrelated hoisted tooling.
+- When you run the CLI **from the Barodoc monorepo**, `@barodoc/*` packages are packed with **`npm pack`** into `.barodoc/.barodoc-packs/`; staged `package.json` files rewrite `workspace:*` to semver so `npm install` succeeds. First run (or after dependency / version changes) needs **network** and **npm** on `PATH`.
+- **`.barodoc-deps-hash`** tracks when to reuse `node_modules`; `src/`, `public`, and `overrides` are regenerated each serve/build. Users can add `.barodoc/` to `.gitignore` (Barodoc scaffolds often do).
 
 ### Prerequisites
 

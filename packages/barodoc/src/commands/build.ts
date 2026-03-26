@@ -3,8 +3,6 @@ import pc from "picocolors";
 import fs from "fs-extra";
 import { execa } from "execa";
 import { build as astroBuild } from "astro";
-import barodoc from "@barodoc/core";
-import docsTheme from "@barodoc/theme-docs/theme";
 import {
   isCustomProject,
   loadProjectConfig,
@@ -57,26 +55,11 @@ export async function build(dir: string, options: BuildOptions): Promise<void> {
   try {
     console.log(pc.dim("Building site..."));
 
+    // Load integrations and Vite options from generated astro.config.mjs (same as full
+    // projects). Programmatic inline config breaks Astro 5 static generation (astro: URLs in workers).
     await astroBuild({
       root: projectDir,
-      configFile: false,
-      integrations: [
-        barodoc({
-          config: "./barodoc.config.json",
-          theme: docsTheme(),
-        }),
-      ],
-      vite: {
-        resolve: {
-          preserveSymlinks: true,
-        },
-        ssr: {
-          noExternal: true,
-        },
-      },
       logLevel: "info",
-      ...(config.site ? { site: config.site } : {}),
-      ...(config.base ? { base: config.base } : {}),
     });
 
     console.log();

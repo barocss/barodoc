@@ -17,6 +17,11 @@ npm install -g barodoc
 npx barodoc serve
 ```
 
+## Quick mode vs full Astro project
+
+- **Quick mode:** a folder with Markdown and `barodoc.config.json` only (no `astro.config.mjs`). The CLI uses **`<dir>/.barodoc/`** as the Astro app root, runs **`npm install`** there on first run or when the dependency set changes, then starts `astro dev` / `astro build`. You need **npm** on `PATH` and network access for that install.
+- **Full project:** the directory contains `astro.config.mjs` — Barodoc runs Astro against that project directly without the `.barodoc/` temp layout.
+
 ## Commands
 
 ### serve - Development Server
